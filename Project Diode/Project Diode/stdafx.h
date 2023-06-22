@@ -29,6 +29,8 @@
 #include <mutex>     // mutex
 #include <string>    // memcpy_s
 #include <functional>// function
+#include <queue>     // queue
+#include <chrono>    // steady_clock, duration
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 

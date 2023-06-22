@@ -49,6 +49,12 @@
     <Filter Include="Game Engine\Messages\Callable">
       <UniqueIdentifier>{8d0f23e1-c135-4f54-bc4b-f751385358d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\Precompiled">
+      <UniqueIdentifier>{736f6cfc-846a-4e57-9e19-21d3d8a354d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Manager">
+      <UniqueIdentifier>{31d0230d-7baa-49d2-a33a-5627086a6c74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -58,16 +64,17 @@
     <ClCompile Include="MemoryManager.cpp">
       <Filter>Game Engine\Memory Manager</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="MemoryAllocation.cpp">
       <Filter>Game Engine\Memory Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Callable.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Utilities\Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Callable.cpp">
+      <Filter>Game Engine\Messages\Callable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Debug.h" />
     <ClInclude Include="GameEngine.h">
       <Filter>Game Engine\Engine</Filter>
     </ClInclude>
@@ -79,9 +86,6 @@
     </ClInclude>
     <ClInclude Include="SlotMap.h">
       <Filter>Utilities\SlotMap</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="MemoryAllocation.h">
       <Filter>Game Engine\Memory Manager</Filter>
@@ -97,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="Callable.h">
       <Filter>Game Engine\Messages\Callable</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Utilities\Precompiled</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

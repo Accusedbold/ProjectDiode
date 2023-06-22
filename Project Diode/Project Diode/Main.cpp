@@ -33,7 +33,14 @@
 */
 /******************************************************************************/
 int main(int argc, char* argv[]) {
+  // Memory Manager should be the first thing to initialize
+  MemoryManager::GetInstance();
+
   int retCode = Engine::GetInstance()->GameLoop();
 	Engine::DestroyInstance();
+
+  // Memory Manager should be the last thing destroyed -
+  // With it goes all allocated memory
+  MemoryManager::DestroyInstance();
   return retCode;
 }

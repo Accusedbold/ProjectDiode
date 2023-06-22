@@ -4,7 +4,7 @@
   Reproduction or disclosure of this file or its contents without the
   prior written consent of John Salguero is prohibited.
 
-  \file    debug.h
+  \file    Debug.h
   \author  John Salguero
   \date    June 18, 2023
   \brief

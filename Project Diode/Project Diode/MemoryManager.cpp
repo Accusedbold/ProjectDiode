@@ -14,6 +14,8 @@
 /********************************************************************/
 #include "stdafx.h" // size_t, malloc, free, memcpy_s
 
+MemoryManager* MemoryManager::m_Instance = new(malloc(sizeof(MemoryManager))) MemoryManager;
+
 /******************************************************************************/
 /*!
           MemoryManager
@@ -40,6 +42,16 @@ MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes), m_BlockSize(0), 
   m_BlockList->m_Address = static_cast<char*>(const_cast<void*>(m_HeapData));
   m_BlockList->m_Allocated = false;
   m_BlockList->m_Next = nullptr;
+}
+
+MemoryManager* MemoryManager::GetInstance()
+{
+  return m_Instance;
+}
+
+void MemoryManager::DestroyInstance()
+{
+  m_Instance->~MemoryManager();
 }
 
 /******************************************************************************/

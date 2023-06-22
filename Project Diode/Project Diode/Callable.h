@@ -24,12 +24,12 @@ class Callable
 public:
   // Constructor
   Callable(long id, std::function<void(std::shared_ptr<Message> const&)>);
-  // move constructor
-  Callable(Callable&& rhs);
+  // Copy Constructor
+  Callable(Callable const&) = default;
   // calling operator
-  void operator()(std::shared_ptr<Message> const& msg);
+  void operator()(std::shared_ptr<Message> const& msg) const;
   // equality operator
-  bool operator==(Callable const& rhs);
+  bool operator==(Callable const& rhs) const;
 
 private:
   // the id of the callable

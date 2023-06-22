@@ -14,7 +14,7 @@
 /********************************************************************/
 #include "stdafx.h" // Engine, shared_ptr
 
-Engine* Engine::m_Instance = new(static_cast<Engine*>(malloc(sizeof(Engine)))) Engine();
+Engine* Engine::m_Instance = nullptr;
 
 /******************************************************************************/
 /*!
@@ -48,6 +48,8 @@ Engine::~Engine() {
 /******************************************************************************/
 Engine* Engine::GetInstance()
 {
+  if (!m_Instance)
+    m_Instance = new Engine;
 	return m_Instance;
 }
 
@@ -66,8 +68,8 @@ Engine* Engine::GetInstance()
 /******************************************************************************/
 bool Engine::DestroyInstance()
 {
-  m_Instance->~Engine();
-  free(m_Instance);
+  if(m_Instance)
+    delete m_Instance;
   return true;
 }
 
@@ -102,12 +104,14 @@ bool Engine::Inititialize()
 /******************************************************************************/
 int Engine::GameLoop()
 {
-  int* stuff = new int[10];
-  delete[] stuff;
-  std::shared_ptr<int> counter(new int);
+  m_LastTime = std::chrono::steady_clock::now();
+  double counter = 0;
   do {
-    ++*counter;
-    if (*counter == 100)
+    auto currentTime = std::chrono::steady_clock::now();
+    m_TimeStep = currentTime - m_LastTime;
+    m_LastTime = currentTime;
+    counter += m_TimeStep.count();
+    if (counter > 30)
       Close();
   } while (m_GameRunning);
 	return 0;
@@ -130,5 +134,137 @@ bool Engine::Close()
   m_GameRunning = false;
   return true;
 }
+
+/******************************************************************************/
+/*!
+          RegisterListener
+
+\author   John Salguero
+
+\brief    Given the Message type and the handler, adds the handler to the map of
+          message handlers.
+
+\param    type
+          The message type to be handled
+
+\param    fxn
+          The Callable that handles that message type
+
+\return   void
+
+*/
+/******************************************************************************/
+void Engine::RegisterListener(MessageType type, Callable const& fxn)
+{
+  m_MessageHandlerMap[type].push_back(fxn);
+}
+
+/******************************************************************************/
+/*!
+          UnregisterListener
+
+\author   John Salguero
+
+\brief    Given the Message type and the handler, removes the handler to the map of
+          message handlers. This should be used by any handler that is destroyed
+          or becomes inaccessable.
+
+\param    type
+          The message type to be handled
+
+\param    fxn
+          The Callable that handles that message type
+
+\return   void
+
+*/
+/******************************************************************************/
+void Engine::UnregisterListener(MessageType type, Callable const& fxn)
+{
+  m_MessageHandlerMap[type].remove(fxn);
+}
+
+/******************************************************************************/
+/*!
+          ImmediateMessage
+
+\author   John Salguero
+
+\brief    Message that is immediately handled.
+
+\return   void
+
+*/
+/******************************************************************************/
+void Engine::ImmediateMessage(std::shared_ptr<Message> const& msg)
+{
+  // This code goes through all the registered functions on the list and sends the appropriate message to them
+  auto functionList = m_MessageHandlerMap[msg->GetMessageId()];
+
+  for (auto nit = functionList.begin(), it = functionList.begin(); it != functionList.end();)
+  {
+    ++nit;
+    (*it)(msg);
+    it = nit;
+  }
+}
+
+/******************************************************************************/
+/*!
+          RelayMessage
+
+\author   John Salguero
+
+\brief    Relays a message to be handled at the end of the game loop.
+
+\return   void
+
+*/
+/******************************************************************************/
+void Engine::RelayMessage(std::shared_ptr<Message> const& msg)
+{
+  m_MessageMutex.lock();
+  m_NewMessages.push(msg);
+  m_MessageMutex.unlock();
+
+  if (msg->GetMessageId() == MessageType::Quit)
+  {
+    Close();
+  }
+}
+
+/******************************************************************************/
+/*!
+          BroadcastMessages
+
+\author   John Salguero
+
+\brief    Every Game loop broadcasts the relayed messages.
+
+\return   void
+
+*/
+/******************************************************************************/
+void Engine::BroadcastMessages()
+{
+  // empty out the messages
+  while (!m_NewMessages.empty())
+  {
+    const std::shared_ptr<Message> &msg = m_NewMessages.front();
+    auto functionList = m_MessageHandlerMap[msg->GetMessageId()];
+
+    for (auto nit = functionList.begin(), it = functionList.begin(); it != functionList.end();)
+    {
+      ++nit;
+      (*it)(msg);
+      it = nit;
+    }
+
+    m_MessageMutex.lock();
+    m_NewMessages.pop();
+    m_MessageMutex.unlock();
+  }
+}
+
 
 

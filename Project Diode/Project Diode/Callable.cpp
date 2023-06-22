@@ -37,28 +37,6 @@ Callable::Callable(long id, std::function<void(std::shared_ptr<Message> const&)>
 
 /******************************************************************************/
 /*!
-          Callable
-
-\author   John Salguero
-
-\brief    MoveConstructor to the callable object
-
-\param    newMessage
-          A pointer to allocated memmory for a message - the core will
-          take care of deleting this object.
-
-\return   void
-
-*/
-/******************************************************************************/
-Callable::Callable(Callable&& rhs)
-{
-  mId = rhs.mId;
-  mFunction = rhs.mFunction;
-}
-
-/******************************************************************************/
-/*!
           operator()
 
 \author   John Salguero
@@ -72,7 +50,7 @@ Callable::Callable(Callable&& rhs)
 
 */
 /******************************************************************************/
-void Callable::operator()(std::shared_ptr<Message> const& msg)
+void Callable::operator()(std::shared_ptr<Message> const& msg) const
 {
   mFunction(msg);
 }
@@ -92,7 +70,7 @@ void Callable::operator()(std::shared_ptr<Message> const& msg)
 
 */
 /******************************************************************************/
-bool Callable::operator==(Callable const& rhs)
+bool Callable::operator==(Callable const& rhs) const
 {
   return (rhs.mId == mId);
 }

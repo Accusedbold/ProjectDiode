@@ -48,7 +48,6 @@
 
 class Engine {
   static Engine* m_Instance;
-  MemoryManager m_MemoryManager;
   bool m_GameRunning = true;
 
   Engine() = default;
@@ -68,20 +67,27 @@ public:
   // Closes down the game
   bool Close();
   // Used to register a listener function
-  static void RegisterListener(MessageType, Callable const&);
+  void RegisterListener(MessageType, Callable const&);
   // Used to unregister a listener function
-  static void UnregisterListener(MessageType, Callable const&);
- 
-  // These global functions are necessary to access the  Memory Manager
-  comrade void* operator new(size_t size) noexcept(false);
-  comrade void* operator new(size_t size, const std::nothrow_t&) noexcept(true);
-  comrade void* operator new[](size_t size) noexcept(false);
-  comrade void* operator new[](size_t size, const std::nothrow_t&) noexcept(true);
-   
-  comrade void operator delete(void* ptr) noexcept(true);
-  comrade void operator delete(void* ptr, const std::nothrow_t&) noexcept(true);
-  comrade void operator delete[](void* ptr) noexcept(true);
-  comrade void operator delete[](void* ptr, const std::nothrow_t&) noexcept(true);
+  void UnregisterListener(MessageType, Callable const&);
+  // Broadcasts the Relayed messages
+  void BroadcastMessages();
+  // Adds a message to the queue of messages
+  void RelayMessage(std::shared_ptr<Message> const&);
+  // Broadcasts the message to handlers when called
+  void ImmediateMessage(std::shared_ptr<Message> const&);
+
+  // mutex for the messages
+  std::mutex m_MessageMutex;
+  // vector for the new messages
+  std::queue<std::shared_ptr<Message>> m_NewMessages;
+  // Used As the messaging Handler for the game
+  std::unordered_map < MessageType, std::list<Callable> >
+    m_MessageHandlerMap;
+  // Used to keep track of time intervals
+  std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
+  // time since last frame
+  std::chrono::duration<double> m_TimeStep;
 };
 
 #endif
