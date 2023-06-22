@@ -1,3 +1,17 @@
+/******************************************************************/
+/*!
+  All content (C) John Salguero, all rights reserved.
+  Reproduction or disclosure of this file or its contents without the
+  prior written consent of John Salguero is prohibited.
+
+  \file    MemoryAllocation.h
+  \author  John Salguero
+  \date    June 18, 2023
+  \brief
+    This header file declares the global new and delete functions, 
+    which manages all the memory used in the game
+*/
+/********************************************************************/
 #ifndef _MemoryAllocation
 	#define _MemoryAllocation
 

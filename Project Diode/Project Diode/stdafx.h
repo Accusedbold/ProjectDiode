@@ -28,14 +28,15 @@
 #include <stdexcept> // length_error
 #include <mutex>     // mutex
 #include <string>    // memcpy_s
+#include <functional>// function
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 
 #include "MemoryAllocation.h" // Global new overloading
 #include "MemoryManager.h"    // Memory Manager 
-#include "GameEngine.h"       // Core of the game 
-#include "Message.h"          // Message Class for sending Events
+#include "Callable.h"         // Callable
 #include "MessageData.h"      // All the data types needed for the Message Types
+#include "GameEngine.h"       // Core of the game 
 #include "SDL\SDL.h"          // SDL2 library
 
 // Utilities

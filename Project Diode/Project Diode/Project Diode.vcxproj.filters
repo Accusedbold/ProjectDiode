@@ -46,6 +46,9 @@
     <Filter Include="Game Engine\Messages\Message Data\Error Message">
       <UniqueIdentifier>{29ed2559-8c7f-49cd-b4f1-4559af69b7c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Engine\Messages\Callable">
+      <UniqueIdentifier>{8d0f23e1-c135-4f54-bc4b-f751385358d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -61,6 +64,7 @@
     <ClCompile Include="MemoryAllocation.cpp">
       <Filter>Game Engine\Memory Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Callable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
@@ -90,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="ErrorMessageData.h">
       <Filter>Game Engine\Messages\Message Data\Error Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Callable.h">
+      <Filter>Game Engine\Messages\Callable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

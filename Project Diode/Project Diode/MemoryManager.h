@@ -42,14 +42,22 @@ class MemoryManager {
   BlockInfo* m_UnusedBlocks; // Linked list of nodes that can be used, so deallocation and allocation do not need to happen
   std::mutex m_MemoryLock;   // Mutex to ensure no data races on the memory manager
 
+  // Gets a BlockInfo class that has been pre-allocated and is unuses
   BlockInfo* GetFreeBlockInfo();
+  // Inserts a block into the blocklist of free and used blocks
   void* InsertBlock(BlockInfo* const oldBlock, const size_t bytes);
+  // allocates and adds block nodes to the list of free block nodes
   void GrowNodes();
 
 public:
+  // constructor - decides the heap size upon construction
   MemoryManager(size_t bytes = GAME_HEAP_SIZE);
+  // destructor - frees all the memory
   virtual ~MemoryManager();
-  void* FastAllocate(size_t bytes, char* label);
+  // Allocates by using the first memory available - tends to fragment
+  void* FastAllocate(size_t bytes);
+  // Allocates by using the best fitting block - tends to be compact
   void* BestAllocate(size_t bytes);
+  // Deletes the allocated memory
   bool Deallocate(void* address);
 };

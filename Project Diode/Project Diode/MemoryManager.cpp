@@ -14,6 +14,21 @@
 /********************************************************************/
 #include "stdafx.h" // size_t, malloc, free, memcpy_s
 
+/******************************************************************************/
+/*!
+          MemoryManager
+
+\author   John Salguero
+
+\brief    Constructs the memory manager. Allocates the heap used for the game
+          as well as components of the memory manager used to manage the
+          heap.
+
+\param    bytes
+          The size of the allocation
+
+*/
+/******************************************************************************/
 MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes), m_BlockSize(0), m_NodeData(nullptr)
 {
   m_HeapData = malloc(m_HeapSize);
@@ -27,6 +42,17 @@ MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes), m_BlockSize(0), 
   m_BlockList->m_Next = nullptr;
 }
 
+/******************************************************************************/
+/*!
+          ~MemoryManager
+
+\author   John Salguero
+
+\brief    Destructor for the Memory Manager. Deallocates the heap used for the
+          game as well as all the components used for managing the memory
+
+*/
+/******************************************************************************/
 MemoryManager::~MemoryManager()
 {
   free(const_cast<void*>(m_HeapData));
@@ -39,6 +65,18 @@ MemoryManager::~MemoryManager()
   free(m_NodeData);
 }
 
+/******************************************************************************/
+/*!
+          GetFreeBlockInfo
+
+\author   John Salguero
+
+\brief    Returns an unused BlockInfo object that has been pre-allocated.
+
+\return   The pointer to the unused BlockInfo object
+
+*/
+/******************************************************************************/
 MemoryManager::BlockInfo* MemoryManager::GetFreeBlockInfo()
 {
   if (!m_UnusedBlocks)
@@ -49,6 +87,25 @@ MemoryManager::BlockInfo* MemoryManager::GetFreeBlockInfo()
   return retVal;
 }
 
+/******************************************************************************/
+/*!
+          InsertBlock
+
+\author   John Salguero
+
+\brief    Given an old block describing free space, splits it into two different
+          blocks if the size is larger than the new size
+
+\param    oldBlock
+          The old block to be split
+
+\param    bytes
+          The size of the new allocation
+
+\return   The pointer to the allocated space
+
+*/
+/******************************************************************************/
 void* MemoryManager::InsertBlock(BlockInfo* const oldBlock, const size_t bytes)
 {
   BlockInfo* freeMem = nullptr; /* block of extra free memory from oldBlock */
@@ -77,7 +134,19 @@ void* MemoryManager::InsertBlock(BlockInfo* const oldBlock, const size_t bytes)
 }
 
 
+/******************************************************************************/
+/*!
+          GrowNodes
 
+\author   John Salguero
+
+\brief    Allocates more nodes for the list of unused BlockInfo Objects. These
+          are used to describe which parts of the heap are used and unused.
+
+\return   void
+
+*/
+/******************************************************************************/
 void MemoryManager::GrowNodes()
 {
   void* newNodePointers = malloc(++m_BlockSize * sizeof(void*));
@@ -97,7 +166,23 @@ void MemoryManager::GrowNodes()
 }
 
 
-void* MemoryManager::FastAllocate(size_t bytes, char* label)
+/******************************************************************************/
+/*!
+          FastAllocate
+
+\author   John Salguero
+
+\brief    Given an size to allocate, looks at the heap for the first available
+          block usable and uses that to allocate the space
+
+\param    bytes
+          The size of the new allocation
+
+\return   The pointer to the allocated space
+
+*/
+/******************************************************************************/
+void* MemoryManager::FastAllocate(size_t bytes)
 {
   void* allocated = nullptr;    /* memory in the heap to be returned */
   m_MemoryLock.lock();
@@ -131,6 +216,22 @@ void* MemoryManager::FastAllocate(size_t bytes, char* label)
   return allocated;
 }
 
+/******************************************************************************/
+/*!
+          BestAllocate
+
+\author   John Salguero
+
+\brief    Given an size to allocate, looks at the heap for the best available
+          block usable and uses that to allocate the space.
+
+\param    bytes
+          The size of the new allocation
+
+\return   The pointer to the allocated space
+
+*/
+/******************************************************************************/
 void* MemoryManager::BestAllocate(size_t bytes)
 {
   void* allocated = nullptr;    /* memory in the heap to be returned */
@@ -176,6 +277,22 @@ void* MemoryManager::BestAllocate(size_t bytes)
   return allocated;
 }
 
+/******************************************************************************/
+/*!
+          Deallocate
+
+\author   John Salguero
+
+\brief    Given an address to deallocate, looks at the block infos to determine
+          the location, and consolidates the information on the block list.
+
+\param    address
+          The size of the new allocation
+
+\return   Whether it deallocated the address successfully
+
+*/
+/******************************************************************************/
 bool MemoryManager::Deallocate(void* address)
 {
   BlockInfo* previous = nullptr; /* block before deallocated block */

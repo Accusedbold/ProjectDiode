@@ -49,10 +49,10 @@
 class Engine {
   static Engine* m_Instance;
   MemoryManager m_MemoryManager;
-  bool m_GameRunning;
+  bool m_GameRunning = true;
 
-  Engine();
-  ~Engine();
+  Engine() = default;
+  virtual ~Engine();
 
 public:
 
@@ -72,6 +72,7 @@ public:
   // Used to unregister a listener function
   static void UnregisterListener(MessageType, Callable const&);
  
+  // These global functions are necessary to access the  Memory Manager
   comrade void* operator new(size_t size) noexcept(false);
   comrade void* operator new(size_t size, const std::nothrow_t&) noexcept(true);
   comrade void* operator new[](size_t size) noexcept(false);

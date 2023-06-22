@@ -16,20 +16,54 @@
 
 Engine* Engine::m_Instance = new(static_cast<Engine*>(malloc(sizeof(Engine)))) Engine();
 
-Engine::Engine() {
-  m_GameRunning = true;
-}
+/******************************************************************************/
+/*!
+          ~Engine
 
+\author   John Salguero
+
+\brief    Destructor for the game engine. Makes sure the game closes if it is
+          being destroyed
+
+*/
+/******************************************************************************/
 Engine::~Engine() {
   if (m_GameRunning)
     Close();
 }
 
+/******************************************************************************/
+/*!
+          GetInstance
+
+\author   John Salguero
+
+\brief    Returns a pointer to a singleton object of the Engine. There should
+          only be 1 instance, which is why the constructor is private. This
+          is static, so it can be used if no instance exists yet.
+
+\return   The pointer to the singleton instance of the Game engine
+
+*/
+/******************************************************************************/
 Engine* Engine::GetInstance()
 {
 	return m_Instance;
 }
 
+/******************************************************************************/
+/*!
+          DestroyInstance
+
+\author   John Salguero
+
+\brief    Cleans up the instance of the engine by freeing the memoyr and calling
+          it's destructor.
+
+\return   whether the instance has been destroyed
+
+*/
+/******************************************************************************/
 bool Engine::DestroyInstance()
 {
   m_Instance->~Engine();
@@ -37,11 +71,35 @@ bool Engine::DestroyInstance()
   return true;
 }
 
+/******************************************************************************/
+/*!
+          Inititialize
+
+\author   John Salguero
+
+\brief    Initializes The game engine and its systems.
+
+\return   whether the game successfully initialized
+
+*/
+/******************************************************************************/
 bool Engine::Inititialize()
 {
   return false;
 }
 
+/******************************************************************************/
+/*!
+          GameLoop
+
+\author   John Salguero
+
+\brief    The main game loop.
+
+\return   Error code. 0 means it exited safely
+
+*/
+/******************************************************************************/
 int Engine::GameLoop()
 {
   int* stuff = new int[10];
@@ -55,6 +113,18 @@ int Engine::GameLoop()
 	return 0;
 }
 
+/******************************************************************************/
+/*!
+          Close
+
+\author   John Salguero
+
+\brief    Initiates closing the game and the systems.
+
+\return   Whether the game closed properly
+
+*/
+/******************************************************************************/
 bool Engine::Close()
 {
   m_GameRunning = false;

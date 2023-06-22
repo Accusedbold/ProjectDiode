@@ -4,7 +4,7 @@
   Reproduction or disclosure of this file or its contents without the
   prior written consent of John Salguero is prohibited.
 
-  \file    stdafx.cpp
+  \file    Message.h
   \author  John Salguero
   \date    June 21, 2023
   \brief
