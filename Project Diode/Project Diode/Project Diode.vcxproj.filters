@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Game Engine">
+      <UniqueIdentifier>{f48be4d9-ffb5-48ed-b3ba-e2f3d30a6250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Engine">
+      <UniqueIdentifier>{dd00f0b4-3649-4680-9669-6290094a3f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Memory Manager">
+      <UniqueIdentifier>{c48ca5d4-e685-4e01-af92-1cad86f75d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{9616690c-16b2-4a92-a720-800c8beda3de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{900e5a33-f5f4-48bb-b2b5-9d5a0655aa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{e7772250-80ee-407a-bf03-c5ad36cf5b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Logic">
+      <UniqueIdentifier>{3210e1f6-88a0-4c8d-9f3f-dff37664a64a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{f3e3ae42-8057-4c25-a53a-1d108864e550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\SlotMap">
+      <UniqueIdentifier>{5bf5da0d-9172-4088-b85a-dfe9d227e8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\System">
+      <UniqueIdentifier>{7e715d10-098a-4093-a492-5bbc32442d7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object Manager">
+      <UniqueIdentifier>{272ce8a2-d95a-4d35-9efe-bf87bdea33ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Reflection">
+      <UniqueIdentifier>{054f346a-07cd-42d1-ad7d-8cc496c4f3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages">
+      <UniqueIdentifier>{4292ec71-d4c8-49e2-b7a5-d018352c73bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data">
+      <UniqueIdentifier>{f66f6c2c-fe69-461f-a6ba-515b61d718f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Error Message">
+      <UniqueIdentifier>{29ed2559-8c7f-49cd-b4f1-4559af69b7c7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameEngine.cpp">
+      <Filter>Game Engine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MemoryManager.cpp">
+      <Filter>Game Engine\Memory Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryAllocation.cpp">
+      <Filter>Game Engine\Memory Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="GameEngine.h">
+      <Filter>Game Engine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryManager.h">
+      <Filter>Game Engine\Memory Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>Game Engine\Memory Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SlotMap.h">
+      <Filter>Utilities\SlotMap</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAllocation.h">
+      <Filter>Game Engine\Memory Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Game Engine\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageData.h">
+      <Filter>Game Engine\Messages\Message Data</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorMessageData.h">
+      <Filter>Game Engine\Messages\Message Data\Error Message</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

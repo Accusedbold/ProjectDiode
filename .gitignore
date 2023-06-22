@@ -1,0 +1,6 @@
+# exclued the target dir
+Project Diode/Target/
+# exclude the private folder visual studio uses
+Project Diode/.vs/
+# exclude the source for the external libraries - we aren't working with these
+External Libraries/source/
