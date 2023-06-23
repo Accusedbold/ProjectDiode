@@ -34,6 +34,39 @@ Engine::~Engine() {
 
 /******************************************************************************/
 /*!
+          AddSystems
+
+\author   John Salguero
+
+\brief    Adds the systems needed for running the game
+
+*/
+/******************************************************************************/
+void Engine::AddSystems()
+{
+  std::wstring name(L"Windows System");
+  m_Systems.push_back(std::shared_ptr<WindowSystem>(new WindowSystem(name)));
+}
+
+/******************************************************************************/
+/*!
+          Update
+
+\author   John Salguero
+
+\brief    Updates the systems needed for running the game every game tic
+
+*/
+/******************************************************************************/
+void Engine::Update(double dt)
+{
+  for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it) {
+    (*it)->Update(dt);
+  }
+}
+
+/******************************************************************************/
+/*!
           GetInstance
 
 \author   John Salguero
@@ -62,15 +95,14 @@ Engine* Engine::GetInstance()
 \brief    Cleans up the instance of the engine by freeing the memoyr and calling
           it's destructor.
 
-\return   whether the instance has been destroyed
+\return   void
 
 */
 /******************************************************************************/
-bool Engine::DestroyInstance()
+void Engine::DestroyInstance()
 {
   if(m_Instance)
     delete m_Instance;
-  return true;
 }
 
 /******************************************************************************/
@@ -87,7 +119,13 @@ bool Engine::DestroyInstance()
 /******************************************************************************/
 bool Engine::Inititialize()
 {
-  return false;
+  // Add everything
+  AddSystems();
+  // Initialize Everything
+  for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it)
+    (*it)->Initialize();
+
+  return true;
 }
 
 /******************************************************************************/
@@ -111,10 +149,10 @@ int Engine::GameLoop()
     m_TimeStep = currentTime - m_LastTime;
     m_LastTime = currentTime;
     counter += m_TimeStep.count();
-    if (counter > 30)
-      Close();
+    Update(counter);
   } while (m_GameRunning);
-	return 0;
+
+	return Close();
 }
 
 /******************************************************************************/
@@ -125,14 +163,17 @@ int Engine::GameLoop()
 
 \brief    Initiates closing the game and the systems.
 
-\return   Whether the game closed properly
+\return   The error code upon closing the systems
 
 */
 /******************************************************************************/
-bool Engine::Close()
+int Engine::Close()
 {
+  int retVal = 0;
   m_GameRunning = false;
-  return true;
+  for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it)
+    (*it)->Release() ? retVal = SYSTEM_RELEASE_ERROR : retVal = retVal;
+  return retVal;
 }
 
 /******************************************************************************/

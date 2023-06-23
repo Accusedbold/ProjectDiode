@@ -15,6 +15,11 @@
 #ifndef _Debug
 	#define _Debug
 
+// Error Defines
+#define SYSTEM_RELEASE_ERROR -1
+#define ERROR_WINDOW_FAILED -2
+#define FATAL_RUNTIME_ERROR -4
+
 // for funsies
 #define comrade friend
 
@@ -31,6 +36,64 @@
 // Used to add a user defined warning during compilation
 #define WARN( MESSAGE ) __pragma( message (__FILE__ "(" XSTR(__LINE__) ") : WARNING [ " MESSAGE " ]") )
 
+// Used to send a fatal error message to the systems
+#define FATAL_ERROR(str) \
+{\
+  std::shared_ptr<void> data(new ErrorMessageData(std::string(str), true, __FUNCTION__, __FILE__, __LINE__));\
+  std::shared_ptr<Message> const newError = std::shared_ptr<Message>(new Message(L"Error Message", MessageType::ErrorMessage, data));\
+  Engine::GetInstance()->ImmediateMessage(newError); \
+}
+
+// Used to send a fatal error message to the systems if expression is true
+#define FATAL_ERRORIF(exp, str) \
+{\
+  if(exp)\
+    FATAL_ERROR(str) \
+}
+
+//////////////////////////////////////////////////////////////////////////////////////// BEGIN Ignored in Release mode
+#ifdef _DEBUG
+
+// Used to send a non fatal error messages to the systems
+#define NONFATAL_ERROR(str) \
+{\
+  std::shared_ptr<void> data(new ErrorMessageData(std::string(str), false, __FUNCTION__, __FILE__, __LINE__));\
+  std::shared_ptr<Message> const newError = std::shared_ptr<Message>(new Message(L"Error Message", MessageType::ErrorMessage, data)); \
+  Engine::GetInstance()->ImmediateMessage(newError); \
+}
+
+// Used to send a non fatal error messages under a certain condition
+#define ERRORIF(exp, str) \
+{\
+  if(exp)\
+    NONFATAL_ERROR(str) \
+}
+
+// Sends a non fatal error message if an expression is false
+#define ASSERT(exp, str) \
+{\
+  if(!(exp))\
+    NONFATAL_ERROR(str) \
+}
+
+// debug breakpoints
+#if defined(WIN32)
+#define DEBUGME() {if (IsDebuggerPresent()) DebugBreak();}
+#else
+#define DEBUGME() {(void)sizeof(int);}
+
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////////// END Ignored in Release mode
+#else 
+
+#define NONFATAL_ERROR(str) {(void)sizeof(str);}
+#define ERRORIF(expr, str) {(void)sizeof(expr); (void)sizeof(str);}
+#define ASSERT(expr, str) {(void)sizeof(expr);}
+#define DEBUGME() 
+
+#endif 
+//////////////////////////////////////////////////////////////////////////////////////// _DEBUG
 
 
 #endif // !_Debug

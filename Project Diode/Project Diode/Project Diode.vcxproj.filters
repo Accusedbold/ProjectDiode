@@ -55,6 +55,9 @@
     <Filter Include="Game Engine\Messages\Message Manager">
       <UniqueIdentifier>{31d0230d-7baa-49d2-a33a-5627086a6c74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{e63557b9-44e4-4330-a1a0-674c4db43046}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -73,6 +76,13 @@
     <ClCompile Include="Callable.cpp">
       <Filter>Game Engine\Messages\Callable</Filter>
     </ClCompile>
+    <ClCompile Include="WindowSystem.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Game Engine\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorMessageData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -107,6 +117,18 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Utilities\Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Game Engine\System</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSystem.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowDefines.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSystem.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

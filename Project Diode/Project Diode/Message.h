@@ -28,25 +28,30 @@ class Message : public std::enable_shared_from_this<Message>
 {
 public:
   // Conversion Constructor for Message Base Class
-  Message(std::wstring const& system, MessageType id) : mMessageId(id), mFromSystem(system)
-  {}
+  Message(std::wstring const& system, MessageType id, std::shared_ptr<void> data = nullptr);
 
   // Default Destructor for Message Base Class
-  virtual ~Message()
-  {}
+  virtual ~Message() = default;
 
   // Get the type of message it is
-  MessageType GetMessageId() const { return mMessageId; }
+  MessageType GetMessageId() const;
 
-  virtual Message& operator=(Message const& rhs) { mMessageId = rhs.mMessageId; return *this; }
+  // Get the name of the system that sent the message
+  const std::wstring GetOriginatingSystem() const;
+
+  // Get the data in the message
+  const std::shared_ptr<void> GetData() const;
 
 protected:
   // The type that the message is
-  MessageType mMessageId;
+  MessageType m_MessageId;
   // What System the message originates from
-  std::wstring const mFromSystem;
+  std::wstring const m_FromSystem;
   // The Data Carried with the message
-  std::shared_ptr<void> data;
+  std::shared_ptr<void> m_Data;
 };
+
+// Easy way to get the data from the message
+#define GET_DATA_FROM_MESSAGE(type, msg) std::static_pointer_cast<type>(msg->GetData())
 
 #endif

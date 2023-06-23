@@ -29,7 +29,7 @@
 
 */
 /******************************************************************************/
-Callable::Callable(long id, std::function<void(std::shared_ptr<Message> const&)> fxn)
+Callable::Callable(long long id, std::function<void(std::shared_ptr<Message> const&)> fxn)
 {
   mId = id;
   mFunction = fxn;

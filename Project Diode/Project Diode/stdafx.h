@@ -38,8 +38,13 @@
 #include "MemoryManager.h"    // Memory Manager 
 #include "Callable.h"         // Callable
 #include "MessageData.h"      // All the data types needed for the Message Types
+#include "System.h"           // System
 #include "GameEngine.h"       // Core of the game 
 #include "SDL\SDL.h"          // SDL2 library
+#include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+
+// Systems
+#include "WindowSystem.h"     // WindowSystem
 
 // Utilities
 #include "SlotMap.h"           // SlotMap 

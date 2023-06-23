@@ -19,31 +19,31 @@
 #define RegisterClassListener(type, Class, fxn) \
 {\
   void (Class::*def_member_)(std::shared_ptr<Message> const&) = fxn;\
-  long def_id_ = reinterpret_cast<long>(this + reinterpret_cast<long&>(def_member_));\
+  long long def_id_ = reinterpret_cast<long long>(this + reinterpret_cast<long&>(def_member_));\
   Callable def_fxn_(def_id_, std::bind(def_member_, this, std::placeholders::_1));\
-  Engine::RegisterListener(type, def_fxn_);\
+  Engine::GetInstance()->RegisterListener(type, def_fxn_);\
 }
 
 #define RegisterGlobalListener(type, fxn) \
 {\
-  long def_id_ = reinterpret_cast<long>(fxn);\
+  long long def_id_ = reinterpret_cast<long long>(fxn);\
   Callable def_fxn_(def_id_, std::bind(fxn, std::placeholders::_1));\
-  Engine::RegisterListener(type, def_fxn_);\
+  Engine::GetInstance()->RegisterListener(type, def_fxn_);\
 }
 
 #define UnRegisterClassListener(type, Class, fxn) \
 {\
   void (Class::*def_member_)(std::shared_ptr<Message> const&) = fxn;\
-  long def_id_ = reinterpret_cast<long>(this + reinterpret_cast<long&>(def_member_));\
+  long long def_id_ = reinterpret_cast<long long>(this + reinterpret_cast<long&>(def_member_));\
   Callable def_fxn_(def_id_, std::bind(def_member_, this, std::placeholders::_1));\
-  Engine::UnregisterListener(type, def_fxn_);\
+  Engine::GetInstance()->UnregisterListener(type, def_fxn_);\
 }
 
 #define UnRegisterGlobalListener(type, fxn) \
 {\
-  long def_id_ = reinterpret_cast<long>(fxn);\
+  long long def_id_ = reinterpret_cast<long long>(fxn);\
   Callable def_fxn_(def_id_, std::bind(fxn, std::placeholders::_1));\
-  Engine::UnregisterListener(type, def_fxn_);\
+  Engine::GetInstance()->UnregisterListener(type, def_fxn_);\
 }
 
 class Engine {
@@ -53,19 +53,24 @@ class Engine {
   Engine() = default;
   virtual ~Engine();
 
+  // Adds all the Systems needed for running the game
+  void AddSystems();
+  // Updates all the Systems this game tick
+  void Update(double dt);
+
 public:
 
   // Gets the singleton instance of the engine
   static Engine* GetInstance();
   // Destroys the engine
-  static bool DestroyInstance();
+  static void DestroyInstance();
 
   // Initializes the Engine
   bool Inititialize();
   // The main loop of the game
   int GameLoop();
   // Closes down the game
-  bool Close();
+  int Close();
   // Used to register a listener function
   void RegisterListener(MessageType, Callable const&);
   // Used to unregister a listener function
@@ -88,6 +93,8 @@ public:
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   // time since last frame
   std::chrono::duration<double> m_TimeStep;
+  // Tracks all the systems the game uses
+  std::vector<std::shared_ptr<System>> m_Systems;
 };
 
 #endif

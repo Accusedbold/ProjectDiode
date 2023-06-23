@@ -23,7 +23,7 @@ class Callable
 {
 public:
   // Constructor
-  Callable(long id, std::function<void(std::shared_ptr<Message> const&)>);
+  Callable(long long id, std::function<void(std::shared_ptr<Message> const&)>);
   // Copy Constructor
   Callable(Callable const&) = default;
   // calling operator
@@ -33,7 +33,7 @@ public:
 
 private:
   // the id of the callable
-  long mId;
+  long long mId;
   // the function to call
   std::function<void(std::shared_ptr<Message> const&)> mFunction;
 };
