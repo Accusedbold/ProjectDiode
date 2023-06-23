@@ -17,6 +17,7 @@
 
 #include "Message.h"          /* The Message Class */
 #include "ErrorMessageData.h" /* The Data for Error Messages */
+#include "WindowCreatedData.h"/* The Data for the Window Created Message */
 
 
 #endif

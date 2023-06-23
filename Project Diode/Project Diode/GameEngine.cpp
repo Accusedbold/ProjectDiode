@@ -44,7 +44,10 @@ Engine::~Engine() {
 /******************************************************************************/
 void Engine::AddSystems()
 {
-  std::wstring name(L"Windows System");
+  std::wstring name(L"Graphics System");
+  m_Systems.push_back(std::shared_ptr<GraphicsSystem>(new GraphicsSystem(name)));
+
+  name = L"Windows System";
   m_Systems.push_back(std::shared_ptr<WindowSystem>(new WindowSystem(name)));
 }
 

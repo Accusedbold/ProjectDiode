@@ -18,6 +18,7 @@
 // Values
 #define GAME_HEAP_SIZE 2147483648
 #define BLOCK_PAGE_SIZE 1000
+#define GLEW_STATIC // Using the static library compiled into the executable
 
 // standard C library stuff
 #include <memory>    // allocator
@@ -34,17 +35,19 @@
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 
+#include "SDL\SDL.h"          // SDL2 library
+#include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+#include "GL\glew.h"          // GLEW
 #include "MemoryAllocation.h" // Global new overloading
 #include "MemoryManager.h"    // Memory Manager 
 #include "Callable.h"         // Callable
 #include "MessageData.h"      // All the data types needed for the Message Types
 #include "System.h"           // System
 #include "GameEngine.h"       // Core of the game 
-#include "SDL\SDL.h"          // SDL2 library
-#include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 // Systems
 #include "WindowSystem.h"     // WindowSystem
+#include "GraphicsSystem.h"   // Graphics
 
 // Utilities
 #include "SlotMap.h"           // SlotMap 

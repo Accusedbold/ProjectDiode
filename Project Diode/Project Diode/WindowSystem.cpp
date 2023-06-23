@@ -57,16 +57,15 @@ void WindowSystem::Initialize()
   m_Window = SDL_CreateWindow(m_WinTitle, m_PosX, m_PosY, m_Width, m_Height, m_WinFlags);
   FATAL_ERRORIF(!m_Window, std::string("Window could not properly be created.\nSDL_Error: ") + SDL_GetError());
 
-  // Get the Window Surface and Errorcheck
-  m_WindowSurface = SDL_GetWindowSurface(m_Window);
-  FATAL_ERRORIF(!m_WindowSurface, std::string("SDL could not fetch Window Surface.\nSDL_Error: ") + SDL_GetError());
+  SDL_Surface* icon = SDL_LoadBMP("Textures\\diode.bmp");
+  ERRORIF(!icon, "Failed to load icon " + std::string(SDL_GetError()));
 
-  SDL_Surface* icon = SDL_LoadBMP(XSTR(RESOURCE_PATH) "\\Textures\\crazyfish.bmp");
   SDL_SetWindowIcon(m_Window, icon);
   SDL_FreeSurface(icon);
 
-  // Fill the surface white
-  SDL_FillRect(m_WindowSurface, NULL, SDL_MapRGB(m_WindowSurface->format, 0xFE, 0xCB, 0xB1));
+  Engine::GetInstance()->RelayMessage(std::shared_ptr<Message>(
+    new Message(m_SystemName, MessageType::WindowCreated, std::shared_ptr<void>(
+      new WindowCreatedData(m_Window, m_Width, m_Height)))));
 
   return;
 

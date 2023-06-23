@@ -15,7 +15,7 @@
 #ifndef _WindowSystem
 #define _WindowSystem
 
-// Base class for Systems
+// System to handle and maintain the window state
 class WindowSystem : public System, public std::enable_shared_from_this<WindowSystem>{
 public:
   // Constructor

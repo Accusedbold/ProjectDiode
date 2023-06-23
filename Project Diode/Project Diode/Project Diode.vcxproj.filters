@@ -58,6 +58,9 @@
     <Filter Include="Windows">
       <UniqueIdentifier>{e63557b9-44e4-4330-a1a0-674c4db43046}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Window Created">
+      <UniqueIdentifier>{e919f1fc-bf1d-4529-846e-c271fd6531ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -82,7 +85,15 @@
     <ClCompile Include="Message.cpp">
       <Filter>Game Engine\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorMessageData.cpp" />
+    <ClCompile Include="ErrorMessageData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Error Message</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowCreatedData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Window Created</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -129,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="GraphicsSystem.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowCreatedData.h">
+      <Filter>Game Engine\Messages\Message Data\Window Created</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

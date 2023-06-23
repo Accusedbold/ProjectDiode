@@ -18,6 +18,7 @@
 enum class MessageType
 {
   None,
+  WindowCreated,
   ErrorMessage,
   Quit,
   Shutdown
