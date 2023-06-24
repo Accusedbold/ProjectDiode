@@ -45,7 +45,7 @@
 #include "MessageData.h"      // All the data types needed for the Message Types
 #include "System.h"           // System
 #include "GameEngine.h"       // Core of the game 
-#include "Component.h"        // Component
+#include "Components.h"       // All the components
 #include "Object.h"           // Object
 #include "ComponentFactory.h" // ComponentFactory
 #include "ObjectFactory.h"    // ObjectFactory

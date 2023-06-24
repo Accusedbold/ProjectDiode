@@ -95,6 +95,9 @@ bool OpenGLDevice::Initialize(std::shared_ptr<WindowCreatedData> const& msgData)
   glewExperimental = GL_TRUE;
   FATAL_ERRORIF(glewInit(), "GLEW Failed to initialize");
 
+  // Enable the Stencil Buffer
+  // glEnable(GL_STENCIL_TEST);
+
   // Print OpenGL version
   DEBUG_POPUP(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 

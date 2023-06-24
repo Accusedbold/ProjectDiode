@@ -45,6 +45,8 @@ public:
   virtual std::shared_ptr<Component> CloneComponent() const = 0;
   // Initializes the component
   virtual void Initialize() = 0;
+  // Returns the Parent of the Component
+  std::weak_ptr<Object> GetParent() const { return m_Parent; }
 protected:
   // Parent of the component
   std::weak_ptr<Object> m_Parent;

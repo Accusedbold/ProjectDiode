@@ -88,6 +88,9 @@
     <Filter Include="Game Engine\Messages\Message Data\Popup Message">
       <UniqueIdentifier>{e74f1707-c53d-4733-a44a-24b1176ff52a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Engine\Object Factory\Components\Renderable">
+      <UniqueIdentifier>{cfc502d7-b5db-44ce-9427-6b3dc0080a8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">

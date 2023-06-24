@@ -1,3 +1,21 @@
+/******************************************************************/
+/*!
+  All content (C) John Salguero, all rights reserved.
+  Reproduction or disclosure of this file or its contents without the
+  prior written consent of John Salguero is prohibited.
+
+  \file    Object.h
+  \author  John Salguero
+  \date    June 24, 2023
+  \brief
+    This cpp file defines the Object class functions, which is a class
+    that 
+    holds the different components that define each of the entities
+    in the game. This uses the Enity Component System (ECS) software
+    architectural pattern.
+
+*/
+/********************************************************************/
 #include "stdafx.h"
 
 /******************************************************************************/
