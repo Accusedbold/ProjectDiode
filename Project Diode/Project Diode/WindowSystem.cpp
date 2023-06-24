@@ -48,7 +48,9 @@ WindowSystem::WindowSystem(std::wstring& name) : System(name)
 void WindowSystem::Initialize()
 {
   // Register the listener for Error Messages
-	RegisterClassListener(MessageType::ErrorMessage, WindowSystem, &WindowSystem::ErrorPopUp);
+  RegisterClassListener(MessageType::ErrorMessage, WindowSystem, &WindowSystem::ErrorPopUp);
+  // Register the listener for Popup Messages
+  RegisterClassListener(MessageType::PopUp, WindowSystem, &WindowSystem::PopUp);
 
   // Initialize SDL for video and Errorcheck
   FATAL_ERRORIF(SDL_Init(SDL_INIT_VIDEO) < 0, std::string("SDL could not be properly initialized.\nSDL_Error: ") + SDL_GetError());
@@ -105,7 +107,8 @@ void WindowSystem::Update(double)
 int WindowSystem::Release()
 {
   // Unregister the listener class since it can no longer handle messages
-	UnRegisterClassListener(MessageType::ErrorMessage, WindowSystem, &WindowSystem::ErrorPopUp);
+  UnRegisterClassListener(MessageType::ErrorMessage, WindowSystem, &WindowSystem::ErrorPopUp);
+  UnRegisterClassListener(MessageType::PopUp, WindowSystem, &WindowSystem::PopUp);
 
   // Destroy The Window and clean up the surface
   SDL_DestroyWindow(m_Window);
@@ -151,6 +154,37 @@ void WindowSystem::HandleEvents()
       break;
     }
   }
+}
+
+/******************************************************************************/
+/*!
+            PopUp
+
+\author     John Salguero
+
+\brief      Given a message, will popup with the message and give.
+
+\param      msg
+            The error message given to the user.
+
+\return     void
+*/
+/******************************************************************************/
+void WindowSystem::PopUp(std::shared_ptr<Message> const& msg)
+{
+  std::string winMessage;
+  std::string winTitle;
+
+  auto data = GET_DATA_FROM_MESSAGE(PopUpMessageData, msg);
+
+  winTitle = "Message";
+
+  winMessage = data->GetMessage();
+
+  int error;
+  error = SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, winTitle.data(), winMessage.data(), m_Window);
+  if (error)
+    exit(ERROR_WINDOW_FAILED);
 }
 
 /******************************************************************************/

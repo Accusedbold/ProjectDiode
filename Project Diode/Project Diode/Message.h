@@ -23,7 +23,10 @@ enum class MessageType
   Quit,
   Shutdown,
   ComponentCreated,
-  ObjectCreated
+  ComponentDestroyed,
+  ObjectCreated,
+  ObjectDestroyed,
+  PopUp
 };
 
 // Base class for Messages

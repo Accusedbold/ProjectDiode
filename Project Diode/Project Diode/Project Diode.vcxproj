@@ -177,6 +177,9 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
   <ItemGroup>
     <ClCompile Include="Callable.cpp" />
     <ClCompile Include="CreatedComponentData.cpp" />
+    <ClCompile Include="CreatedObjectData.cpp" />
+    <ClCompile Include="DestroyedComponentData.cpp" />
+    <ClCompile Include="DestroyedObjectData.cpp" />
     <ClCompile Include="ErrorMessageData.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
@@ -184,7 +187,10 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="OpenGLDevice.cpp" />
+    <ClCompile Include="PopUpMessageData.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -200,7 +206,10 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="CreatedComponentData.h" />
+    <ClInclude Include="CreatedObjectData.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DestroyedComponentData.h" />
+    <ClInclude Include="DestroyedObjectData.h" />
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicsSystem.h" />
@@ -211,6 +220,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="OpenGLDevice.h" />
+    <ClInclude Include="PopUpMessageData.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />

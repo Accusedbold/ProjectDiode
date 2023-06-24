@@ -4,7 +4,7 @@
   Reproduction or disclosure of this file or its contents without the
   prior written consent of John Salguero is prohibited.
 
-  \file    ErrorMessageData.h
+  \file    ErrorMessageData.cpp
   \author  John Salguero
   \date    June 22, 2023
   \brief
@@ -17,11 +17,11 @@
 
 /******************************************************************************/
 /*!
-            ErrorMessage
+            ErrorMessageData
 
 \author     John Salguero
 
-\brief      Constructor for the error message sent to the systems
+\brief      Constructor for the error message data object sent to the systems
 
 \param      errorMessage
             The message given to the user

@@ -37,6 +37,9 @@ private:
   // Creates an error popup message box
   void ErrorPopUp(std::shared_ptr<Message> const& msg);
 
+  // Creates an popup message box
+  void PopUp(std::shared_ptr<Message> const& msg);
+
   // Window Size
   int m_Width = WINDOW_WIDTH;
   int m_Height = WINDOW_HEIGHT;

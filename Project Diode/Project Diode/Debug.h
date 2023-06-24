@@ -44,6 +44,14 @@
   Engine::GetInstance()->ImmediateMessage(newError); \
 }
 
+// Used to send a popup message to the user
+#define POPUP(str) \
+{\
+  std::shared_ptr<void> data(new PopUpMessageData(std::string(str)));\
+  std::shared_ptr<Message> const newPopup = std::shared_ptr<Message>(new Message(L"PopUp Message", MessageType::PopUp, data));\
+  Engine::GetInstance()->ImmediateMessage(newPopup); \
+}
+
 // Used to send a fatal error message to the systems if expression is true
 #define FATAL_ERRORIF(exp, str) \
 {\
@@ -60,6 +68,12 @@
   std::shared_ptr<void> data(new ErrorMessageData(std::string(str), false, __FUNCTION__, __FILE__, __LINE__));\
   std::shared_ptr<Message> const newError = std::shared_ptr<Message>(new Message(L"Error Message", MessageType::ErrorMessage, data)); \
   Engine::GetInstance()->ImmediateMessage(newError); \
+}
+
+// Used to send a debug message to the user
+#define DEBUG_POPUP(str) \
+{\
+  POPUP(str) \
 }
 
 // Used to send a non fatal error messages under a certain condition
@@ -87,6 +101,7 @@
 //////////////////////////////////////////////////////////////////////////////////////// END Ignored in Release mode
 #else 
 
+#define DEBUG_POPUP(str) {(void)sizeof(str);}
 #define NONFATAL_ERROR(str) {(void)sizeof(str);}
 #define ERRORIF(expr, str) {(void)sizeof(expr); (void)sizeof(str);}
 #define ASSERT(expr, str) {(void)sizeof(expr);}

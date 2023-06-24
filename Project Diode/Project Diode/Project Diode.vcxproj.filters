@@ -67,11 +67,26 @@
     <Filter Include="Game Engine\Object Factory">
       <UniqueIdentifier>{b9b20732-c970-4341-856c-9da9b8d3b24b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Engine\Object Factory\Component Factory">
-      <UniqueIdentifier>{3f4f0bc4-7133-4cfa-89bb-1ada36dcebeb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Engine\Messages\Message Data\Created Component">
       <UniqueIdentifier>{e9f08405-3305-4044-a12a-d1493b75bcaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object Factory\Object">
+      <UniqueIdentifier>{9c1d7f52-294b-4c62-9357-de046ef3c4d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object Factory\Components">
+      <UniqueIdentifier>{3f4f0bc4-7133-4cfa-89bb-1ada36dcebeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Object Created">
+      <UniqueIdentifier>{6ce2df75-df10-42c7-b773-921178237fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Object Destroyed">
+      <UniqueIdentifier>{5e80c7e3-71ac-466c-bb41-beeb3f81ef8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Component Destroyed">
+      <UniqueIdentifier>{1ee8c1d7-62f5-4c53-8c7e-2d9cdfabc17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Popup Message">
+      <UniqueIdentifier>{e74f1707-c53d-4733-a44a-24b1176ff52a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +126,24 @@
     </ClCompile>
     <ClCompile Include="CreatedComponentData.cpp">
       <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp">
+      <Filter>Game Engine\Object Factory\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatedObjectData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Object Created</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyedObjectData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Object Destroyed</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyedComponentData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Component Destroyed</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpMessageData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Popup Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Game Engine\Object Factory\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,20 +198,32 @@
     <ClInclude Include="OpenGLDevice.h">
       <Filter>Graphics\OpenGL\Device</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Game Engine\Object Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectFactory.h">
-      <Filter>Game Engine\Object Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>Game Engine\Object Factory\Component Factory</Filter>
+      <Filter>Game Engine\Object Factory\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentFactory.h">
-      <Filter>Game Engine\Object Factory\Component Factory</Filter>
+      <Filter>Game Engine\Object Factory\Components</Filter>
     </ClInclude>
     <ClInclude Include="CreatedComponentData.h">
       <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Game Engine\Object Factory\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Game Engine\Object Factory\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyedObjectData.h">
+      <Filter>Game Engine\Messages\Message Data\Object Destroyed</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatedObjectData.h">
+      <Filter>Game Engine\Messages\Message Data\Object Created</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyedComponentData.h">
+      <Filter>Game Engine\Messages\Message Data\Component Destroyed</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpMessageData.h">
+      <Filter>Game Engine\Messages\Message Data\Popup Message</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

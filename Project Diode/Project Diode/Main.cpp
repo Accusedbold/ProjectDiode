@@ -39,8 +39,9 @@ int main(int, char*[]) {
 
   int retCode = 1;
   if(Engine::GetInstance()->Inititialize())
-    retCode = Engine::GetInstance()->GameLoop();
+    retCode |= Engine::GetInstance()->GameLoop();
 	Engine::DestroyInstance();
+  retCode |= ObjectFactory::GetInstance()->Release();
 
   // Memory Manager should be the last thing destroyed -
   // With it goes all allocated memory

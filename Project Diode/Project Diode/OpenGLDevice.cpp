@@ -96,7 +96,7 @@ bool OpenGLDevice::Initialize(std::shared_ptr<WindowCreatedData> const& msgData)
   FATAL_ERRORIF(glewInit(), "GLEW Failed to initialize");
 
   // Print OpenGL version
-  // NONFATAL_ERROR(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  DEBUG_POPUP(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
   // Set up the viewport
   glViewport(0, 0, 800, 600);

@@ -57,6 +57,8 @@ class Engine {
   void AddSystems();
   // Updates all the Systems this game tick
   void Update(double dt);
+  // Broadcasts the Relayed messages
+  void BroadcastMessages();
 
 public:
 
@@ -75,13 +77,12 @@ public:
   void RegisterListener(MessageType, Callable const&);
   // Used to unregister a listener function
   void UnregisterListener(MessageType, Callable const&);
-  // Broadcasts the Relayed messages
-  void BroadcastMessages();
   // Adds a message to the queue of messages
   void RelayMessage(std::shared_ptr<Message> const&);
   // Broadcasts the message to handlers when called
   void ImmediateMessage(std::shared_ptr<Message> const&);
 
+private:
   // mutex for the messages
   std::mutex m_MessageMutex;
   // vector for the new messages

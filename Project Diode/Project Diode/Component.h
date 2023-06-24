@@ -34,17 +34,22 @@ enum class ComponentType {
 
 class Component : public std::enable_shared_from_this<Component> {
 
+  comrade class ObjectFactory;
+  comrade class Object;
   template<class cType, ComponentType eType> comrade class ComponentTypeFactory;
 
 public:
   // Retrieves the Componet Type
-  virtual ComponentType GetType() = 0;
+  virtual ComponentType GetType() const = 0;
+  // Clones the component
+  virtual std::shared_ptr<Component> CloneComponent() const = 0;
+  // Initializes the component
+  virtual void Initialize() = 0;
 protected:
   // Parent of the component
-  std::weak_ptr<Object> mParent;
+  std::weak_ptr<Object> m_Parent;
   // Type of the Component
   ComponentType m_Type;
-private:
   // The ID of the component
   ComponentID m_ID;
 };
