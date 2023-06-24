@@ -244,7 +244,7 @@ void Engine::UnregisterListener(MessageType type, Callable const& fxn)
 void Engine::ImmediateMessage(std::shared_ptr<Message> const& msg)
 {
   // This code goes through all the registered functions on the list and sends the appropriate message to them
-  auto functionList = m_MessageHandlerMap[msg->GetMessageId()];
+  auto functionList = m_MessageHandlerMap[msg->GetMessageType()];
 
   for (auto nit = functionList.begin(), it = functionList.begin(); it != functionList.end();)
   {
@@ -272,7 +272,7 @@ void Engine::RelayMessage(std::shared_ptr<Message> const& msg)
   m_NewMessages.push(msg);
   m_MessageMutex.unlock();
 
-  if (msg->GetMessageId() == MessageType::Quit)
+  if (msg->GetMessageType() == MessageType::Quit)
   {
     Close();
   }
@@ -296,7 +296,7 @@ void Engine::BroadcastMessages()
   while (!m_NewMessages.empty())
   {
     const std::shared_ptr<Message> &msg = m_NewMessages.front();
-    auto functionList = m_MessageHandlerMap[msg->GetMessageId()];
+    auto functionList = m_MessageHandlerMap[msg->GetMessageType()];
 
     for (auto nit = functionList.begin(), it = functionList.begin(); it != functionList.end();)
     {

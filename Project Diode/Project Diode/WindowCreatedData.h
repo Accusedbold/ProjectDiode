@@ -17,7 +17,7 @@
 #ifndef _WindowCreatedData
 #define _WindowCreatedData
 
-class WindowCreatedData {
+class WindowCreatedData : public std::enable_shared_from_this<WindowCreatedData> {
 public:
   //  Constructor
   WindowCreatedData(SDL_Window* window, int width, int height);
@@ -33,7 +33,9 @@ public:
 private:
   // the Window Context
   SDL_Window* m_Window;
+  // Width of the Window
   int m_Width;
+  // Height of the Window
   int m_Height;
 };
 

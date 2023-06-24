@@ -176,6 +176,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Callable.cpp" />
+    <ClCompile Include="CreatedComponentData.cpp" />
     <ClCompile Include="ErrorMessageData.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
@@ -196,6 +197,9 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="Callable.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="CreatedComponentData.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
@@ -204,6 +208,8 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageData.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="OpenGLDevice.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />

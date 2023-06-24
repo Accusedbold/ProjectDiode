@@ -21,17 +21,18 @@
 #define GLEW_STATIC // Using the static library compiled into the executable
 
 // standard C library stuff
-#include <memory>    // allocator
-#include <vector>    // vector
-#include <list>      // list
-#include <limits>    // numeric_limits
-#include <cstdlib>   // malloc
-#include <stdexcept> // length_error
-#include <mutex>     // mutex
-#include <string>    // memcpy_s
-#include <functional>// function
-#include <queue>     // queue
-#include <chrono>    // steady_clock, duration
+#include <memory>        // allocator
+#include <vector>        // vector
+#include <list>          // list
+#include <limits>        // numeric_limits
+#include <cstdlib>       // malloc
+#include <stdexcept>     // length_error
+#include <mutex>         // mutex
+#include <string>        // memcpy_s
+#include <functional>    // function
+#include <queue>         // queue
+#include <chrono>        // steady_clock, duration
+#include <unordered_map> // unordered_map
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 
@@ -44,6 +45,10 @@
 #include "MessageData.h"      // All the data types needed for the Message Types
 #include "System.h"           // System
 #include "GameEngine.h"       // Core of the game 
+#include "Component.h"        // Component
+#include "Object.h"           // Object
+#include "ComponentFactory.h" // ComponentFactory
+#include "ObjectFactory.h"    // ObjectFactory
 
 // Systems
 #include "WindowSystem.h"     // WindowSystem

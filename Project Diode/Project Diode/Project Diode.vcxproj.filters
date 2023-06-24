@@ -31,9 +31,6 @@
     <Filter Include="Game Engine\System">
       <UniqueIdentifier>{7e715d10-098a-4093-a492-5bbc32442d7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Engine\Object Manager">
-      <UniqueIdentifier>{272ce8a2-d95a-4d35-9efe-bf87bdea33ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Engine\Reflection">
       <UniqueIdentifier>{054f346a-07cd-42d1-ad7d-8cc496c4f3cb}</UniqueIdentifier>
     </Filter>
@@ -52,9 +49,6 @@
     <Filter Include="Utilities\Precompiled">
       <UniqueIdentifier>{736f6cfc-846a-4e57-9e19-21d3d8a354d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Engine\Messages\Message Manager">
-      <UniqueIdentifier>{31d0230d-7baa-49d2-a33a-5627086a6c74}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Windows">
       <UniqueIdentifier>{e63557b9-44e4-4330-a1a0-674c4db43046}</UniqueIdentifier>
     </Filter>
@@ -69,6 +63,15 @@
     </Filter>
     <Filter Include="Graphics\OpenGL\Device">
       <UniqueIdentifier>{c848214c-a3e5-492a-abc9-36b3b433be83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object Factory">
+      <UniqueIdentifier>{b9b20732-c970-4341-856c-9da9b8d3b24b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object Factory\Component Factory">
+      <UniqueIdentifier>{3f4f0bc4-7133-4cfa-89bb-1ada36dcebeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Messages\Message Data\Created Component">
+      <UniqueIdentifier>{e9f08405-3305-4044-a12a-d1493b75bcaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="OpenGLDevice.cpp">
       <Filter>Graphics\OpenGL\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatedComponentData.cpp">
+      <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,21 @@
     </ClInclude>
     <ClInclude Include="OpenGLDevice.h">
       <Filter>Graphics\OpenGL\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Game Engine\Object Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Game Engine\Object Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Game Engine\Object Factory\Component Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>Game Engine\Object Factory\Component Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatedComponentData.h">
+      <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

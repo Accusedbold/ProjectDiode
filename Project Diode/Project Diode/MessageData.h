@@ -15,9 +15,10 @@
 #ifndef _MessageData
 #define _MessageData
 
-#include "Message.h"          /* The Message Class */
-#include "ErrorMessageData.h" /* The Data for Error Messages */
-#include "WindowCreatedData.h"/* The Data for the Window Created Message */
+#include "Message.h"              /* The Message Class */
+#include "ErrorMessageData.h"     /* The Data for Error Messages */
+#include "WindowCreatedData.h"    /* The Data for the Window Created Message */
+#include "CreatedComponentData.h" /* The Data for Created Components */
 
 
 #endif

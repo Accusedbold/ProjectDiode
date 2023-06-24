@@ -21,7 +21,9 @@ enum class MessageType
   WindowCreated,
   ErrorMessage,
   Quit,
-  Shutdown
+  Shutdown,
+  ComponentCreated,
+  ObjectCreated
 };
 
 // Base class for Messages
@@ -35,7 +37,7 @@ public:
   virtual ~Message() = default;
 
   // Get the type of message it is
-  MessageType GetMessageId() const;
+  MessageType GetMessageType() const;
 
   // Get the name of the system that sent the message
   const std::wstring GetOriginatingSystem() const;
@@ -45,7 +47,7 @@ public:
 
 protected:
   // The type that the message is
-  MessageType m_MessageId;
+  MessageType m_MessageType;
   // What System the message originates from
   std::wstring const m_FromSystem;
   // The Data Carried with the message

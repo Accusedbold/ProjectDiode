@@ -32,12 +32,12 @@
             The data that the message carries, if it needs
 */
 /******************************************************************************/
-Message::Message(std::wstring const& system, MessageType id, std::shared_ptr<void> const& data) : m_MessageId(id), m_FromSystem(system), m_Data(data)
+Message::Message(std::wstring const& system, MessageType id, std::shared_ptr<void> const& data) : m_MessageType(id), m_FromSystem(system), m_Data(data)
 {}
 
 /******************************************************************************/
 /*!
-            GetMessageId
+            GetMessageType
 
 \author     John Salguero
 
@@ -47,9 +47,9 @@ Message::Message(std::wstring const& system, MessageType id, std::shared_ptr<voi
             Ultimately how the message is handled
 */
 /******************************************************************************/
-MessageType Message::GetMessageId() const 
+MessageType Message::GetMessageType() const 
 { 
-	return m_MessageId; 
+	return m_MessageType; 
 }
 
 /******************************************************************************/
