@@ -28,8 +28,8 @@ enum class MessageType
 class Message : public std::enable_shared_from_this<Message>
 {
 public:
-  // Conversion Constructor for Message Base Class
-  Message(std::wstring const& system, MessageType id, std::shared_ptr<void> data = nullptr);
+  // Constructor for Message Base Class
+  Message(std::wstring const& system, MessageType id, std::shared_ptr<void> const& data = nullptr);
 
   // Default Destructor for Message Base Class
   virtual ~Message() = default;

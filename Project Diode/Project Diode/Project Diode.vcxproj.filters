@@ -61,6 +61,15 @@
     <Filter Include="Game Engine\Messages\Message Data\Window Created">
       <UniqueIdentifier>{e919f1fc-bf1d-4529-846e-c271fd6531ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\System">
+      <UniqueIdentifier>{841fbfce-c208-4bff-bbab-cb176cc77f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\OpenGL">
+      <UniqueIdentifier>{b850307d-211c-4c63-8fce-2b1faf0d13f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\OpenGL\Device">
+      <UniqueIdentifier>{c848214c-a3e5-492a-abc9-36b3b433be83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -88,11 +97,14 @@
     <ClCompile Include="ErrorMessageData.cpp">
       <Filter>Game Engine\Messages\Message Data\Error Message</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsSystem.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="WindowCreatedData.cpp">
       <Filter>Game Engine\Messages\Message Data\Window Created</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Graphics\System</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLDevice.cpp">
+      <Filter>Graphics\OpenGL\Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,11 +150,14 @@
     <ClInclude Include="WindowDefines.h">
       <Filter>Windows</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsSystem.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="WindowCreatedData.h">
       <Filter>Game Engine\Messages\Message Data\Window Created</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSystem.h">
+      <Filter>Graphics\System</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLDevice.h">
+      <Filter>Graphics\OpenGL\Device</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

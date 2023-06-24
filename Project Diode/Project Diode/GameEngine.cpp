@@ -152,6 +152,7 @@ int Engine::GameLoop()
     m_TimeStep = currentTime - m_LastTime;
     m_LastTime = currentTime;
     counter += m_TimeStep.count();
+    BroadcastMessages();
     Update(counter);
   } while (m_GameRunning);
 

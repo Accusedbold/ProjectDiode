@@ -32,7 +32,7 @@
             The data that the message carries, if it needs
 */
 /******************************************************************************/
-Message::Message(std::wstring const& system, MessageType id, std::shared_ptr<void> data) : m_MessageId(id), m_FromSystem(system), m_Data(data)
+Message::Message(std::wstring const& system, MessageType id, std::shared_ptr<void> const& data) : m_MessageId(id), m_FromSystem(system), m_Data(data)
 {}
 
 /******************************************************************************/
