@@ -24,13 +24,19 @@ public:
   GraphicsSystem(std::wstring& name);
 
   // Updates the function on a per frame basis
-  virtual void Update(double dt);
+  void Update(double dt) override;
 
   // Releases the system and deletes all allocations
-  virtual int Release();
+  int Release() override;
 
   // Initializes the system
-  virtual void Initialize();
+  void Initialize() override;
+
+  // Retrieves a resource
+  std::weak_ptr<Resource> GetResource(ResourceType type, std::wstring const& name);
+
+  // Loads a resource
+  ResourceID LoadResource(ResourceType type, std::wstring const& name);
 
 private:
   // Function that handles a window created event
@@ -40,6 +46,8 @@ private:
   SDL_Window* m_WindowHandle;
   // OpenGL device
   OpenGLDevice m_Device;
+  // Holds All The Resources
+  ResourceManager m_ResourceManager;
 };
 
 

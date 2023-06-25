@@ -43,14 +43,8 @@
     <Filter Include="Game Engine\Messages\Message Data\Window Created">
       <UniqueIdentifier>{e919f1fc-bf1d-4529-846e-c271fd6531ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Engine\Object Factory">
-      <UniqueIdentifier>{b9b20732-c970-4341-856c-9da9b8d3b24b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Engine\Messages\Message Data\Created Component">
       <UniqueIdentifier>{e9f08405-3305-4044-a12a-d1493b75bcaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Engine\Object Factory\Object">
-      <UniqueIdentifier>{9c1d7f52-294b-4c62-9357-de046ef3c4d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Engine\Messages\Message Data\Object Created">
       <UniqueIdentifier>{6ce2df75-df10-42c7-b773-921178237fcd}</UniqueIdentifier>
@@ -100,8 +94,20 @@
     <Filter Include="Systems\Graphics\Model\Mesh">
       <UniqueIdentifier>{c7c85b83-6c74-48e9-9272-b5ebcc33cf07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Graphics\Resource Manager">
+    <Filter Include="Game Engine\Object">
+      <UniqueIdentifier>{9c1d7f52-294b-4c62-9357-de046ef3c4d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Object\Object Factory">
+      <UniqueIdentifier>{b9b20732-c970-4341-856c-9da9b8d3b24b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\Transform">
+      <UniqueIdentifier>{709f4c95-3eaf-4390-a7b0-d1bd74da9a13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics\Resources">
       <UniqueIdentifier>{bbd654f1-3fc6-4c62-9cbf-39a6f1695e7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics\Resources\Resource Manager">
+      <UniqueIdentifier>{b083e389-7ebe-4baa-b52f-1ce309a39376}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -155,13 +161,19 @@
       <Filter>Game Engine\Messages\Message Data\Popup Message</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Game Engine\Object Factory\Object</Filter>
+      <Filter>Game Engine\Object</Filter>
     </ClCompile>
     <ClCompile Include="Renderable.cpp">
       <Filter>Game Engine\Components\Renderable</Filter>
     </ClCompile>
     <ClCompile Include="ObjectFactory.cpp">
-      <Filter>Game Engine\Object Factory</Filter>
+      <Filter>Game Engine\Object\Object Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Systems\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +235,7 @@
       <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Game Engine\Object Factory\Object</Filter>
+      <Filter>Game Engine\Object</Filter>
     </ClInclude>
     <ClInclude Include="DestroyedObjectData.h">
       <Filter>Game Engine\Messages\Message Data\Object Destroyed</Filter>
@@ -244,16 +256,28 @@
       <Filter>Game Engine\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentFactory.h">
-      <Filter>Game Engine\Object Factory</Filter>
+      <Filter>Game Engine\Object\Object Factory</Filter>
     </ClInclude>
     <ClInclude Include="ObjectFactory.h">
-      <Filter>Game Engine\Object Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="shaders.h">
-      <Filter>Systems\Graphics\OpenGL</Filter>
+      <Filter>Game Engine\Object\Object Factory</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Systems\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="shaders.h">
+      <Filter>Systems\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTypes.h">
+      <Filter>Systems\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Systems\Graphics\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Systems\Graphics\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

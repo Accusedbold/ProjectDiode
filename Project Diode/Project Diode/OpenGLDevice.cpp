@@ -17,6 +17,25 @@
 
 /******************************************************************************/
 /*!
+          OpenGLDevice
+
+\author   John Salguero
+
+\brief    Constructs the Graphics Device with the proper system
+
+\param    std::weak_ptr<Renderable>
+          The Renderable to Draw
+
+\return   void
+*/
+/******************************************************************************/
+OpenGLDevice::OpenGLDevice(std::weak_ptr<GraphicsSystem> const& system) 
+{
+  m_System = system;
+}
+
+/******************************************************************************/
+/*!
           InitializedUpdate
 
 \author   John Salguero
@@ -53,6 +72,25 @@ void OpenGLDevice::DoNothing(double)
 
 /******************************************************************************/
 /*!
+          DrawRenderable
+
+\author   John Salguero
+
+\brief    Draws the Renderable to the current bound buffer
+
+\param    std::weak_ptr<Renderable>
+          The Renderable to Draw
+
+\return   void
+*/
+/******************************************************************************/
+int OpenGLDevice::DrawRenderable(std::weak_ptr<Renderable> const& renderable)
+{
+  return 0;
+}
+
+/******************************************************************************/
+/*!
           Update
 
 \author   John Salguero
@@ -82,10 +120,14 @@ void OpenGLDevice::Update(double dt)
 \param    msgData
           The Data that comes with window creation
 
+\param    system
+          The Graphics System that takes care of the resources
+
 \return   void
 */
 /******************************************************************************/
-bool OpenGLDevice::Initialize(std::shared_ptr<WindowCreatedData> const& msgData)
+bool OpenGLDevice::Initialize
+(std::shared_ptr<WindowCreatedData> const& msgData, std::shared_ptr<GraphicsSystem> const& system)
 {
   // Create an OpenGL context
   m_glContext = SDL_GL_CreateContext(msgData->GetWindow());
@@ -105,6 +147,7 @@ bool OpenGLDevice::Initialize(std::shared_ptr<WindowCreatedData> const& msgData)
   glViewport(0, 0, 800, 600);
 
   m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
+  m_System = system;
   return true;
 }
 

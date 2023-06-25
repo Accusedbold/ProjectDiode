@@ -37,6 +37,8 @@
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 
 #include "shaders.h"          // Shader enums
+#include "ResourceTypes.h"    // Differnt Types of Resources
+#include "Resource.h"        // The interface to the resources
 #include "SDL\SDL.h"          // SDL2 library
 #include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 #include "GL\glew.h"          // GLEW

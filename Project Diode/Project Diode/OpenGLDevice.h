@@ -16,6 +16,9 @@
 #ifndef _OpenGLDevice
 #define _OpenGLDevice
 
+// forward Declaration
+class GraphicsSystem;
+
 class OpenGLDevice {
 
 	using UpdateFxn = void (OpenGLDevice::*)(double);
@@ -24,12 +27,17 @@ class OpenGLDevice {
 	void InitializedUpdate(double dt);
 	// Called when uninitialized
 	void DoNothing(double dt);
+	// Draws a Renderable to the current buffer
+	int DrawRenderable(std::weak_ptr<Renderable> const& renderable);
 
 public:
+	// Constructs the device with the graphics system
+	OpenGLDevice(std::weak_ptr<GraphicsSystem> const& system);
 	// Called to update it every game tick
 	void Update(double dt);
 	// Used to initialize the device
-	bool Initialize(std::shared_ptr<WindowCreatedData> const& data);
+	bool Initialize
+	(std::shared_ptr<WindowCreatedData> const& data, std::shared_ptr<GraphicsSystem> const& system);
 	// Used to Release all resources it owns
 	int Release();
 
@@ -38,6 +46,8 @@ private:
 	UpdateFxn m_UpdateFxn = &OpenGLDevice::DoNothing;
 	// the openGL Context
 	SDL_GLContext m_glContext;
+	// The Graphics System which holds the resources for rendering
+	std::weak_ptr<GraphicsSystem> m_System;
 };
 
 #endif

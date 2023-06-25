@@ -24,19 +24,19 @@ enum class ShaderType : unsigned long long {
   Count
 };
 
-enum class VertexShaders : unsigned {
+enum class VertexShaders : unsigned long long {
   Default = 0,
 };
 
-enum class TessellationShaders : unsigned {
+enum class TessellationShaders : unsigned long long {
   Default = 2,
 };
 
-enum class GeometryShaders : unsigned {
+enum class GeometryShaders : unsigned long long {
   Default = 4,
 };
 
-enum class FragmentShaders : unsigned {
+enum class FragmentShaders : unsigned long long {
   Default = 8,
 };
 

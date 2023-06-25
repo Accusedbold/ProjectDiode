@@ -13,6 +13,8 @@
 */
 /********************************************************************/
 #include "stdafx.h"
+#include "Model.h"
+#include "ResourceManager.h"
 
 /******************************************************************************/
 /*!
@@ -28,7 +30,8 @@
 					The name of the Graphics System
 */
 /******************************************************************************/
-GraphicsSystem::GraphicsSystem(std::wstring& name) : System(name), m_WindowHandle(nullptr)
+GraphicsSystem::GraphicsSystem(std::wstring& name) : 
+	System(name), m_WindowHandle(nullptr), m_Device(std::weak_ptr<GraphicsSystem>())
 {}
 
 /******************************************************************************/
@@ -96,6 +99,53 @@ void GraphicsSystem::Initialize()
 
 /******************************************************************************/
 /*!
+					GetResource
+
+\author   John Salguero
+
+\brief    Retrieves a resource from the graphics system
+
+\param    type
+					The type of the resource
+
+\param    name
+					The name of the resource
+
+\return   std::weak_ptr<Resource>
+					Pointer to the Resouce
+*/
+/******************************************************************************/
+std::weak_ptr<Resource> GraphicsSystem::GetResource
+(ResourceType type, std::wstring const& name)
+{
+	return m_ResourceManager.GetResource(type, name);
+}
+
+/******************************************************************************/
+/*!
+					LoadResource
+
+\author   John Salguero
+
+\brief    Retrieves a resource from the graphics system
+
+\param    type
+					The type of the resource
+
+\param    name
+					The name of the resource
+
+\return   std::weak_ptr<Resource>
+					Pointer to the Resouce
+*/
+/******************************************************************************/
+ResourceID GraphicsSystem::LoadResource(ResourceType type, std::wstring const& name)
+{
+	return m_ResourceManager.LoadResource(type, name);
+}
+
+/******************************************************************************/
+/*!
 					HandleWindowCreated
 
 \author   John Salguero
@@ -112,5 +162,5 @@ void GraphicsSystem::HandleWindowCreated(std::shared_ptr<Message> const& msg)
 {
 	auto data = GET_DATA_FROM_MESSAGE(WindowCreatedData, msg);
 	m_WindowHandle = data->GetWindow();
-	m_Device.Initialize(data);
+	m_Device.Initialize(data, shared_from_this());
 }

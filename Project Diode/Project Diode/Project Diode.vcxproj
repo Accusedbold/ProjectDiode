@@ -187,11 +187,13 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="OpenGLDevice.cpp" />
     <ClCompile Include="PopUpMessageData.cpp" />
     <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -215,6 +217,8 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicsSystem.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="MemoryAllocation.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Message.h" />
@@ -225,6 +229,8 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="OpenGLDevice.h" />
     <ClInclude Include="PopUpMessageData.h" />
     <ClInclude Include="Renderable.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceTypes.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />

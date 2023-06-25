@@ -43,8 +43,8 @@ public:
   void SetShader(ShaderType, unsigned);
   
 private:
-  // Name of the model to use
-  std::wstring m_ModelName = L"default";
+  // Resource index of the default model to use
+  ResourceID m_Model = 0;
 
   // whether this model is transparent
   bool m_Transparent = false;
@@ -59,7 +59,7 @@ private:
   bool m_Debug = false;
 
   // Shaders to use
-  unsigned m_Shaders[static_cast<unsigned long long>(ShaderType::Count)] = {};
+  unsigned m_Shaders[static_cast<unsigned long long>(ShaderType::Count)] = { };
 
 };
 
