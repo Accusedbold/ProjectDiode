@@ -191,6 +191,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="OpenGLDevice.cpp" />
     <ClCompile Include="PopUpMessageData.cpp" />
+    <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -205,6 +206,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="Callable.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="CreatedComponentData.h" />
     <ClInclude Include="CreatedObjectData.h" />
     <ClInclude Include="Debug.h" />
@@ -217,10 +219,13 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageData.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="OpenGLDevice.h" />
     <ClInclude Include="PopUpMessageData.h" />
+    <ClInclude Include="Renderable.h" />
+    <ClInclude Include="shaders.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />

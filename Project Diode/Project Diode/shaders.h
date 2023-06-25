@@ -16,20 +16,28 @@
 #ifndef _Shaders
 #define _Shaders
 
-enum class VertexShaders {
-  Default,
+enum class ShaderType : unsigned long long {
+  Vertex,
+  Tesselation,
+  Geometry,
+  Fragment,
+  Count
 };
 
-enum class TessellationShaders {
-  Default,
+enum class VertexShaders : unsigned {
+  Default = 0,
 };
 
-enum class GeometryShaders {
-  Default,
+enum class TessellationShaders : unsigned {
+  Default = 2,
 };
 
-enum class FragmentShaders {
-  Default,
+enum class GeometryShaders : unsigned {
+  Default = 4,
+};
+
+enum class FragmentShaders : unsigned {
+  Default = 8,
 };
 
 

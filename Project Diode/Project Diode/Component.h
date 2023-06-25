@@ -38,22 +38,24 @@ class Component : public std::enable_shared_from_this<Component> {
   comrade class Object;
   template<class cType, ComponentType eType> comrade class ComponentTypeFactory;
 
+  // The ID of the component
+  ComponentID m_ID;
 public:
   // Retrieves the Componet Type
-  virtual ComponentType GetType() const = 0;
+  virtual ComponentType GetType() const { return m_Type; }
   // Clones the component
   virtual std::shared_ptr<Component> CloneComponent() const = 0;
   // Initializes the component
-  virtual void Initialize() = 0;
+  virtual void Initialize() {}
   // Returns the Parent of the Component
   std::weak_ptr<Object> GetParent() const { return m_Parent; }
+  // Virtual destructor
+  virtual ~Component() = default;
 protected:
   // Parent of the component
   std::weak_ptr<Object> m_Parent;
   // Type of the Component
   ComponentType m_Type;
-  // The ID of the component
-  ComponentID m_ID;
 };
 
 #endif

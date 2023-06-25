@@ -36,6 +36,7 @@
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 
+#include "shaders.h"          // Shader enums
 #include "SDL\SDL.h"          // SDL2 library
 #include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 #include "GL\glew.h"          // GLEW
@@ -55,6 +56,7 @@
 #include "GraphicsSystem.h"   // Graphics
 
 // Utilities
-#include "SlotMap.h"           // SlotMap 
+#include "SlotMap.h"          // SlotMap 
+#include "glm/glm.hpp"        // glm Math library
 
 #endif
