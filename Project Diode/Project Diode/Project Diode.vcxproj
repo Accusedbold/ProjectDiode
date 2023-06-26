@@ -194,6 +194,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="PopUpMessageData.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -231,6 +232,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ResourceTypes.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />

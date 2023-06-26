@@ -16,9 +16,12 @@
 #ifndef _Model
 #define _Model
 
-class Model : public std::enable_shared_from_this<Model>
+#include "Mesh.h" // Mesh
+
+class Model : public Resource, public std::enable_shared_from_this<Model>
 {
 public:
+  Model(std::wstring const& name, ResourceType type, ResourceID id);
 
 private:
   // collection of Meshes the model owns

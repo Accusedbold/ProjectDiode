@@ -32,25 +32,14 @@ std::shared_ptr<Component> Renderable::CloneComponent() const
 {
   auto clone = std::static_pointer_cast<Renderable>(ObjectFactory::GetInstance()->CreateComponent(m_Type));
 
-  clone->m_Parent = m_Parent;
-  clone->m_Type = m_Type;
-  clone->m_Debug = m_Debug;
-  clone->m_ModelName = m_ModelName;
-  clone->m_Transparency = m_Transparency;
-  clone->m_Transparent = m_Transparent;
-  clone->m_Visible = m_Visible;
-
-  // needed for deep copy
-  for (int i = 0; i < static_cast<unsigned long long>(ShaderType::Count); ++i) {
-    clone->m_Shaders[i] = m_Shaders[i];
-  }
+  *clone = *this;
 
 	return clone;
 }
 
-std::wstring Renderable::GetModelName() const
+ResourceID Renderable::GetModelID() const
 {
-  return m_ModelName;
+  return m_Model;
 }
 
 bool Renderable::IsTransparent() const
@@ -73,14 +62,28 @@ bool Renderable::IsDebug() const
   return m_Debug;
 }
 
-unsigned Renderable::GetShader(ShaderType type) const
+ResourceID Renderable::GetShader(ShaderType type) const
 {
-  return m_Shaders[static_cast<unsigned long long>(type)];
+  switch (type) {
+  case ShaderType::Vertex:
+    return m_VShader;
+    break;
+  case ShaderType::Tesselation:
+    return m_TShader;
+    break;
+  case ShaderType::Geometry:
+    return m_GShader;
+    break;
+  case ShaderType::Fragment:
+    return m_FShader;
+  default:
+    return DEFAULT_FSHADER;
+  }
 }
 
-void Renderable::SetModel(std::wstring const& modelName)
+void Renderable::SetModel(ResourceID modelID)
 {
-  m_ModelName = modelName;
+  m_Model = modelID;
 }
 
 void Renderable::SetTransparent(bool transparent)
@@ -103,7 +106,23 @@ void Renderable::SetDebug(bool debug)
   m_Debug = debug;
 }
 
-void Renderable::SetShader(ShaderType type, unsigned shader)
+void Renderable::SetShader(ShaderType type, ResourceID shader)
 {
-  m_Shaders[static_cast<unsigned long long>(type)] = shader;
+  switch (type)
+  {
+  case ShaderType::Vertex:
+    m_VShader = shader;
+    break;
+  case ShaderType::Tesselation:
+    m_TShader = shader;
+    break;
+  case ShaderType::Geometry:
+    m_GShader = shader;
+    break;
+  case ShaderType::Fragment:
+    m_FShader = shader;
+    break;
+  default:
+    break;
+  }
 }

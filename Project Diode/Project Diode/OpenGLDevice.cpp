@@ -84,7 +84,7 @@ void OpenGLDevice::DoNothing(double)
 \return   void
 */
 /******************************************************************************/
-int OpenGLDevice::DrawRenderable(std::weak_ptr<Renderable> const& renderable)
+int OpenGLDevice::DrawRenderable(std::weak_ptr<Renderable> const&)
 {
   return 0;
 }

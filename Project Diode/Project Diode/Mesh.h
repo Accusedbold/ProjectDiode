@@ -17,15 +17,41 @@
 #ifndef _Mesh
 #define _Mesh
 
+class Model; // forward Declaration
+
 class Mesh {
 public:
 
 private:
 
-  std::wstring m_Name;
-  std::vector<std::wstring> m_Textures;
-  std::vector<std::wstring> m_Shaders;
-  glm::vec4 m_Color;
+  // The Textures used in drawing the mesh
+  std::shared_ptr<Resource> m_Textures;
+  // the vertex shader used
+  std::shared_ptr<Shader> m_VShader;
+  // the Tesselation Shader used
+  std::shared_ptr<Shader> m_TShader;
+  // The Geometry Shader used
+  std::shared_ptr<Shader> m_GShader;
+  // The Fragment Shader used
+  std::shared_ptr<Shader> m_FShader;
+  // The Indicies of the points to create the geometry
+  std::vector<size_t> m_Indicies;
+  // The position of the verticies
+  std::vector<glm::vec4> m_Positions;
+  // The normals of the verticies
+  std::vector<glm::vec4> m_Normals;
+  // The Bi-Tangets of the verticies
+  std::vector<glm::vec4> m_BiTangents;
+  // The Color of the verticies
+  std::vector<glm::vec3> m_Colors;
+  // The Texture Coordinates of the Mesh
+  std::vector<glm::ivec2> m_UVs;
+  // The Physical Weight of the points
+  std::vector<float> m_Weights;
+  // The skeletal weight of the points
+  std::vector<std::vector<float>> m_SkeletalWeight;
+  // The owner of the Mesh
+  std::shared_ptr<Model> m_Owner;
 };
 
 #endif

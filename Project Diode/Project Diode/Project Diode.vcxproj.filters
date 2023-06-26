@@ -109,6 +109,9 @@
     <Filter Include="Systems\Graphics\Resources\Resource Manager">
       <UniqueIdentifier>{b083e389-7ebe-4baa-b52f-1ce309a39376}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Graphics\Shader">
+      <UniqueIdentifier>{0464c114-c27a-45b3-946a-fd406fab603c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -174,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Systems\Graphics\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Systems\Graphics\Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

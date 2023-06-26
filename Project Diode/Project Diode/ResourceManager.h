@@ -16,6 +16,7 @@
 #define _ResourceManager_H
 
 #include "Resource.h" // ResourceID
+#include "Shader.h"   // Shader
 
 class ResourceManager : public std::enable_shared_from_this<ResourceManager> {
 
@@ -29,9 +30,17 @@ public:
 	// used to specify if a resource's ID
 	ResourceID LoadResource(ResourceType type, std::wstring const& name, ResourceID hint);
 
-
-	
 private:
+	// Specifically loads in a Shader and takes care of what a shader needs
+	ResourceID LoadShader(std::wstring const&, ResourceID);
+	// Specifically loads in a Model and takes care of what a shader needs
+	ResourceID LoadModel(std::wstring const&, ResourceID);
+	// Get a new ID number to use
+	ResourceID GetNewID(ResourceType);
+	// Create Resource Map
+	void CreateResourceMap(ResourceType);
+	// inserts a new resource into the maps
+	void InsertNewResource(ResourceType, std::wstring const&, ResourceID, std::shared_ptr<Resource> const&);
 	// maps the resource maps to types
 	ResourceMapMap m_ResourceMap;
 	// maps ID to name

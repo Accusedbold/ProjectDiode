@@ -16,21 +16,26 @@
 #ifndef _iResource
 #define _iResource
 
-class Resource {
-  Resource(std::wstring const& name, ResourceType type) : m_name(name), m_type(type) {
+using ResourceID = unsigned long long;
 
-  }
+class Resource {
+public:
+  Resource(std::wstring const& name, ResourceType type, ResourceID id) : 
+    m_name(name), m_type(type), m_ID(id) {}
+  virtual ~Resource() = default;
 
   std::wstring GetName() { return m_name; }
   ResourceType GetType() { return m_type; }
 
-  virtual ~Resource() = default;
 private:
+  // name of the resource
   std::wstring m_name;
+  // type of the resource
   ResourceType m_type;
+  // id of the resource
+  ResourceID m_ID;
 };
 
-using ResourceID = unsigned long long;
 using ResourceMap = std::unordered_map<ResourceID, std::shared_ptr<Resource>>;
 using ResourceMapMap = std::unordered_map<ResourceType, ResourceMap>;
 using ResourceIDMap = std::unordered_map<std::wstring, ResourceID>;
@@ -38,5 +43,4 @@ using ResourceIDMapMap = std::unordered_map<ResourceType, ResourceIDMap>;
 using ResourceNameMap = std::unordered_map<ResourceID, std::wstring>;
 using ResourceNameMapMap = std::unordered_map<ResourceType, ResourceNameMap>;
 using ResourceTypeIDMap = std::unordered_map<ResourceType, ResourceID>;
-
 #endif

@@ -27,20 +27,20 @@ public:
   std::shared_ptr<Component> CloneComponent() const override;
 
   // Getters
-  std::wstring GetModelName() const;
+  ResourceID GetModelID() const;
   bool IsTransparent() const;
   glm::vec3 GetTransparency() const;
   bool IsVisible() const;
   bool IsDebug() const;
-  unsigned GetShader(ShaderType) const;
+  ResourceID GetShader(ShaderType) const;
 
   // Setters
-  void SetModel(std::wstring const&);
+  void SetModel(ResourceID);
   void SetTransparent(bool);
   void SetTransparency(glm::vec3 const&);
   void SetVisible(bool);
   void SetDebug(bool);
-  void SetShader(ShaderType, unsigned);
+  void SetShader(ShaderType, ResourceID);
   
 private:
   // Resource index of the default model to use
@@ -58,8 +58,14 @@ private:
   // whether this is a Debug-Renderable
   bool m_Debug = false;
 
-  // Shaders to use
-  unsigned m_Shaders[static_cast<unsigned long long>(ShaderType::Count)] = { };
+  // the vertex shader used
+  ResourceID m_VShader = DEFAULT_VSHADER;
+  // the Tesselation Shader used
+  ResourceID m_TShader = DEFAULT_TSHADER;
+  // The Geometry Shader used
+  ResourceID m_GShader = DEFAULT_GSHADER;
+  // The Fragment Shader used
+  ResourceID m_FShader = DEFAULT_FSHADER;
 
 };
 
