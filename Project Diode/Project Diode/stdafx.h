@@ -33,6 +33,9 @@
 #include <queue>         // queue
 #include <chrono>        // steady_clock, duration
 #include <unordered_map> // unordered_map
+#include <filesystem>    // path, exists, is_directory, directory_iterator
+
+namespace fs = std::filesystem;
 
 // Engine stuff
 #include "Debug.h"            // Used for logging and debugging 

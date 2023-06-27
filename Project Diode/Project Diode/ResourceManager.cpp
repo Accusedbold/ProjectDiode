@@ -14,6 +14,7 @@
 /********************************************************************/
 #include "stdafx.h"
 #include "ResourceManager.h"  // ResourceManager
+#include "Skeleton.h"         // Skeleton
 #include "Model.h"						// Model
 
 /******************************************************************************/
@@ -269,6 +270,7 @@ ResourceID ResourceManager::LoadShader(std::wstring const& name, ResourceID id)
 ResourceID ResourceManager::LoadModel(std::wstring const& name, ResourceID id)
 {
 	std::shared_ptr<Model> loadedModel(new Model(name, ResourceType::Shader, id));
+
 	InsertNewResource(ResourceType::Model, name, id, loadedModel);
 	return id;
 }

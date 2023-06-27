@@ -59,7 +59,7 @@ void WindowSystem::Initialize()
   m_Window = SDL_CreateWindow(m_WinTitle, m_PosX, m_PosY, m_Width, m_Height, m_WinFlags);
   FATAL_ERRORIF(!m_Window, std::string("Window could not properly be created.\nSDL_Error: ") + SDL_GetError());
 
-  SDL_Surface* icon = SDL_LoadBMP("Textures\\diode.bmp");
+  SDL_Surface* icon = SDL_LoadBMP("Resources\\Textures\\diode.bmp");
   ERRORIF(!icon, "Failed to load icon " + std::string(SDL_GetError()));
 
   SDL_SetWindowIcon(m_Window, icon);

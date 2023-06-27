@@ -112,6 +112,15 @@
     <Filter Include="Systems\Graphics\Shader">
       <UniqueIdentifier>{0464c114-c27a-45b3-946a-fd406fab603c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Graphics\Model\Skeleton">
+      <UniqueIdentifier>{4b3e949f-ec00-4d23-ac5d-6830a22f953d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics\Model\Skeleton\Joint">
+      <UniqueIdentifier>{d51a94cb-6e7e-4807-b09f-8908d3ae61d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics\Model\Animation">
+      <UniqueIdentifier>{1574a3c2-c1a4-4a16-ba4c-51f9fc49803c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -180,6 +189,15 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Systems\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Systems\Graphics\Model\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Systems\Graphics\Model\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +305,15 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Systems\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Systems\Graphics\Model\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Systems\Graphics\Model\Animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

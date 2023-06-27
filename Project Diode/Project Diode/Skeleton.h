@@ -4,27 +4,25 @@
   Reproduction or disclosure of this file or its contents without the
   prior written consent of John Salguero is prohibited.
 
-  \file    ResourceTypes.h
+  \file    Skeleton.h
   \author  John Salguero
-  \date    June 25, 2023
+  \date    June 26, 2023
   \brief
-    This header file defines the different Resources That the Engine
-    Uses
-
+    This header file declares the Skeleton class, which is am object
+    owned by Models that describe the animations each part of the
+    models do.
 */
 /********************************************************************/
-#ifndef _ResourceTypes
-#define _ResourceTypes
+#ifndef _SKELETON
+#define _SKELETON
 
-#define SHADER_DIRECTORY "Resources/Shaders"
-#define MODEL_DIRECTORY "Resources/Models"
-#define TEXTURE_DIRECTORY "Resources/Textures"
+struct Joint; // forward declaration
 
-enum class ResourceType {
-	Shader,
-	Model,
-	Texture,
-	Count
+struct Skeleton {
+public:
+
+private:
+  std::vector<Joint> m_Joints;
 };
 
 #endif

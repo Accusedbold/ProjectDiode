@@ -35,10 +35,12 @@ public:
   // Retrieves a resource
   std::weak_ptr<Resource> GetResource(ResourceType type, std::wstring const& name);
 
-  // Loads a resource
-  ResourceID LoadResource(ResourceType type, std::wstring const& name);
 
 private:
+  // Loads a type of resource from the file path
+  void LoadResourcesByType(ResourceType type, fs::path const& path);
+  // Function that loads Resources from the Resource Dir
+  void LoadResources();
   // Function that handles a window created event
   void HandleWindowCreated(std::shared_ptr<Message> const& msg);
 

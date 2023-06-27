@@ -127,7 +127,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)..\External Libraries\bin\SDL\x64\SDL2.dll" "$(TargetDir)"
-xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
+xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying Dependencies and Resources</Message>
@@ -162,7 +162,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)..\External Libraries\bin\SDL\x64\SDL2.dll" "$(TargetDir)"
-xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
+xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Command>
       <Message>Copying Dependencies and Resources</Message>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -175,6 +175,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Callable.cpp" />
     <ClCompile Include="CreatedComponentData.cpp" />
     <ClCompile Include="CreatedObjectData.cpp" />
@@ -183,6 +184,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="ErrorMessageData.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
+    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
@@ -195,6 +197,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -206,6 +209,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Callable.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
@@ -218,6 +222,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicsSystem.h" />
+    <ClInclude Include="Joint.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="MemoryAllocation.h" />
@@ -234,6 +239,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Textures\"</Command>
     <ClInclude Include="ResourceTypes.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="shaders.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />

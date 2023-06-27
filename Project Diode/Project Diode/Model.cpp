@@ -14,8 +14,11 @@
 */
 /********************************************************************/
 #include "stdafx.h"
-#include "Mesh.h"	 // Mesh
-#include "Model.h" // Model
+#include "Joint.h"    // Joint
+#include "Animation.h"// Animation
+#include "Skeleton.h" // Skeleton
+#include "Mesh.h"	    // Mesh
+#include "Model.h"    // Model
 
 /******************************************************************************/
 /*!
