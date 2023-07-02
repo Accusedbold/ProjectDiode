@@ -16,6 +16,7 @@
 #include "stdafx.h"
 #include "ResourceLoader.h"
 #include "Model.h"
+#include "Texture.h"
 
 ResourceLoader* ResourceLoader::m_Instance = nullptr;
 
@@ -151,7 +152,8 @@ std::shared_ptr<Resource> ResourceLoader::LoadModel(std::wstring const& name, Re
 std::shared_ptr<Resource> ResourceLoader::LoadTexture(std::wstring const& name, ResourceID id)
 {
 
-	std::string cName(name.begin(), name.end());
+	std::wstring filename = TEXTURE_DIRECTORY + name;
+	std::string cName(filename.begin(), filename.end());
 	SDL_Surface* surface = IMG_Load(cName.c_str());
 	FATAL_ERRORIF(!surface, "Could not load in Texture Name: " + cName);
 
@@ -170,8 +172,10 @@ std::shared_ptr<Resource> ResourceLoader::LoadTexture(std::wstring const& name, 
 
 	// Free SDL surface (we don't need it anymore)
 	SDL_FreeSurface(surface);
+	std::shared_ptr<Texture> loadedTexture(new Texture(name, id));
+	loadedTexture->m_textureID = textureID;
 
-	return std::shared_ptr<Resource>();
+	return loadedTexture;
 }
 
 void ResourceLoader::LoadResources()

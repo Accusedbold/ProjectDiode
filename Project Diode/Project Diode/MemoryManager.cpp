@@ -34,6 +34,7 @@ MemoryManager* MemoryManager::m_Instance = new(malloc(sizeof(MemoryManager))) Me
 MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes), m_BlockSize(0), m_NodeData(nullptr)
 {
   m_HeapData = malloc(m_HeapSize);
+  m_UnusedBlocks = nullptr;
   GrowNodes();
   m_BlockList = m_UnusedBlocks;
   m_UnusedBlocks = m_UnusedBlocks->m_Next;

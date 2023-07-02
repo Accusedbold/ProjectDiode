@@ -134,10 +134,9 @@ std::ifstream& operator>>(std::ifstream& inputFile, std::shared_ptr<Material>& l
   std::wstring name;
 
   inputFile >> name;
-  std::shared_ptr<Material> material = 
-    std::static_pointer_cast<Material>(ResourceManager::GetInstance()->GetResource(ResourceType::Material, name).lock());
-  if (material) {
-    loadedmaterial = material;
+  std::weak_ptr<Resource> material = ResourceManager::GetInstance()->GetResource(ResourceType::Material, name);
+  if (!material.expired()) {
+    loadedmaterial = std::static_pointer_cast<Material>(material.lock());
     // tokens to consume data not needed
     MaterialType typeToken;
     glm::vec3 vec3Token;

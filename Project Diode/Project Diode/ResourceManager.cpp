@@ -109,7 +109,11 @@ std::weak_ptr<Resource> ResourceManager::GetResource(ResourceType type, std::wst
 		m_Mutex.unlock();
 		// Load in the Resource and return the resource
 		ResourceID id = LoadResource(type, name);
-		return m_ResourceMap.find(type)->second.find(id)->second;
+		auto resourceIt = m_ResourceMap.find(type)->second.find(id);
+		if (resourceIt != m_ResourceMap.find(type)->second.end())
+			return resourceIt->second;
+		else
+			return std::weak_ptr<Resource>();
 	}
 	/// We have a have a map for the resource already
 	// get an iterator to the map of IDs
@@ -122,7 +126,11 @@ std::weak_ptr<Resource> ResourceManager::GetResource(ResourceType type, std::wst
 		m_Mutex.unlock();
 		// Load in the Resource and return the resource
 		ResourceID id = LoadResource(type, name);
-		return m_ResourceMap.find(type)->second.find(id)->second;
+		auto resourceIt = m_ResourceMap.find(type)->second.find(id);
+		if (resourceIt != m_ResourceMap.find(type)->second.end())
+			return resourceIt->second;
+		else
+			return std::weak_ptr<Resource>();
 	}
 	// We Do have ID already, just return the resource
 	m_Mutex.unlock();

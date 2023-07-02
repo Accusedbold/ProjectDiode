@@ -139,6 +139,9 @@
     <Filter Include="Game Engine\Serialization">
       <UniqueIdentifier>{30fe7259-3629-4ca9-8f5d-03cea232b86b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Graphics\Texture">
+      <UniqueIdentifier>{5e970605-213c-4411-8c13-f9c774a681ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -222,6 +225,9 @@
     </ClCompile>
     <ClCompile Include="DeSerializingOperators.cpp">
       <Filter>Game Engine\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Systems\Graphics\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="Serialization.h">
       <Filter>Game Engine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Systems\Graphics\Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

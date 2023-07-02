@@ -46,11 +46,11 @@ struct Mesh {
   // The Indicies of the Colors
   std::vector<size_t> m_ColorIndicies;
   // The Color of the verticies
-  std::vector<glm::vec3> m_Colors;
+  std::vector<glm::vec4> m_Colors;
   // The Indicies of the Texture Coordinates
   std::vector<size_t> m_UVIndicies;
   // The Texture Coordinates of the Mesh
-  std::vector<std::vector<glm::vec2>> m_UVs;
+  std::vector<glm::vec2> m_UVs;
   // The Indicies of the weight
   std::vector<size_t> m_WeightIndicies;
   // The Physical Weight of the points
