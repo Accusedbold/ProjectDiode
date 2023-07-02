@@ -13,10 +13,13 @@
 
 */
 /********************************************************************/
-#ifndef _iResource
-#define _iResource
+#ifndef Resource_H
+#define Resource_H
+
+#include "ResourceTypes.h"
 
 using ResourceID = unsigned long long;
+#define UNUSED_RESOURCE ~ResourceID(0);
 
 class Resource {
 public:
@@ -26,6 +29,7 @@ public:
 
   std::wstring GetName() { return m_name; }
   ResourceType GetType() { return m_type; }
+  ResourceID GetID() { return m_ID; }
 
 private:
   // name of the resource

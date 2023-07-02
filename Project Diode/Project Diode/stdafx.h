@@ -12,8 +12,8 @@
     those that change infrequently and or are widely used.
 */
 /********************************************************************/
-#ifndef _Precompiled
-#define _Precompiled
+#ifndef Precompiled_H
+#define Precompiled_H
 
 // Values
 #define GAME_HEAP_SIZE 2147483648
@@ -21,31 +21,36 @@
 #define GLEW_STATIC // Using the static library compiled into the executable
 
 // standard C library stuff
-#include <memory>        // allocator
-#include <vector>        // vector
-#include <list>          // list
-#include <limits>        // numeric_limits
-#include <cstdlib>       // malloc
-#include <stdexcept>     // length_error
-#include <mutex>         // mutex
-#include <string>        // memcpy_s
-#include <functional>    // function
-#include <queue>         // queue
-#include <chrono>        // steady_clock, duration
-#include <unordered_map> // unordered_map
-#include <filesystem>    // path, exists, is_directory, directory_iterator
+#include <memory>          // allocator
+#include <vector>          // vector
+#include <list>            // list
+#include <limits>          // numeric_limits
+#include <cstdlib>         // malloc
+#include <stdexcept>       // length_error
+#include <mutex>           // mutex
+#include <string>          // memcpy_s
+#include <functional>      // function
+#include <queue>           // queue
+#include <chrono>          // steady_clock, duration
+#include <unordered_map>   // unordered_map
+#include <filesystem>      // path, exists, is_directory, directory_iterator
+#include <fstream>         // ofstream
+#include <GL\glew.h>       // GLEW
+#include <glm\glm.hpp>     // glm Math library
+#include <SDL\SDL.h>       // SDL2 library
+#include <SDL\SDL_image.h> // SDL Image
 
 namespace fs = std::filesystem;
 
 // Engine stuff
+#include "Serialization.h"    // Used for serializing
 #include "Debug.h"            // Used for logging and debugging 
 #include "shaders.h"          // Shader enums
 #include "ResourceTypes.h"    // Differnt Types of Resources
 #include "Resource.h"         // The interface to the resources
+#include "ResourceLoader.h"   // ResourceLoader
 #include "ResourceManager.h"  // ResourceManager
-#include "SDL\SDL.h"          // SDL2 library
 #include "WindowDefines.h"    // FULLSCREEN_MODE, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
-#include "GL\glew.h"          // GLEW
 #include "MemoryAllocation.h" // Global new overloading
 #include "MemoryManager.h"    // Memory Manager 
 #include "Callable.h"         // Callable
@@ -62,7 +67,7 @@ namespace fs = std::filesystem;
 #include "GraphicsSystem.h"   // Graphics
 
 // Utilities
-#include "SlotMap.h"          // SlotMap 
-#include "glm/glm.hpp"        // glm Math library
+#include "SlotMap.h"             // SlotMap 
+#include "QuaternionTransform.h" // Custom Class made to interpolate between animation
 
 #endif

@@ -128,6 +128,9 @@ bool Engine::Inititialize()
   for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it)
     (*it)->Initialize();
 
+  WARN("This is a hacked thing - please remove");
+  ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"CC_Standard_B");
+
   return true;
 }
 
@@ -146,14 +149,12 @@ bool Engine::Inititialize()
 int Engine::GameLoop()
 {
   m_LastTime = std::chrono::steady_clock::now();
-  double counter = 0;
   do {
     auto currentTime = std::chrono::steady_clock::now();
     m_TimeStep = currentTime - m_LastTime;
     m_LastTime = currentTime;
-    counter += m_TimeStep.count();
     BroadcastMessages();
-    Update(counter);
+    Update(m_TimeStep.count());
   } while (m_GameRunning);
 
 	return Close();

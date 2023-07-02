@@ -121,6 +121,24 @@
     <Filter Include="Systems\Graphics\Model\Animation">
       <UniqueIdentifier>{1574a3c2-c1a4-4a16-ba4c-51f9fc49803c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Graphics\Model\Material">
+      <UniqueIdentifier>{45fe2254-3c47-4d09-a803-f63b1c167bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{10885663-a942-4e3c-a043-652de6b68263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{e5cf85bc-4fe1-44da-966e-9da64f4ee760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fragment">
+      <UniqueIdentifier>{cda87beb-4468-4c88-b6da-85af86517502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics\Resources\ResourceLoader">
+      <UniqueIdentifier>{754b5759-4968-4546-b1c8-1a3472709913}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Serialization">
+      <UniqueIdentifier>{30fe7259-3629-4ca9-8f5d-03cea232b86b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -190,14 +208,20 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Systems\Graphics\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Skeleton.cpp">
-      <Filter>Systems\Graphics\Model\Skeleton</Filter>
-    </ClCompile>
     <ClCompile Include="Joint.cpp">
       <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Systems\Graphics\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaternionTransform.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Systems\Graphics\Resources\ResourceLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="DeSerializingOperators.cpp">
+      <Filter>Game Engine\Serialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,14 +330,26 @@
     <ClInclude Include="Shader.h">
       <Filter>Systems\Graphics\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Skeleton.h">
-      <Filter>Systems\Graphics\Model\Skeleton</Filter>
-    </ClInclude>
     <ClInclude Include="Joint.h">
       <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Systems\Graphics\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Systems\Graphics\Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionTransform.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLoader.h">
+      <Filter>Systems\Graphics\Resources\ResourceLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="DeSerializingOperators.h">
+      <Filter>Game Engine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization.h">
+      <Filter>Game Engine\Serialization</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,16 +13,16 @@
     models do.
 */
 /********************************************************************/
-#ifndef _ANIMATION
-#define _ANIMATION
+#ifndef Animation_H
+#define Animation_H
 
-class Animation {
-public:
+struct Animation {
 
-private:
-  // brings takes the verticies from model space to world space
-  std::vector<glm::mat4> m_globalTransform;
-  // The delay in ms between each frame
+  // brings takes the verticies from model space to animated space
+  QuaternionTransform m_globalTransform;
+  // brings takes the verticies from bone space to animated space
+  QuaternionTransform m_AnimatedTransform;
+  // The delay in ms for the next frame
   unsigned m_FrameDelay;
   // The count of how many frames are in the animation
   unsigned m_Count;

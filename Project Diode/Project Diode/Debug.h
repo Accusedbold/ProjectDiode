@@ -12,8 +12,8 @@
     during compile and runtime.
 */
 /********************************************************************/
-#ifndef _Debug
-	#define _Debug
+#ifndef Debug_H
+#define Debug_H
 
 // Error Defines
 #define SYSTEM_RELEASE_ERROR -1

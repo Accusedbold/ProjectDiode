@@ -18,9 +18,14 @@
 #include "Resource.h" // ResourceID
 #include "Shader.h"   // Shader
 
-class ResourceManager : public std::enable_shared_from_this<ResourceManager> {
+class ResourceManager {
 
+	// Constructs the ResourceManager private is singleton
+	ResourceManager() = default;
 public:
+	// gets the instance of the resource manager
+	static ResourceManager* GetInstance();
+
 	// Retrieves a resource
 	std::weak_ptr<Resource> GetResource(ResourceType type, ResourceID index) const;
 	std::weak_ptr<Resource> GetResource(ResourceType type, std::wstring const& name);
@@ -31,16 +36,14 @@ public:
 	ResourceID LoadResource(ResourceType type, std::wstring const& name, ResourceID hint);
 
 private:
-	// Specifically loads in a Shader and takes care of what a shader needs
-	ResourceID LoadShader(std::wstring const&, ResourceID);
-	// Specifically loads in a Model and takes care of what a shader needs
-	ResourceID LoadModel(std::wstring const&, ResourceID);
 	// Get a new ID number to use
 	ResourceID GetNewID(ResourceType);
 	// Create Resource Map
 	void CreateResourceMap(ResourceType);
 	// inserts a new resource into the maps
 	void InsertNewResource(ResourceType, std::wstring const&, ResourceID, std::shared_ptr<Resource> const&);
+	// inserts a new resource into the maps
+	void InsertNewResource(ResourceType, std::wstring const&, std::shared_ptr<Resource> const&);
 	// maps the resource maps to types
 	ResourceMapMap m_ResourceMap;
 	// maps ID to name
@@ -50,7 +53,11 @@ private:
 	// the next ID to use
 	ResourceTypeIDMap m_IDs;
 	// Mutex so that we can load Resources from multiple threads
-	std::mutex m_Mutex;
+	std::recursive_mutex m_Mutex;
+	// Instance of the Resource Manager
+	static ResourceManager* m_Instance;
+
+	comrade std::ifstream& operator>>(std::ifstream& inputFile, std::shared_ptr<Material>& loadedmaterial);
 };
 
 #endif

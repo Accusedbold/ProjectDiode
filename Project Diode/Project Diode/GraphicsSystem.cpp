@@ -13,12 +13,13 @@
 */
 /********************************************************************/
 #include "stdafx.h"
-#include "Joint.h"           // Joint
-#include "Animation.h"       // Animation
-#include "Skeleton.h"        // Skeleton
-#include "Mesh.h"	           // Mesh
-#include "Model.h"           // Model
-#include "ResourceManager.h" // ResourceManager 
+#include "QuaternionTransform.h" // QuaternionTransform
+#include "Joint.h"               // Joint
+#include "Animation.h"           // Animation
+#include "Mesh.h"	               // Mesh
+#include "Model.h"               // Model
+#include "Material.h"            // Material
+#include "ResourceManager.h"     // ResourceManager 
 
 /******************************************************************************/
 /*!
@@ -99,87 +100,6 @@ void GraphicsSystem::Initialize()
 {
 	// Register the listener for WindowCreated Messages
 	RegisterClassListener(MessageType::WindowCreated, GraphicsSystem, &GraphicsSystem::HandleWindowCreated);
-
-	// Load Resources on start
-	LoadResources();
-}
-
-/******************************************************************************/
-/*!
-					GetResource
-
-\author   John Salguero
-
-\brief    Retrieves a resource from the graphics system
-
-\param    type
-					The type of the resource
-
-\param    name
-					The name of the resource
-
-\return   std::weak_ptr<Resource>
-					Pointer to the Resouce
-*/
-/******************************************************************************/
-std::weak_ptr<Resource> GraphicsSystem::GetResource
-(ResourceType type, std::wstring const& name)
-{
-	return m_ResourceManager.GetResource(type, name);
-}
-
-/******************************************************************************/
-/*!
-					LoadResource
-
-\author   John Salguero
-
-\brief    Retrieves a resource from the graphics system
-
-\param    type
-					The type of the resource
-
-\param    name
-					The name of the resource
-
-\return   std::weak_ptr<Resource>
-					Pointer to the Resouce
-*/
-/******************************************************************************/
-void GraphicsSystem::LoadResourcesByType(ResourceType type, fs::path const& dir)
-{
-	if (fs::exists(dir) && fs::is_directory(dir)) {
-		for (const auto& entry : fs::directory_iterator(dir)) {
-			if (fs::is_regular_file(entry)) {
-				m_ResourceManager.LoadResource(type, dir.filename().wstring());
-			}
-		}
-	}
-	else
-	{
-		NONFATAL_ERROR("Invalid directory path " + dir.string());
-	}
-}
-
-/******************************************************************************/
-/*!
-					LoadResource
-
-\author   John Salguero
-
-\brief    Loads Resources from the Resource Folder
-
-\return   void
-*/
-/******************************************************************************/
-void GraphicsSystem::LoadResources()
-{
-	fs::path directoryPath = "Resources/Textures";
-	LoadResourcesByType(ResourceType::Texture, directoryPath);
-	directoryPath = "Resources/Models";
-	LoadResourcesByType(ResourceType::Model, directoryPath);
-	directoryPath = "Resources/Shaders";
-	LoadResourcesByType(ResourceType::Shader, directoryPath);
 }
 
 /******************************************************************************/

@@ -14,8 +14,8 @@
 
 */
 /********************************************************************/
-#ifndef _Renderable
-#define _Renderable
+#ifndef Renderable_H
+#define Renderable_H
 
 #include "glm/glm.hpp" // math library
 
@@ -32,7 +32,6 @@ public:
   glm::vec3 GetTransparency() const;
   bool IsVisible() const;
   bool IsDebug() const;
-  ResourceID GetShader(ShaderType) const;
 
   // Setters
   void SetModel(ResourceID);
@@ -40,32 +39,36 @@ public:
   void SetTransparency(glm::vec3 const&);
   void SetVisible(bool);
   void SetDebug(bool);
-  void SetShader(ShaderType, ResourceID);
   
 private:
   // Resource index of the default model to use
   ResourceID m_Model = 0;
-
   // whether this model is transparent
   bool m_Transparent = false;
-
   // Defines how transparent each channel is
   glm::vec3 m_Transparency = glm::vec3(1, 1, 1);
-
   // whether this is visible
   bool m_Visible = false;
-
   // whether this is a Debug-Renderable
   bool m_Debug = false;
-
-  // the vertex shader used
-  ResourceID m_VShader = DEFAULT_VSHADER;
-  // the Tesselation Shader used
-  ResourceID m_TShader = DEFAULT_TSHADER;
-  // The Geometry Shader used
-  ResourceID m_GShader = DEFAULT_GSHADER;
-  // The Fragment Shader used
-  ResourceID m_FShader = DEFAULT_FSHADER;
+  // The current animation Time
+  float m_CurrTime;
+  // The current Frame of the animation animation
+  float m_CurrFrame;
+  // The next animation Time
+  float m_NextAnimTime;
+  // The next Frame of the animation animation
+  float m_NextAnimFrame;
+  // how much between the frames that need to be slurped
+  float m_FrameInterpolation;
+  // how much between the animations that need to be slurped
+  float m_AnimInterpolation;
+  // whether the animation is playing
+  bool m_isAnimating;
+  // The current animation
+  int m_AnimationID;
+  // The next Animation
+  int m_nextAnimationID;
 
 };
 

@@ -12,8 +12,8 @@
     messaging system, game loop and updates each system accordingly
 */
 /********************************************************************/
-#ifndef _GameEngine
-	#define _GameEngine
+#ifndef GameEngine_H
+#define GameEngine_H
 
 // macros to make message system easy to use
 #define RegisterClassListener(type, Class, fxn) \

@@ -62,25 +62,6 @@ bool Renderable::IsDebug() const
   return m_Debug;
 }
 
-ResourceID Renderable::GetShader(ShaderType type) const
-{
-  switch (type) {
-  case ShaderType::Vertex:
-    return m_VShader;
-    break;
-  case ShaderType::Tesselation:
-    return m_TShader;
-    break;
-  case ShaderType::Geometry:
-    return m_GShader;
-    break;
-  case ShaderType::Fragment:
-    return m_FShader;
-  default:
-    return DEFAULT_FSHADER;
-  }
-}
-
 void Renderable::SetModel(ResourceID modelID)
 {
   m_Model = modelID;
@@ -106,23 +87,3 @@ void Renderable::SetDebug(bool debug)
   m_Debug = debug;
 }
 
-void Renderable::SetShader(ShaderType type, ResourceID shader)
-{
-  switch (type)
-  {
-  case ShaderType::Vertex:
-    m_VShader = shader;
-    break;
-  case ShaderType::Tesselation:
-    m_TShader = shader;
-    break;
-  case ShaderType::Geometry:
-    m_GShader = shader;
-    break;
-  case ShaderType::Fragment:
-    m_FShader = shader;
-    break;
-  default:
-    break;
-  }
-}

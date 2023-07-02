@@ -13,8 +13,8 @@
 		that is - it executes the low level graphics calls
 */
 /********************************************************************/
-#ifndef _OpenGLDevice
-#define _OpenGLDevice
+#ifndef OpenGLDevice_H
+#define OpenGLDevice_H
 
 // forward Declaration
 class GraphicsSystem;

@@ -13,9 +13,30 @@
 */
 /********************************************************************/
 #include "stdafx.h"
+#include "ResourceLoader.h"   // ResourceLoader
 #include "ResourceManager.h"  // ResourceManager
-#include "Skeleton.h"         // Skeleton
 #include "Model.h"						// Model
+
+ResourceManager* ResourceManager::m_Instance = nullptr;
+
+/******************************************************************************/
+/*!
+					GetInstance
+
+\author   John Salguero
+
+\brief    Returns an instance of the singleton ResourceManager
+
+\return   ResourceManager*
+					Instance of the resource manager
+*/
+/******************************************************************************/
+ResourceManager* ResourceManager::GetInstance()
+{
+	if (!m_Instance)
+		m_Instance = new ResourceManager();
+	return m_Instance;
+}
 
 /******************************************************************************/
 /*!
@@ -147,19 +168,11 @@ ResourceID ResourceManager::LoadResource(ResourceType type, std::wstring const& 
 	// get a new id
 	ResourceID id = GetNewID(type);
 
-	WARN("TODO: Loading in the resources Hardcoding some in");
-		switch (type) {
-		case ResourceType::Model:
-		{
-			id = LoadModel(name, id);
-			break;
-		}
-		case ResourceType::Shader:
-			id = LoadShader(name, id);
-			break;
-		}
+	std::shared_ptr<Resource> loadedResource = (*ResourceLoader::GetInstance())(type, name, id);
+	if(loadedResource)
+		InsertNewResource(type, name, id, loadedResource);
 
-		m_Mutex.unlock();
+	m_Mutex.unlock();
 	return id;
 }
 
@@ -208,71 +221,12 @@ ResourceID ResourceManager::LoadResource(ResourceType type, std::wstring const& 
 		return LoadResource(type, name);
 	}
 	 // We can use the hint, load in the prospective Resource depending on type
-	switch (type) {
-		case ResourceType::Shader:
-			LoadShader(name, hint);
-			break;
-		case ResourceType::Model:
-			LoadModel(name, hint);
-			break;
-	}
-		m_Mutex.unlock();
-		return hint;
-}
+	std::shared_ptr<Resource> loadedResource = (*ResourceLoader::GetInstance())(type, name, hint);
+	if(loadedResource)
+		InsertNewResource(type, name, hint, loadedResource);
 
-/******************************************************************************/
-/*!
-					LoadShader
-
-\author   John Salguero
-
-\brief    Specifically Loads the shader and handles everything needed with
-					loading a shader in. This should be called only when the Mutex
-					is locked.
-
-\param    name
-					The shader name to load in
-
-\param    id
-					The id given to the resource
-
-\return   id
-					The resultant ID given to the resource
-*/
-/******************************************************************************/
-ResourceID ResourceManager::LoadShader(std::wstring const& name, ResourceID id)
-{
-	std::shared_ptr<Shader> loadedShader(new Shader(name, ResourceType::Shader, id));
-	InsertNewResource(ResourceType::Shader, name, id, loadedShader);
-	return id;
-}
-
-/******************************************************************************/
-/*!
-					LoadModel
-
-\author   John Salguero
-
-\brief    Specifically Loads a Model and handles everything needed with
-					loading a Model in. This should be called only when the mutex
-					is locked.
-
-\param    name
-					The Model name to load in
-
-\param    id
-					The id given to the resource
-
-\return   id
-					The resultant ID given to the resource
-*/
-/******************************************************************************/
-ResourceID ResourceManager::LoadModel(std::wstring const& name, ResourceID id)
-{
-	std::shared_ptr<Model> loadedModel(new Model(name, ResourceType::Shader, id));
-
-	InsertNewResource(ResourceType::Model, name, id, loadedModel);
-	return id;
+	m_Mutex.unlock();
+	return hint;
 }
 
 /******************************************************************************/
@@ -382,6 +336,35 @@ void ResourceManager::CreateResourceMap(ResourceType type)
 void ResourceManager::InsertNewResource(
 	ResourceType type, std::wstring const& name, ResourceID id, std::shared_ptr<Resource> const& resource)
 {
+	m_ResourceMap[type].insert(std::pair<ResourceID, std::shared_ptr<Resource>>(id, resource));
+	m_ResourceNameMap[type].insert(std::pair<ResourceID, std::wstring>(id, name));
+	m_ResourceIDMap[type].insert(std::pair<std::wstring, ResourceID>(name, id));
+}
+
+/******************************************************************************/
+/*!
+					InsertNewResource
+
+\author   John Salguero
+
+\brief    Given its name and the resource - inserts it into the memory
+					manager. The manager will pick the id. Mutex should be locked when 
+					calling this.
+
+\param    name
+					The name of the resource to insert
+
+\param    resource
+					The actual resource to insert
+
+\return   void
+*/
+/******************************************************************************/
+void ResourceManager::InsertNewResource(
+	ResourceType type, std::wstring const& name, std::shared_ptr<Resource> const& resource)
+{
+	ResourceID id = GetNewID(type);
+
 	m_ResourceMap[type].insert(std::pair<ResourceID, std::shared_ptr<Resource>>(id, resource));
 	m_ResourceNameMap[type].insert(std::pair<ResourceID, std::wstring>(id, name));
 	m_ResourceIDMap[type].insert(std::pair<std::wstring, ResourceID>(name, id));

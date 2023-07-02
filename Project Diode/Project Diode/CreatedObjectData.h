@@ -13,8 +13,8 @@
     when a new component is created that can be handled by systems.
 */
 /********************************************************************/
-#ifndef _CreatedObjectData
-#define _CreatedObjectData
+#ifndef CreatedObjectData_H
+#define CreatedObjectData_H
 
 class Object; // forward declarations
 
@@ -31,7 +31,7 @@ public:
 
 
 private:
-  // the Window Context
+  // the pointer to the newly created object
   std::weak_ptr<Object> m_Object;
 };
 

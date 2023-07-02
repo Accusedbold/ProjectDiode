@@ -13,19 +13,17 @@
     models do.
 */
 /********************************************************************/
-#ifndef _JOINT
-#define _JOINT
+#ifndef Joint_H
+#define Joint_H
 
-class Animation; // forward declaration
+struct Animation; // forward declaration
 
 struct Joint {
-public:
 
-private:
-  // brings takes the verticies from joint space to model space
-  glm::mat4 m_globalBindposeInverse;
+  // brings takes the verticies from bone space to model space
+  QuaternionTransform m_globalBindposeInverse;
   // index to this joint's parent joint in the skeleton's vector of joints (if parent does not exist, value is -1)
-  int parentIndex_;
+  int m_parentIndex;
   // The frames of each animation
   std::vector<Animation> m_Animations;
 };

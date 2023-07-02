@@ -13,8 +13,8 @@
     when an old component is destroyed that can be handled by systems.
 */
 /********************************************************************/
-#ifndef _DestroyedObjectData
-#define _DestroyedObjectData
+#ifndef DestroyedObjectData_H
+#define DestroyedObjectData_H
 
 class Object; // forward declarations
 

@@ -15,8 +15,8 @@
 
 */
 /********************************************************************/
-#ifndef _Object
-#define _Object
+#ifndef Object_H
+#define Object_H
 
 // Forward Declarations
 class ObjectFactory;

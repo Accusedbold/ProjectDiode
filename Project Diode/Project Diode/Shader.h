@@ -14,8 +14,8 @@
 
 */
 /********************************************************************/
-#ifndef _Shader
-#define _Shader
+#ifndef Shader_H
+#define Shader_H
 
 class Shader : public Resource,  public std::enable_shared_from_this<Shader>
 {

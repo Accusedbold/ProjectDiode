@@ -13,38 +13,26 @@
 
 */
 /********************************************************************/
-#ifndef _Model
-#define _Model
+#ifndef Model_H
+#define Model_H
 
 struct Mesh; // forward declaration
-struct Skeleton;
+struct Joint;
+using Skeleton = std::vector<Joint>;
 
 struct Model : public Resource, public std::enable_shared_from_this<Model>
 {
-  Model(std::wstring const& name, ResourceType type, ResourceID id);
+  Model(std::wstring const& name, ResourceID id);
 
   // collection of Meshes the model owns
   std::vector<Mesh> m_meshes;
-  // The current animation frame
-  int m_CurrFrame;
-  // how much between the frames that need to be slurped
-  float m_FrameInterpolation;
-  // how much between the animations that need to be slurped
-  float m_AnimInterpolation;
-  // whether the animation is playing
-  bool m_isAnimating;
-  // The current animation
-  int m_AnimationID;  
-  // The next Animation
-  int m_nextAnimationID;
   // A calculated middle
   glm::vec4 m_centroid;
-  // How to scale on each axis
-  glm::vec3 m_scalar;
-  // The overall Model Transformation
-  glm::mat4 m_modelTranformation;
   // The skeleton of a rigged model
   Skeleton m_skeleton;
+
+  // The different Flags of shaders used to draw this model
+  std::vector<ResourceID> shaders;
 };
 
 #endif

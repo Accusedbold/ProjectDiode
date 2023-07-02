@@ -12,8 +12,8 @@
     actions, which send an event that can be handled
 */
 /********************************************************************/
-#ifndef _Messages // Code is included only once
-#define _Messages
+#ifndef Messages_H // Code is included only once
+#define Messages_H
 
 enum class MessageType
 {
@@ -26,6 +26,7 @@ enum class MessageType
   ComponentDestroyed,
   ObjectCreated,
   ObjectDestroyed,
+  GetResource,
   PopUp
 };
 

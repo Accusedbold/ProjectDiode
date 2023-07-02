@@ -12,8 +12,8 @@
     a class that drives the Underlying Graphics of the Game
 */
 /********************************************************************/
-#ifndef _GraphicsSystem
-#define _GraphicsSystem
+#ifndef GraphicsSystem_H
+#define GraphicsSystem_H
 
 #include "OpenGLDevice.h"
 
@@ -32,15 +32,8 @@ public:
   // Initializes the system
   void Initialize() override;
 
-  // Retrieves a resource
-  std::weak_ptr<Resource> GetResource(ResourceType type, std::wstring const& name);
-
 
 private:
-  // Loads a type of resource from the file path
-  void LoadResourcesByType(ResourceType type, fs::path const& path);
-  // Function that loads Resources from the Resource Dir
-  void LoadResources();
   // Function that handles a window created event
   void HandleWindowCreated(std::shared_ptr<Message> const& msg);
 
@@ -48,8 +41,6 @@ private:
   SDL_Window* m_WindowHandle;
   // OpenGL device
   OpenGLDevice m_Device;
-  // Holds All The Resources
-  ResourceManager m_ResourceManager;
 };
 
 

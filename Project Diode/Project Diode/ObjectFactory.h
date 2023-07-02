@@ -13,8 +13,8 @@
 
 */
 /********************************************************************/
-#ifndef _ObjectFactory
-#define _ObjectFactory
+#ifndef ObjectFactory_H
+#define ObjectFactory_H
 
 class ObjectFactory : public std::enable_shared_from_this<ObjectFactory> {
 

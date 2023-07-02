@@ -11,8 +11,8 @@
     This header file is used to include all the components used
 */
 /********************************************************************/
-#ifndef _Components
-#define _Components
+#ifndef Components_H
+#define Components_H
 
 #include "Component.h"        /* Component */
 #include "Renderable.h"       /* Renderable */

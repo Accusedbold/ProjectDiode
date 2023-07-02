@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -127,7 +127,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)..\External Libraries\bin\SDL\x64\SDL2.dll" "$(TargetDir)"
-xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Command>
+xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying Dependencies and Resources</Message>
@@ -162,7 +162,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Comman
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y "$(SolutionDir)..\External Libraries\bin\SDL\x64\SDL2.dll" "$(TargetDir)"
-xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Command>
+xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
       <Message>Copying Dependencies and Resources</Message>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -179,6 +179,7 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Comman
     <ClCompile Include="Callable.cpp" />
     <ClCompile Include="CreatedComponentData.cpp" />
     <ClCompile Include="CreatedObjectData.cpp" />
+    <ClCompile Include="DeSerializingOperators.cpp" />
     <ClCompile Include="DestroyedComponentData.cpp" />
     <ClCompile Include="DestroyedObjectData.cpp" />
     <ClCompile Include="ErrorMessageData.cpp" />
@@ -194,10 +195,11 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Comman
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="OpenGLDevice.cpp" />
     <ClCompile Include="PopUpMessageData.cpp" />
+    <ClCompile Include="QuaternionTransform.cpp" />
     <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -217,13 +219,16 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Comman
     <ClInclude Include="CreatedComponentData.h" />
     <ClInclude Include="CreatedObjectData.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DeSerializingOperators.h" />
     <ClInclude Include="DestroyedComponentData.h" />
     <ClInclude Include="DestroyedObjectData.h" />
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="Joint.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="QuaternionTransform.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="MemoryAllocation.h" />
     <ClInclude Include="MemoryManager.h" />
@@ -235,11 +240,12 @@ xcopy /y "$(SolutionDir)..\Textures\" "$(TargetDir)\Resources\Textures\"</Comman
     <ClInclude Include="OpenGLDevice.h" />
     <ClInclude Include="PopUpMessageData.h" />
     <ClInclude Include="Renderable.h" />
+    <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ResourceTypes.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="shaders.h" />
-    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />

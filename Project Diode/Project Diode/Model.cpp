@@ -16,7 +16,6 @@
 #include "stdafx.h"
 #include "Joint.h"    // Joint
 #include "Animation.h"// Animation
-#include "Skeleton.h" // Skeleton
 #include "Mesh.h"	    // Mesh
 #include "Model.h"    // Model
 
@@ -31,13 +30,10 @@
 \param    name
 					The name of the Resource
 
-\param    type
-					The type of the Resource
-
 \param    id
 					The id of the Resource
 */
 /******************************************************************************/
-Model::Model(std::wstring const& name, ResourceType type, ResourceID id) : Resource(name, type, id)
+Model::Model(std::wstring const& name, ResourceID id) : Resource(name, ResourceType::Model, id)
 {
 }

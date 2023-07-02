@@ -13,18 +13,25 @@
 
 */
 /********************************************************************/
-#ifndef _ResourceTypes
-#define _ResourceTypes
-
-#define SHADER_DIRECTORY "Resources/Shaders"
-#define MODEL_DIRECTORY "Resources/Models"
-#define TEXTURE_DIRECTORY "Resources/Textures"
+#ifndef ResourceTypes_H
+#define ResourceTypes_H
 
 enum class ResourceType {
 	Shader,
 	Model,
 	Texture,
+  Material,
 	Count
 };
+
+#include "Material.h"
+#include "Mesh.h"
+#include "Model.h"
+//#include "Texture.h"
+
+#define SHADER_DIRECTORY L"Resources/Shaders/"
+#define MODEL_DIRECTORY L"Resources/Models/"
+#define TEXTURE_DIRECTORY L"Resources/Textures/"
+
 
 #endif

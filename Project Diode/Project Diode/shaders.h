@@ -13,8 +13,8 @@
 
 */
 /********************************************************************/
-#ifndef _Shaders
-#define _Shaders
+#ifndef Shaders_H
+#define Shaders_H
 
 #define DEFAULT_VSHADER 0
 #define DEFAULT_TSHADER 2
