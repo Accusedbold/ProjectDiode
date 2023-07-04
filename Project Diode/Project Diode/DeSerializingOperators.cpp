@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Joint.h"
 #include "Animation.h"
+#include "Texture.h"
 
 std::ifstream& operator>>(std::ifstream& inputFile, size_t& t)
 {
@@ -101,6 +102,14 @@ std::ifstream& operator>>(std::ifstream& inputFile, Model& model)
 	inputFile >> model.m_meshes;
 	inputFile >> model.m_centroid;
 	inputFile >> model.m_skeleton;
+
+  for (auto& mesh : model.m_meshes)
+  {
+    mesh.m_Owner = model.shared_from_this();
+    if (!model.m_skeleton.empty())
+      mesh.m_flags |= ANIMATION_FLAG;
+  }
+
 	return inputFile;
 }
 
@@ -125,6 +134,13 @@ std::ifstream& operator>>(std::ifstream& inputFile, Mesh& mesh)
   inputFile >> mesh.m_AnimWeightIndicies;
   inputFile >> mesh.m_SkeletalIndices;
   inputFile >> mesh.m_SkeletalWeights;
+
+  if (mesh.m_Materials[0]) {
+    mesh.m_flags = mesh.m_Materials[0]->GetMaterialFlags();
+    if (mesh.m_Materials[0]->GetMaterialFlags() & TRANSPARENCY_FLAG)
+      mesh.m_IsTransparent = true;
+  }
+  mesh.GenerateDataBuffer();
 
 	return inputFile;
 }
@@ -157,6 +173,7 @@ std::ifstream& operator>>(std::ifstream& inputFile, std::shared_ptr<Material>& l
     ResourceManager *rm = ResourceManager::GetInstance();
     ResourceID id = rm->GetNewID(ResourceType::Material);
     loadedmaterial = std::shared_ptr<Material>(new Material(name, id));
+    rm->InsertNewResource(ResourceType::Material, name, id, loadedmaterial);
     inputFile >> *loadedmaterial;
   }
 
@@ -182,7 +199,8 @@ std::ifstream& operator>>(std::ifstream& inputFile, Material& material)
   {
     if (!mapNames[i].empty())
     {
-      material.m_MappingTextures[i] = ResourceManager::GetInstance()->GetResource(ResourceType::Texture, mapNames[i]).lock()->GetID();
+      material.m_MappingTextures[i] = 
+        std::static_pointer_cast<Texture>(ResourceManager::GetInstance()->GetResource(ResourceType::Texture, mapNames[i]).lock());
     }
   }
 

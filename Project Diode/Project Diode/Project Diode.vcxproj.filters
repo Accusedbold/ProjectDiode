@@ -10,9 +10,6 @@
     <Filter Include="Game Engine\Memory Manager">
       <UniqueIdentifier>{c48ca5d4-e685-4e01-af92-1cad86f75d8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Logic">
-      <UniqueIdentifier>{3210e1f6-88a0-4c8d-9f3f-dff37664a64a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{f3e3ae42-8057-4c25-a53a-1d108864e550}</UniqueIdentifier>
     </Filter>
@@ -42,18 +39,6 @@
     </Filter>
     <Filter Include="Game Engine\Messages\Message Data\Window Created">
       <UniqueIdentifier>{e919f1fc-bf1d-4529-846e-c271fd6531ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Engine\Messages\Message Data\Created Component">
-      <UniqueIdentifier>{e9f08405-3305-4044-a12a-d1493b75bcaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Engine\Messages\Message Data\Object Created">
-      <UniqueIdentifier>{6ce2df75-df10-42c7-b773-921178237fcd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Engine\Messages\Message Data\Object Destroyed">
-      <UniqueIdentifier>{5e80c7e3-71ac-466c-bb41-beeb3f81ef8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Engine\Messages\Message Data\Component Destroyed">
-      <UniqueIdentifier>{1ee8c1d7-62f5-4c53-8c7e-2d9cdfabc17e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game Engine\Messages\Message Data\Popup Message">
       <UniqueIdentifier>{e74f1707-c53d-4733-a44a-24b1176ff52a}</UniqueIdentifier>
@@ -142,6 +127,27 @@
     <Filter Include="Systems\Graphics\Texture">
       <UniqueIdentifier>{5e970605-213c-4411-8c13-f9c774a681ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems\Game Manager">
+      <UniqueIdentifier>{3d83f36a-469a-41e0-b7d6-4b93a4091d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\Collider">
+      <UniqueIdentifier>{b11fa693-0d24-491a-8ce1-51420990b464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\RigidBody">
+      <UniqueIdentifier>{b843a0bc-132c-42eb-8b70-2a653b3f3836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\Controller">
+      <UniqueIdentifier>{ec6e957c-456c-4722-9c9c-63101bb1e75a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\Camera">
+      <UniqueIdentifier>{c7f81c33-a26e-46ee-bc76-e10b8581b55b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Engine\Components\Teleportal">
+      <UniqueIdentifier>{88b2c818-5758-4f6e-8de7-8ae5cfb67637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Comparators">
+      <UniqueIdentifier>{67bc7984-72be-46b2-8503-65b7f258aaae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -177,18 +183,6 @@
     </ClCompile>
     <ClCompile Include="OpenGLDevice.cpp">
       <Filter>Systems\Graphics\OpenGL\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="CreatedComponentData.cpp">
-      <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
-    </ClCompile>
-    <ClCompile Include="CreatedObjectData.cpp">
-      <Filter>Game Engine\Messages\Message Data\Object Created</Filter>
-    </ClCompile>
-    <ClCompile Include="DestroyedObjectData.cpp">
-      <Filter>Game Engine\Messages\Message Data\Object Destroyed</Filter>
-    </ClCompile>
-    <ClCompile Include="DestroyedComponentData.cpp">
-      <Filter>Game Engine\Messages\Message Data\Component Destroyed</Filter>
     </ClCompile>
     <ClCompile Include="PopUpMessageData.cpp">
       <Filter>Game Engine\Messages\Message Data\Popup Message</Filter>
@@ -228,6 +222,27 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Systems\Graphics\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Systems\Graphics\Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Game Engine\Components\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Game Engine\Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Systems\Game Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Systems\Graphics\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Game Engine\Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Comparators.cpp">
+      <Filter>Utilities\Comparators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,20 +300,8 @@
     <ClInclude Include="Component.h">
       <Filter>Game Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="CreatedComponentData.h">
-      <Filter>Game Engine\Messages\Message Data\Created Component</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Game Engine\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="DestroyedObjectData.h">
-      <Filter>Game Engine\Messages\Message Data\Object Destroyed</Filter>
-    </ClInclude>
-    <ClInclude Include="CreatedObjectData.h">
-      <Filter>Game Engine\Messages\Message Data\Object Created</Filter>
-    </ClInclude>
-    <ClInclude Include="DestroyedComponentData.h">
-      <Filter>Game Engine\Messages\Message Data\Component Destroyed</Filter>
     </ClInclude>
     <ClInclude Include="PopUpMessageData.h">
       <Filter>Game Engine\Messages\Message Data\Popup Message</Filter>
@@ -360,5 +363,28 @@
     <ClInclude Include="Texture.h">
       <Filter>Systems\Graphics\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Systems\Game Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Game Engine\Components\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Game Engine\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Game Engine\Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Comparators.h">
+      <Filter>Utilities\Comparators</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components.inl">
+      <Filter>Game Engine\Components</Filter>
+    </None>
   </ItemGroup>
 </Project>

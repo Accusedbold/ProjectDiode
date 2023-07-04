@@ -12,8 +12,8 @@
     is used to manage the events and the operating systems windows
 */
 /********************************************************************/
-#ifndef _WindowSystem
-#define _WindowSystem
+#ifndef WindowSystem_H
+#define WindowSystem_H
 
 // System to handle and maintain the window state
 class WindowSystem : public System, public std::enable_shared_from_this<WindowSystem>{

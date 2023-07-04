@@ -49,6 +49,30 @@ void Engine::AddSystems()
 
   name = L"Windows System";
   m_Systems.push_back(std::shared_ptr<WindowSystem>(new WindowSystem(name)));
+
+  name = L"Game Manager";
+  m_Systems.push_back(std::shared_ptr<GameManager>(new GameManager(name)));
+}
+
+/******************************************************************************/
+/*!
+          AddFactories
+
+\author   John Salguero
+
+\brief    Adds the Factories needed for running the game
+
+*/
+/******************************************************************************/
+void Engine::AddFactories()
+{
+
+  // Register all the components
+#define ENUM_COMPONENT(type) RegisterComponent(type)
+  
+#include "Components.inl"
+
+#undef ENUM_COMPONENT
 }
 
 /******************************************************************************/
@@ -66,6 +90,7 @@ void Engine::Update(double dt)
   for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it) {
     (*it)->Update(dt);
   }
+  ObjectFactory::GetInstance()->Update(dt);
 }
 
 /******************************************************************************/
@@ -124,12 +149,10 @@ bool Engine::Inititialize()
 {
   // Add everything
   AddSystems();
+  AddFactories();
   // Initialize Everything
   for (auto it = m_Systems.begin(), end = m_Systems.end(); it != end; ++it)
     (*it)->Initialize();
-
-  WARN("This is a hacked thing - please remove");
-  ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"CC_Standard_B");
 
   return true;
 }

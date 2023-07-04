@@ -23,6 +23,7 @@
 // standard C library stuff
 #include <memory>          // allocator
 #include <vector>          // vector
+#include <set>             // set
 #include <list>            // list
 #include <limits>          // numeric_limits
 #include <cstdlib>         // malloc
@@ -43,8 +44,8 @@
 namespace fs = std::filesystem;
 
 // Engine stuff
-#include "Serialization.h"    // Used for serializing
 #include "Debug.h"            // Used for logging and debugging 
+#include "Serialization.h"    // Used for serializing
 #include "shaders.h"          // Shader enums
 #include "ResourceTypes.h"    // Differnt Types of Resources
 #include "Resource.h"         // The interface to the resources
@@ -63,8 +64,7 @@ namespace fs = std::filesystem;
 #include "ObjectFactory.h"    // ObjectFactory
 
 // Systems
-#include "WindowSystem.h"     // WindowSystem
-#include "GraphicsSystem.h"   // Graphics
+#include "Systems.h"          // All The Systems the Game uses
 
 // Utilities
 #include "SlotMap.h"             // SlotMap 

@@ -177,18 +177,20 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Callable.cpp" />
-    <ClCompile Include="CreatedComponentData.cpp" />
-    <ClCompile Include="CreatedObjectData.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Comparators.cpp" />
     <ClCompile Include="DeSerializingOperators.cpp" />
-    <ClCompile Include="DestroyedComponentData.cpp" />
-    <ClCompile Include="DestroyedObjectData.cpp" />
     <ClCompile Include="ErrorMessageData.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -207,6 +209,7 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="WindowCreatedData.cpp" />
     <ClCompile Include="WindowSystem.cpp" />
   </ItemGroup>
@@ -214,17 +217,17 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Callable.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Comparators.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="Components.h" />
-    <ClInclude Include="CreatedComponentData.h" />
-    <ClInclude Include="CreatedObjectData.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DeSerializingOperators.h" />
-    <ClInclude Include="DestroyedComponentData.h" />
-    <ClInclude Include="DestroyedObjectData.h" />
     <ClInclude Include="ErrorMessageData.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="Material.h" />
@@ -250,10 +253,15 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="Systems.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="WindowCreatedData.h" />
     <ClInclude Include="WindowDefines.h" />
     <ClInclude Include="WindowSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

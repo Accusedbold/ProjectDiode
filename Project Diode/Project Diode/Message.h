@@ -26,7 +26,8 @@ enum class MessageType
   ComponentDestroyed,
   ObjectCreated,
   ObjectDestroyed,
-  GetResource,
+  ModelChange,
+  TransparencyChange,
   PopUp
 };
 

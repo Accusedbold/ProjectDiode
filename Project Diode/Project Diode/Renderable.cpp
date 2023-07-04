@@ -37,51 +37,344 @@ std::shared_ptr<Component> Renderable::CloneComponent() const
 	return clone;
 }
 
+/******************************************************************************/
+/*!
+           Update
+
+\author    John Salguero
+
+\brief     Updates the component
+
+\return    void
+
+*/
+/******************************************************************************/
+void Renderable::Update(double)
+{
+}
+
+/******************************************************************************/
+/*!
+           Release
+
+\author    John Salguero
+
+\brief     Releases the component
+
+\return    void
+
+*/
+/******************************************************************************/
+void Renderable::Release()
+{
+}
+
+/******************************************************************************/
+/*!
+           Initialize
+
+\author    John Salguero
+
+\brief     Initialize the component
+
+\return    void
+
+*/
+/******************************************************************************/
+void Renderable::Initialize()
+{
+}
+
+/******************************************************************************/
+/*!
+           GetModelID
+
+\author    John Salguero
+
+\brief     Gets the model ID
+
+\return    ResourceID
+           The ID of the model uses to draw to the screen
+
+*/
+/******************************************************************************/
 ResourceID Renderable::GetModelID() const
+{
+  return m_Model->GetID();
+}
+
+/******************************************************************************/
+/*!
+           GetModelID
+
+\author    John Salguero
+
+\brief     Gets the model
+
+\return    shared_ptr<Model>
+           The pointer to the model the renderable uses to draw to the screen
+
+*/
+/******************************************************************************/
+std::shared_ptr<Model> Renderable::GetModel() const
 {
   return m_Model;
 }
 
+/******************************************************************************/
+/*!
+           IsTransparent
+
+\author    John Salguero
+
+\brief     Gets whether the renderable is transparent. This affects the whole
+           Renderable and not just some of the meshes, which may already be
+           transparent.
+
+\return    bool
+           whether the renderable is transparent
+
+*/
+/******************************************************************************/
 bool Renderable::IsTransparent() const
 {
-  return m_Transparent;
+  return m_IsTransparent;
 }
 
-glm::vec3 Renderable::GetTransparency() const
+/******************************************************************************/
+/*!
+           GetTransparency
+
+\author    John Salguero
+
+\brief     How transparent the renderable is. This affects the entire model
+           and not just some of the meshes
+
+\return    float
+           1 is fully transparent, 0 is fully opaque.
+
+*/
+/******************************************************************************/
+float Renderable::GetTransparency() const
 {
-  return m_Transparency;
+  return m_TransparencyFactor;
 }
 
+/******************************************************************************/
+/*!
+           IsVisible
+
+\author    John Salguero
+
+\brief     Whether the renderable should be drawn
+
+\return    bool
+           whether to draw the renderable.
+
+*/
+/******************************************************************************/
 bool Renderable::IsVisible() const
 {
   return m_Visible;
 }
 
+/******************************************************************************/
+/*!
+           IsDebug
+
+\author    John Salguero
+
+\brief     Whether the renderable should be drawn only as a debug object
+
+\return    bool
+           whether to draw the renderable as a debug object.
+
+*/
+/******************************************************************************/
 bool Renderable::IsDebug() const
 {
   return m_Debug;
 }
 
+/******************************************************************************/
+/*!
+           HasAnimation
+
+\author    John Salguero
+
+\brief     Whether the renderable has animation
+
+\return    bool
+           whether to draw the renderable has animation.
+
+*/
+/******************************************************************************/
+bool Renderable::HasAnimation() const
+{
+  return m_HasAnimation;
+}
+
+/******************************************************************************/
+/*!
+          SetModel
+
+\author   John Salguero
+
+\brief    Changes the model of the renderable, assumes the model is properly set 
+          upon creation. IF the model changes after creations, sends out a message
+          that can be handled by graphics system letting it know to reorder
+          how it draws that model based on its flags. You really shouldn't
+          use this except for object creation. There is the possibility of
+          dangling a model that the resource manager has expunged.
+
+\param    modelID
+          ID of the new model to draw
+
+\return   void
+
+*/
+/******************************************************************************/
 void Renderable::SetModel(ResourceID modelID)
 {
-  m_Model = modelID;
+  auto sharedModel = 
+    std::static_pointer_cast<Model>(
+      ResourceManager::GetInstance()->GetResource(ResourceType::Model, modelID).lock());
+  SetModel(sharedModel);
 }
 
-void Renderable::SetTransparent(bool transparent)
+/******************************************************************************/
+/*!
+          SetModel
+
+\author   John Salguero
+
+\brief    Changes the model of the renderable, assumes the model is properly set
+          upon creation. IF the model changes after creations, sends out a message
+          that can be handled by graphics system letting it know to reorder
+          how it draws that model based on its flags. You really shouldn't
+          use this except for object creation. There is the possibility of
+          dangling a model that the resource manager has expunged.
+
+\param    model
+          pointer of the model to set
+
+\return   void
+
+*/
+/******************************************************************************/
+void Renderable::SetModel(std::shared_ptr<Model>& modelPtr)
 {
-  m_Transparent = transparent;
+  // gets the model to set values for the renderable
+  m_PrevModel = m_Model;
+  m_Model = modelPtr;
+  if (m_PrevModel == m_Model)
+    return;
+
+  auto const& model = *m_Model;
+  // sets the material flags of the renderable
+  m_MaterialFlags.clear();
+  for (auto const& mesh : model.m_meshes) {
+    for (auto const& material : mesh.m_Materials) {
+      long flags = material->GetMaterialFlags();
+      m_MaterialFlags.insert(flags);
+    }
+  }
+
+  m_HasAnimation = !model.m_skeleton.empty();
+
+  // Determins if the graphics system needs to know about the change
+  if (m_PrevModel)
+  {
+    std::shared_ptr<Message>msg(
+      new Message(L"Renderable", MessageType::ModelChange, std::enable_shared_from_this<Renderable>::shared_from_this()));
+    Engine::GetInstance()->ImmediateMessage(msg);
+  }
 }
 
-void Renderable::SetTransparency(glm::vec3 const& transparency)
+/******************************************************************************/
+/*!
+          SetIsTransparent
+
+\author   John Salguero
+
+\brief    Sets whether or not the whole renderable is affected by the transparency
+          factor. Meshes that are already transparent within the model will
+          remain transparent
+
+\param    transparent
+          Whether the model is transparent
+
+\return   void
+
+*/
+/******************************************************************************/
+void Renderable::SetIsTransparent(bool transparent)
 {
-  m_Transparency = transparency;
+  if (m_IsTransparent == transparent)
+    return;
+  m_IsTransparent = transparent;
+
+
+  std::shared_ptr<Message>msg(
+    new Message(L"Renderable", MessageType::TransparencyChange, std::enable_shared_from_this<Renderable>::shared_from_this()));
+  Engine::GetInstance()->ImmediateMessage(msg);
 }
 
+/******************************************************************************/
+/*!
+          SetTransparency
+
+\author   John Salguero
+
+\brief    Sets the transparency factor. 1 is fully transparent, 0 is fully opaque.
+
+\param    transparency
+          The transparency factor of the renderable
+
+\return   void
+
+*/
+/******************************************************************************/
+void Renderable::SetTransparency(float transparency)
+{
+  m_TransparencyFactor = transparency;
+}
+
+/******************************************************************************/
+/*!
+          SetVisible
+
+\author   John Salguero
+
+\brief    Sets the whether the renderable should be drawn.
+
+\param    visible
+          whether the renderable should be drawn.
+
+\return   void
+
+*/
+/******************************************************************************/
 void Renderable::SetVisible(bool visible)
 {
   m_Visible = visible;
 }
 
+/******************************************************************************/
+/*!
+          SetDebug
+
+\author   John Salguero
+
+\brief    Sets the whether the renderable should be drawn.
+
+\param    visible
+          whether the renderable should be drawn.
+
+\return   void
+
+*/
+/******************************************************************************/
 void Renderable::SetDebug(bool debug)
 {
   m_Debug = debug;

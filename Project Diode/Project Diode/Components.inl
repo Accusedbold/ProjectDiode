@@ -1,0 +1,4 @@
+ENUM_COMPONENT(Renderable)
+ENUM_COMPONENT(Transform)
+ENUM_COMPONENT(Camera)
+ENUM_COMPONENT(Collider)

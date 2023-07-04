@@ -18,6 +18,8 @@
 #ifndef Object_H
 #define Object_H
 
+#define has(type) GetComponentType<type>(ComponentType::##type)
+
 // Forward Declarations
 class ObjectFactory;
 
@@ -32,6 +34,12 @@ class Object : public std::enable_shared_from_this<Object> {
 public:
   /* Initialize the Object  */
   void Initialize();
+
+  /* Update the Object and its Components */
+  void Update(double dt);
+
+  /* Releases the object */
+  void Release();
 
   /* Get a pointer of base class of component of the Object */
   std::weak_ptr<Component> GetComponent(ComponentType type) const;
@@ -58,9 +66,6 @@ public:
   /* Set the name of the Object */
   void SetName(std::wstring const&);
 
-  /* Releases the object */
-  void Release();
-
 private:
   /* Human Readable Identifier for Object */
   std::wstring m_Name;
@@ -77,3 +82,13 @@ private:
 };
 
 #endif // !_Object
+
+template<typename comp>
+inline std::weak_ptr<comp> Object::GetComponentType(ComponentType type) const
+{
+  auto it = m_Components.find(type);
+  if (it == m_Components.end())
+    return std::weak_ptr<comp>();
+
+  return std::static_pointer_cast<comp>(it->second);
+}

@@ -327,7 +327,7 @@ void ResourceManager::CreateResourceMap(ResourceType type)
 \author   John Salguero
 
 \brief    Given its name, and id, and the resource - inserts it into the memory
-					manager. Mutex should be locked when calling this.
+					manager.
 
 \param    name
 					The name of the resource to insert
@@ -344,9 +344,11 @@ void ResourceManager::CreateResourceMap(ResourceType type)
 void ResourceManager::InsertNewResource(
 	ResourceType type, std::wstring const& name, ResourceID id, std::shared_ptr<Resource> const& resource)
 {
+	m_Mutex.lock();
 	m_ResourceMap[type].insert(std::pair<ResourceID, std::shared_ptr<Resource>>(id, resource));
 	m_ResourceNameMap[type].insert(std::pair<ResourceID, std::wstring>(id, name));
 	m_ResourceIDMap[type].insert(std::pair<std::wstring, ResourceID>(name, id));
+	m_Mutex.unlock();
 }
 
 /******************************************************************************/
@@ -356,8 +358,8 @@ void ResourceManager::InsertNewResource(
 \author   John Salguero
 
 \brief    Given its name and the resource - inserts it into the memory
-					manager. The manager will pick the id. Mutex should be locked when 
-					calling this.
+					manager. The manager will pick the id. ID should be proper when
+					calling this
 
 \param    name
 					The name of the resource to insert
@@ -372,8 +374,10 @@ void ResourceManager::InsertNewResource(
 	ResourceType type, std::wstring const& name, std::shared_ptr<Resource> const& resource)
 {
 	ResourceID id = GetNewID(type);
-
+	resource->m_ID = id;
+	m_Mutex.lock();
 	m_ResourceMap[type].insert(std::pair<ResourceID, std::shared_ptr<Resource>>(id, resource));
 	m_ResourceNameMap[type].insert(std::pair<ResourceID, std::wstring>(id, name));
 	m_ResourceIDMap[type].insert(std::pair<std::wstring, ResourceID>(name, id));
+	m_Mutex.unlock();
 }

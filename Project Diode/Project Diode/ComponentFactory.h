@@ -19,8 +19,8 @@
 #define _ComponentFactory
 
 class ComponentBaseFactory {
-
-  // Private constructor, using the singleton pattern
+protected:
+  // protected constructor, using the singleton pattern
   ComponentBaseFactory() = default;
 public:
   // Pure Virtual function that returns a generic Component
@@ -50,8 +50,7 @@ public:
     std::shared_ptr<Component> newComponent = std::shared_ptr<Component>(new ClassType);
     newComponent->m_Type = mType;
     newComponent->m_ID = GetNewID();
-    auto data = new CreatedComponentData(newComponent, mType);
-    Engine::RelayMessage(std::shared_ptr<Message>(new Message(L"Core", MessageType::ComponentCreated, data)));
+    Engine::GetInstance()->RelayMessage(std::shared_ptr<Message>(new Message(L"Core", MessageType::ComponentCreated, newComponent)));
     return newComponent;
   };
   // Creates a Component for archetype reasons No Message Sent
@@ -64,6 +63,7 @@ public:
   };
 private:
   ComponentType mType = eType;
-};
 
-#endif // !_ObjectFactory
+  comrade class Engine;
+};
+#endif

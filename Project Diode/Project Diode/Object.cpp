@@ -41,6 +41,26 @@ void Object::Initialize()
 
 /******************************************************************************/
 /*!
+           Update
+
+\author    John Salguero
+
+\brief     Updates each component
+
+\return    void
+
+*/
+/******************************************************************************/
+void Object::Update(double dt)
+{
+  for (auto& comp : m_Components)
+  {
+    comp.second->Update(dt);
+  }
+}
+
+/******************************************************************************/
+/*!
            AddComponent
 
 \author    John Salguero
@@ -61,8 +81,7 @@ void Object::AddComponent(std::weak_ptr<Component> const& component)
   auto compIT = m_Components.find(addComp->GetType());
   if (compIT != m_Components.end())
   {
-    std::shared_ptr<DestroyedComponentData>data(new DestroyedComponentData(component.lock()));
-    std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ComponentDestroyed, data));
+    std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ComponentDestroyed, component.lock()));
     Engine::GetInstance()->RelayMessage(msg);
   }
 
@@ -110,4 +129,47 @@ std::weak_ptr<Object> Object::CloneObject() const
 ObjectID Object::GetID() const
 {
   return m_ID;
+}
+
+/******************************************************************************/
+/*!
+           Release
+
+\author    John Salguero
+
+\brief     Releases the object and its components
+
+\return    void
+*/
+/******************************************************************************/
+void Object::Release()
+{
+  for (auto& comp : m_Components)
+  {
+    comp.second->Release();
+  }
+}
+
+/******************************************************************************/
+/*!
+           GetComponent
+
+\author    John Salguero
+
+\brief     Returns a component if the object has one 
+
+\param     type
+           The type of the component to get
+
+\return    std::weak_ptr<Component>
+           Pointer to the component
+*/
+/******************************************************************************/
+std::weak_ptr<Component> Object::GetComponent(ComponentType type) const
+{
+  auto it = m_Components.find(type);
+  if(it == m_Components.end())
+    return std::weak_ptr<Component>();
+
+  return it->second;
 }

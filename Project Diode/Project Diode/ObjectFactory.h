@@ -16,6 +16,9 @@
 #ifndef ObjectFactory_H
 #define ObjectFactory_H
 
+// precompiler define used to help add component factories
+#define RegisterComponent(type) ObjectFactory::GetInstance()->AddComponentFactory(ComponentType::##type, std::shared_ptr<ComponentBaseFactory>(new ComponentFactory<type, ComponentType::##type>()));
+
 class ObjectFactory : public std::enable_shared_from_this<ObjectFactory> {
 
   // Private constructor, using the singleton pattern
@@ -61,6 +64,7 @@ public:
   std::weak_ptr<Component> const GiveArchetypeComponent(std::weak_ptr<Object> const&, std::weak_ptr<Component> const&);
   std::weak_ptr<Component> const GiveArchetypeComponent(const std::wstring&, std::weak_ptr<Component> const&);
 
+
   /* Destroys a given Object */
   void Destroy(std::weak_ptr<Object> const&);
 
@@ -79,6 +83,8 @@ public:
   /* Releases all the Resources */
   int Release();
 
+  /* Updates all the objects */
+  void Update(double dt);
 private:
   /* Instance of the Singleton */
   static ObjectFactory* m_Instance;

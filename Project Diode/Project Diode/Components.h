@@ -16,5 +16,8 @@
 
 #include "Component.h"        /* Component */
 #include "Renderable.h"       /* Renderable */
+#include "Transform.h"        /* Transform */
+#include "Camera.h"           /* Camera */
+#include "Collider.h"         /* Collider */
 
 #endif

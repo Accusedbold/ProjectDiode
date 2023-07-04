@@ -14,8 +14,8 @@
 
 */
 /********************************************************************/
-#ifndef _Component
-#define _Component
+#ifndef Component_H
+#define Component_H
 
 // forward declarations
 class Object;
@@ -36,26 +36,34 @@ class Component : public std::enable_shared_from_this<Component> {
 
   comrade class ObjectFactory;
   comrade class Object;
-  template<class cType, ComponentType eType> comrade class ComponentTypeFactory;
+  template<class cType, ComponentType eType> comrade class ComponentFactory;
 
-  // The ID of the component
-  ComponentID m_ID;
 public:
   // Retrieves the Componet Type
   virtual ComponentType GetType() const { return m_Type; }
   // Clones the component
   virtual std::shared_ptr<Component> CloneComponent() const = 0;
+  // updates the component
+  virtual void Update(double) = 0;
+  // Releases the component
+  virtual void Release() = 0;
+  // Gets the ID of the component
+  ComponentID GetID() { return m_ID; }
   // Initializes the component
-  virtual void Initialize() {}
+  virtual void Initialize() = 0;
   // Returns the Parent of the Component
   std::weak_ptr<Object> GetParent() const { return m_Parent; }
   // Virtual destructor
   virtual ~Component() = default;
 protected:
+  // Constructor to the Component
+  Component() = default;
   // Parent of the component
   std::weak_ptr<Object> m_Parent;
   // Type of the Component
   ComponentType m_Type;
+  // The ID of the component
+  ComponentID m_ID;
 };
 
 #endif

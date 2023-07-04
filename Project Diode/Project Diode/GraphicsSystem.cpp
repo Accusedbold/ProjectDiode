@@ -62,6 +62,7 @@ void GraphicsSystem::Update(double dt)
 
 	m_Device.Update(dt);
 
+
 	// Swap buffers
 	SDL_GL_SwapWindow(m_WindowHandle);
 }
@@ -81,6 +82,8 @@ int GraphicsSystem::Release()
 {
 	// Unregister the listener for WindowCreated Messages
 	UnRegisterClassListener(MessageType::WindowCreated, GraphicsSystem, &GraphicsSystem::HandleWindowCreated);
+	UnRegisterClassListener(MessageType::ComponentCreated, GraphicsSystem, &GraphicsSystem::HandleComponentCreated);
+	UnRegisterClassListener(MessageType::ComponentDestroyed, GraphicsSystem, &GraphicsSystem::HandleComponentDestroyed);
 
 	return m_Device.Release();
 }
@@ -100,6 +103,8 @@ void GraphicsSystem::Initialize()
 {
 	// Register the listener for WindowCreated Messages
 	RegisterClassListener(MessageType::WindowCreated, GraphicsSystem, &GraphicsSystem::HandleWindowCreated);
+	RegisterClassListener(MessageType::ComponentCreated, GraphicsSystem, &GraphicsSystem::HandleComponentCreated);
+	RegisterClassListener(MessageType::ComponentDestroyed, GraphicsSystem, &GraphicsSystem::HandleComponentDestroyed);
 }
 
 /******************************************************************************/
@@ -121,4 +126,131 @@ void GraphicsSystem::HandleWindowCreated(std::shared_ptr<Message> const& msg)
 	auto data = GET_DATA_FROM_MESSAGE(WindowCreatedData, msg);
 	m_WindowHandle = data->GetWindow();
 	m_Device.Initialize(data, shared_from_this());
+}
+
+/******************************************************************************/
+/*!
+					HandleComponentCreated
+
+\author   John Salguero
+
+\brief    Handles the event when a Component is created to add colliderless
+					renderables to the collection
+
+\param    msg
+					The message to be handled
+
+\return   void
+*/
+/******************************************************************************/
+void GraphicsSystem::HandleComponentCreated(std::shared_ptr<Message> const& msg)
+{
+	auto component = GET_DATA_FROM_MESSAGE(Component, msg);
+	auto parent = component->GetParent().lock();
+	if (component->GetType() == ComponentType::Renderable)
+	{
+		auto collider = parent->has(Collider);
+		if (collider.expired())
+			m_ColliderlessRenderables.push_back(std::static_pointer_cast<Renderable>(component));
+	}
+
+	switch (component->GetType()) {
+		case ComponentType::Collider:
+		{
+			auto renderable = parent->has(Renderable);
+			if (!renderable.expired())
+			{
+				for (auto it = m_ColliderlessRenderables.begin(), end = m_ColliderlessRenderables.end();
+					it != end; ++it)
+				{
+					if (it->lock() == renderable.lock())
+					{
+						m_ColliderlessRenderables.erase(it);
+						break;
+					}
+				}
+			}
+			break;
+		}
+		case ComponentType::Camera:
+		{
+			WARN("Needs to check for Teleportals when implemented");
+			m_Cameras.push_back(std::static_pointer_cast<Camera>(component));
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+/******************************************************************************/
+/*!
+					HandleComponentDestroyed
+
+\author   John Salguero
+
+\brief    Handles the event when a Component is destroyed to remove colliderless
+					renderables from the collection
+
+\param    msg
+					The message to be handled
+
+\return   void
+*/
+/******************************************************************************/
+void GraphicsSystem::HandleComponentDestroyed(std::shared_ptr<Message> const& msg)
+{
+	// Get the component from the message
+	auto component = GET_DATA_FROM_MESSAGE(Component, msg);
+	auto parent = component->GetParent().lock();
+
+	switch (component->GetType())
+	{
+		case ComponentType::Renderable:
+			for (auto it = m_ColliderlessRenderables.begin(), end = m_ColliderlessRenderables.end();
+				it != end; ++it)
+			{
+				if (it->lock() == component)
+				{
+					m_ColliderlessRenderables.erase(it);
+					break;
+				}
+			}
+			break;
+		case ComponentType::Camera:
+			for (auto it = m_Cameras.begin(), end = m_Cameras.end(); it != end; ++it) 
+			{
+				if (it->lock() == component)
+				{
+					m_Cameras.erase(it);
+					break;
+				}
+			}
+			break;
+		default:
+			WARN("Needs to check for Teleportals when implemented");
+	}
+
+}
+
+/******************************************************************************/
+/*!
+					DrawCameras
+
+\author   John Salguero
+
+\brief    Draws all the cameras not associated with a teleportal
+
+\return   void
+*/
+/******************************************************************************/
+void GraphicsSystem::DrawCameras()
+{
+	for (auto const& camera : m_Cameras)
+	{
+		std::vector<std::weak_ptr<Renderable>> drawList;
+		drawList.swap(camera.lock()->GetDrawList());
+		drawList.insert(drawList.end(), m_ColliderlessRenderables.begin(), m_ColliderlessRenderables.end());
+
+	}
 }

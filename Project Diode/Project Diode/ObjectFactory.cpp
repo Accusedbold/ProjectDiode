@@ -16,6 +16,7 @@
 #include "stdafx.h"
 
 ObjectFactory* ObjectFactory::m_Instance = nullptr;
+ComponentID ComponentBaseFactory::m_ID = 0;
 
 /******************************************************************************/
 /*!
@@ -56,8 +57,7 @@ std::weak_ptr<Object> ObjectFactory::CreateGenericObject()
   m_ObjectMap.insert(std::pair<ObjectID, std::shared_ptr<Object>>(retVal->m_ID, retVal));
   
   // Send the Message
-  std::shared_ptr<CreatedObjectData>data(new CreatedObjectData(retVal));
-  std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ObjectCreated, data));
+  std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ObjectCreated, retVal));
   Engine::GetInstance()->RelayMessage(msg);
 
   return retVal;
@@ -121,8 +121,7 @@ std::weak_ptr<Object> ObjectFactory::CreateArchetypedObject(const std::wstring& 
   retVal = (*archeIT).second->CloneObject();
 
   // Send the Message
-  std::shared_ptr<CreatedObjectData>data(new CreatedObjectData(retVal));
-  std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ObjectCreated, data));
+  std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ObjectCreated, retVal.lock()));
   Engine::GetInstance()->RelayMessage(msg);
 
   return retVal;
@@ -145,7 +144,7 @@ std::weak_ptr<Object> ObjectFactory::CreateArchetypedObject(const std::wstring& 
 /******************************************************************************/
 std::shared_ptr<Component> ObjectFactory::CreateComponent(ComponentType compType)
 {
-  /* Create The Object */
+  /* Create The Component */
   std::shared_ptr<Component> retVal = m_ComponentFactoryMap.find(compType)->second->CreateComponent();
 
   return retVal;
@@ -463,13 +462,12 @@ void ObjectFactory::Destroy(ObjectID objectID)
   {
     // send the message
     auto sharedObject = mapIT->second;
-    std::shared_ptr<DestroyedObjectData> data(new DestroyedObjectData(sharedObject));
-    std::shared_ptr<Message> msg(new Message(L"Core", MessageType::ObjectDestroyed, data));
+    sharedObject->Release();
+    std::shared_ptr<Message> msg(new Message(L"Core", MessageType::ObjectDestroyed, sharedObject));
     Engine::GetInstance()->RelayMessage(msg);
     for (auto& comp : mapIT->second->m_Components)
     {
-      std::shared_ptr<DestroyedComponentData> componentData(new DestroyedComponentData(comp.second));
-      std::shared_ptr<Message> componentMessage(new Message(L"Core", MessageType::ComponentDestroyed, componentData));
+      std::shared_ptr<Message> componentMessage(new Message(L"Core", MessageType::ComponentDestroyed, comp.second));
       Engine::GetInstance()->RelayMessage(componentMessage);
     }
 
@@ -556,4 +554,22 @@ int ObjectFactory::Release()
   m_ComponentFactoryMap.clear();
 
   return 0;
+}
+
+/******************************************************************************/
+/*!
+          Update
+
+\author   John Salguero
+
+\brief    RUpdates all the objects
+
+\return   dt
+          The duration between game tics
+*/
+/******************************************************************************/
+void ObjectFactory::Update(double dt)
+{
+  for (auto& object : m_ObjectMap)
+    object.second->Update(dt);
 }

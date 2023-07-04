@@ -55,6 +55,8 @@ class Engine {
 
   // Adds all the Systems needed for running the game
   void AddSystems();
+  // Initialize the Factory by adding all the component Factories
+  void AddFactories();
   // Updates all the Systems this game tick
   void Update(double dt);
   // Broadcasts the Relayed messages

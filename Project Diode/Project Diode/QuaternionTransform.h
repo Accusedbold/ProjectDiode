@@ -30,11 +30,11 @@ struct QuaternionTransform {
 	// Interpolate the transformation
 	QuaternionTransform Interpolate(QuaternionTransform const&, float) const;
 	// the translation in vec 3 form
-	glm::vec3 m_Translate;
+	glm::vec3 m_Translate = glm::vec3(0.0f);
 	// the rotation that can be slerped
-	glm::quat m_Rotate;
+	glm::quat m_Rotate = glm::quat(1.0, 0.0, 0.0, 0.0);
 	// the scale in vec3 form
-	glm::vec3 m_Scale;
+	glm::vec3 m_Scale = glm::vec3(1.0f);
 };
 
 #endif

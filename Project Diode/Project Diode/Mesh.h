@@ -23,6 +23,11 @@ struct Model; // forward Declaration
 struct Material;
 
 struct Mesh {
+  // Generates the data buffer
+  void GenerateDataBuffer();
+  // Frees up the memory
+  ~Mesh();
+
   // determines which face uses which material
   std::vector<size_t> m_MaterialIndices;
   // The Textures used in drawing the mesh
@@ -61,8 +66,14 @@ struct Mesh {
   std::vector<std::vector<size_t>> m_SkeletalIndices;
   // The skeletal weight of the points
   std::vector<std::vector<float>> m_SkeletalWeights;
+  // Whether the mesh is transparent
+  bool m_IsTransparent;
+  // The current flags of the mesh
+  long m_flags;
   // The owner of the Mesh
-  std::shared_ptr<Model> m_Owner;
+  std::weak_ptr<Model> m_Owner;
+  // All the vertex data packed into contiguous memory
+  char* m_Data = nullptr;
 };
 
 #endif

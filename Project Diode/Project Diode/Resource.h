@@ -19,7 +19,7 @@
 #include "ResourceTypes.h"
 
 using ResourceID = unsigned long long;
-#define UNUSED_RESOURCE ~ResourceID(0);
+#define UNUSED_RESOURCE ~ResourceID(0)
 
 class Resource {
 public:
@@ -38,6 +38,8 @@ private:
   ResourceType m_type;
   // id of the resource
   ResourceID m_ID;
+
+  comrade class ResourceManager;
 };
 
 using ResourceMap = std::unordered_map<ResourceID, std::shared_ptr<Resource>>;

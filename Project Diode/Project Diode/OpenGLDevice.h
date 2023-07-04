@@ -28,7 +28,13 @@ class OpenGLDevice {
 	// Called when uninitialized
 	void DoNothing(double dt);
 	// Draws a Renderable to the current buffer
-	int DrawRenderable(std::weak_ptr<Renderable> const& renderable);
+	int DrawRenderable(std::shared_ptr<Renderable> const& renderable) const;
+	// Draws a Batch of Renderables to the current Buffer
+	int DrawRenderables(std::multiset<std::shared_ptr<Renderable>> const& vecRenderabls) const;
+	// Switches between the different shaders
+	int SwitchShaders(long flags);
+	// Switches between buffers to draw on
+	int SwitchBuffer(int id);
 
 public:
 	// Constructs the device with the graphics system
@@ -42,12 +48,15 @@ public:
 	int Release();
 
 private:
+	// the current state of the device - will only draw certain flags
+	long m_CurrentFlags;
 	// The function used to update the device
 	UpdateFxn m_UpdateFxn = &OpenGLDevice::DoNothing;
 	// the openGL Context
 	SDL_GLContext m_glContext;
 	// The Graphics System which holds the resources for rendering
 	std::weak_ptr<GraphicsSystem> m_System;
+
 };
 
 #endif

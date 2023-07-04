@@ -17,6 +17,11 @@
 #define Material_H
 
 #include "Resource.h" // ResourceID
+#define TRANSPARENCY_FLAG 0b100000000000L
+#define ANIMATION_FLAG 0b1000000000000000000000000000000uL
+#define PHONG_FLAG 0b10000000000000000000000000000000uL
+
+struct Texture;
 
 enum class MaterialType {
   Surface,
@@ -51,11 +56,9 @@ enum class MapType {
 
 struct Material : public Resource
 {
-  Material(std::wstring const& name, ResourceID id) :
-    Resource(name, ResourceType::Material, id) {
-    for (int i = 0; i < static_cast<size_t>(MapType::Count); ++i)
-      m_MappingTextures[i] = UNUSED_RESOURCE;
-  }
+  Material(std::wstring const& name, ResourceID id);
+
+  long GetMaterialFlags() const;
 
   virtual ~Material() = default;
   // The Type of the shader
@@ -85,6 +88,6 @@ struct Material : public Resource
   float m_Reflectivity;
 
   // Textures used for mapping
-  ResourceID m_MappingTextures[static_cast<size_t>(MapType::Count)];
+  std::shared_ptr<Texture> m_MappingTextures[static_cast<size_t>(MapType::Count)];
 };
 #endif

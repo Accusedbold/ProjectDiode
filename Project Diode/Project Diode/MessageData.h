@@ -18,10 +18,6 @@
 #include "Message.h"                 /* The Message Class */
 #include "ErrorMessageData.h"        /* The Data for Error Messages */
 #include "WindowCreatedData.h"       /* The Data for the Window Created Message */
-#include "CreatedComponentData.h"    /* The Data for Created Components */
-#include "CreatedObjectData.h"       /* The Data for created objects */
-#include "DestroyedObjectData.h"     /* The Data for destroyed objects */
-#include "DestroyedComponentData.h"  /* The Data for destroyed Components */
 #include "PopUpMessageData.h"        /* The Data for the PopUp Message */
 
 

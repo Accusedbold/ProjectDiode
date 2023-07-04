@@ -72,25 +72,6 @@ void OpenGLDevice::DoNothing(double)
 
 /******************************************************************************/
 /*!
-          DrawRenderable
-
-\author   John Salguero
-
-\brief    Draws the Renderable to the current bound buffer
-
-\param    std::weak_ptr<Renderable>
-          The Renderable to Draw
-
-\return   void
-*/
-/******************************************************************************/
-int OpenGLDevice::DrawRenderable(std::weak_ptr<Renderable> const&)
-{
-  return 0;
-}
-
-/******************************************************************************/
-/*!
           Update
 
 \author   John Salguero
