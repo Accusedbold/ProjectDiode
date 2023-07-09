@@ -16,7 +16,7 @@ void Mesh::GenerateDataBuffer()
   size += m_Tangents.size() * sizeof(glm::vec4);
   size += m_BiTangents.size() * sizeof(glm::vec4);
   size += m_Colors.size() * sizeof(glm::vec4);
-  size += m_UVs.size() * sizeof(glm::vec4);
+  size += m_UVs.size() * sizeof(glm::vec2);
   size += m_SkeletalIndices.size() * MAX_BONE_INFLUENCE * sizeof(GLushort);
   size += m_SkeletalWeights.size() * MAX_BONE_INFLUENCE * sizeof(float);
 
@@ -58,8 +58,8 @@ void Mesh::GenerateDataBuffer()
   std::memcpy(m_Data + offset, m_Colors.data(), m_Colors.size() * sizeof(glm::vec4));
   offset += m_Colors.size() * sizeof(glm::vec4);
   glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<const void*>(offset));
-  std::memcpy(m_Data + offset, m_UVs.data(), m_UVs.size() * sizeof(glm::vec4));
-  offset += m_UVs.size() * sizeof(glm::vec4);
+  std::memcpy(m_Data + offset, m_UVs.data(), m_UVs.size() * sizeof(glm::vec2));
+  offset += m_UVs.size() * sizeof(glm::vec2);
   glVertexAttribPointer(7, 4, GL_UNSIGNED_SHORT, GL_FALSE, 0, reinterpret_cast<const void*>(offset));
   for (auto skelIndexVec : m_SkeletalIndices)
   {

@@ -41,6 +41,8 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glm::mat4 transform;
     GetTransform(renderable, transform);
     // Set up the instances
+    glBindVertexArray(mesh.m_VAO[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
     int pos1 = 9;
     int pos2 = pos1 + 1;
@@ -60,7 +62,7 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     // Draw the Mesh
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.m_PosIndicies.size()));
+    glDrawArrays(GL_TRIANGLES, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
