@@ -150,6 +150,8 @@ void WindowSystem::HandleEvents()
     case SDL_SYSWMEVENT:
       //HandleWMEvents(event.syswm.msg->msg.win.msg, event.syswm.msg->msg.win.wParam, event.syswm.msg->msg.win.lParam);
       break;
+    case SDL_KEYDOWN:
+      break;
     default:
       break;
     }

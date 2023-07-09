@@ -137,7 +137,7 @@ std::ifstream& operator>>(std::ifstream& inputFile, Mesh& mesh)
 
   if (mesh.m_Materials[0]) {
     mesh.m_flags = mesh.m_Materials[0]->GetMaterialFlags();
-    if (mesh.m_Materials[0]->GetMaterialFlags() & TRANSPARENCY_FLAG)
+    if (mesh.m_flags & TRANSPARENCY_FLAG)
       mesh.m_IsTransparent = true;
   }
   mesh.GenerateDataBuffer();

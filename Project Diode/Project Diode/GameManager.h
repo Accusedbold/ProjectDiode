@@ -17,6 +17,9 @@
 
 // System to handle and maintain the window state
 class GameManager : public System, public std::enable_shared_from_this<GameManager> {
+
+  using UpdateFxn = void (GameManager::*)(double);
+
 public:
   // Constructor
   GameManager(std::wstring& name);
@@ -31,8 +34,13 @@ public:
   virtual void Initialize();
 
 private:
+
+  // The function used to update the device
+  UpdateFxn m_UpdateFxn = &GameManager::SetUpHackedObject;
   // Hacked player object
   WARN("This is Hacked, please Remove");
+  void SetUpHackedObject(double dt);
+  void OogleBikiniBabe(double dt);
   std::shared_ptr<Object> m_player;
   double m_timeKeeper = 0;
 };

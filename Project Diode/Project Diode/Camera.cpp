@@ -251,6 +251,12 @@ glm::vec4 Camera::GetStrafeVector()
   return retVal;
 }
 
+/* Get the Perspective Projectsion of the camera */
+glm::mat4 Camera::GetPerpectiveMatrix() {
+  return glm::perspectiveFov(m_FOV, static_cast<float>(m_Width), static_cast<float>(m_Height), m_Near, m_Far);
+}
+
+/* Get the draw list of collidable Renderables */
 std::vector<std::weak_ptr<Renderable>>& Camera::GetDrawList()
 {
   return m_RenderablesWithinFrustum;

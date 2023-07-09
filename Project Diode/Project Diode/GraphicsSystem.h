@@ -17,7 +17,8 @@
 
 #include "OpenGLDevice.h"
 
-
+// Forward Declaration
+struct RenderableComparator;
 
 // System to handle and maintain the window state
 class GraphicsSystem : public System, public std::enable_shared_from_this<GraphicsSystem> {
@@ -44,8 +45,10 @@ private:
   // Draws the cameras not associated with a teleportal
   void DrawCameras();
   // Divides the renderables into batches the Device Uses
-  std::unordered_map<long, std::multiset<std::shared_ptr<Renderable>>>
-    DivideRenderables();
+  std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>>
+    DivideRenderables(std::vector<std::weak_ptr<Renderable>> const&) const;
+  void DrawOpaqueRenderables(std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> const&);
+  void DrawTransparentRenderables(std::shared_ptr<Camera> const&, std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> const&);
 
   // container owning window 
   SDL_Window* m_WindowHandle;
@@ -57,6 +60,4 @@ private:
   std::vector<std::weak_ptr<Camera>> m_Cameras;
 };
 
-
 #endif // !_GraphicsSystem
-

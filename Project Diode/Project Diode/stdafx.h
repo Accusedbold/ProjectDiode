@@ -23,7 +23,7 @@
 // standard C library stuff
 #include <memory>          // allocator
 #include <vector>          // vector
-#include <set>             // set
+#include <set>             // set, multimap
 #include <list>            // list
 #include <limits>          // numeric_limits
 #include <cstdlib>         // malloc
@@ -31,9 +31,10 @@
 #include <mutex>           // mutex
 #include <string>          // memcpy_s
 #include <functional>      // function
-#include <queue>           // queue
 #include <chrono>          // steady_clock, duration
+#include <queue>           // queue
 #include <unordered_map>   // unordered_map
+#include <map>             // multimap
 #include <filesystem>      // path, exists, is_directory, directory_iterator
 #include <fstream>         // ofstream
 #include <GL\glew.h>       // GLEW
@@ -69,5 +70,6 @@ namespace fs = std::filesystem;
 // Utilities
 #include "SlotMap.h"             // SlotMap 
 #include "QuaternionTransform.h" // Custom Class made to interpolate between animation
+#include "Comparators.h"         // Funtors for organizing containers
 
 #endif

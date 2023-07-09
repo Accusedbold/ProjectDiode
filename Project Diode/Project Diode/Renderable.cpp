@@ -216,6 +216,24 @@ bool Renderable::HasAnimation() const
 
 /******************************************************************************/
 /*!
+           GetMaterialFlags
+
+\author    John Salguero
+
+\brief     the different materials in the current Model
+
+\return    std::set<long>
+           The different Materials in the model.
+
+*/
+/******************************************************************************/
+std::set<long> const& Renderable::GetMaterialFlags()
+{
+  return m_MaterialFlags;
+}
+
+/******************************************************************************/
+/*!
           SetModel
 
 \author   John Salguero

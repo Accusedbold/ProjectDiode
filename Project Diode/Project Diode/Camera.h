@@ -38,6 +38,9 @@ public:
   // Get The Camera Matrix in Row-Major Order 
   glm::mat4 GetCameraTransformation();
 
+  // Get The Projection Matrix
+  glm::mat4 GetPerpectiveMatrix();
+
   // Get The Camera Width 
   unsigned GetCameraWidth();
 
@@ -117,11 +120,11 @@ private:
   glm::vec4 m_Up;
 
   // Used for projection
-  unsigned m_Width;
-  unsigned m_Height;
-  float m_FOV;
-  float m_Near;
-  float m_Far;
+  unsigned m_Width = 800;
+  unsigned m_Height = 600;
+  float m_FOV = 170.0f;
+  float m_Near = 2.5f;
+  float m_Far = 10'000.0f;
 
   // used to resize buffers
   bool m_WidthHeightChanged;

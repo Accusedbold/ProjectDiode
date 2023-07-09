@@ -16,7 +16,6 @@
 #define _ResourceManager_H
 
 #include "Resource.h" // ResourceID
-#include "Shader.h"   // Shader
 
 class ResourceManager {
 

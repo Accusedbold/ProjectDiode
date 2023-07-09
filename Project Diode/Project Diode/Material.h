@@ -17,11 +17,15 @@
 #define Material_H
 
 #include "Resource.h" // ResourceID
-#define TRANSPARENCY_FLAG 0b100000000000L
+#define TRANSPARENCY_MAP_FLAG 0b100000000000L
+#define Animation_FLAG 0b10000000000000000000000000000uL
+#define TRANSPARENCY_FLAG 0b100000000000000000000000000000uL
 #define ANIMATION_FLAG 0b1000000000000000000000000000000uL
 #define PHONG_FLAG 0b10000000000000000000000000000000uL
 
 struct Texture;
+
+using ShaderFlags = unsigned long;
 
 enum class MaterialType {
   Surface,
@@ -58,7 +62,7 @@ struct Material : public Resource
 {
   Material(std::wstring const& name, ResourceID id);
 
-  long GetMaterialFlags() const;
+  ShaderFlags GetMaterialFlags() const;
 
   virtual ~Material() = default;
   // The Type of the shader

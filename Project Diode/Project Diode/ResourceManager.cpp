@@ -222,12 +222,6 @@ ResourceID ResourceManager::LoadResource(ResourceType type, std::wstring const& 
 		m_Mutex.unlock();
 		return LoadResource(type, name);
 	}
-	// ID is not in use, check if we can't use the id for the type provided
-	if (type == ResourceType::Shader && (hint & (hint - 1)))
-	{
-		m_Mutex.unlock();
-		return LoadResource(type, name);
-	}
 	 // We can use the hint, load in the prospective Resource depending on type
 	std::shared_ptr<Resource> loadedResource = (*ResourceLoader::GetInstance())(type, name, hint);
 	if(loadedResource)
@@ -262,37 +256,17 @@ ResourceID ResourceManager::GetNewID(ResourceType type)
 		CreateResourceMap(type);
 		IDIt = m_IDs.find(type);
 	}
-	// if type require special attention
-	// shaders for instance use a mask
-	if (type == ResourceType::Shader) 
+	
+	auto const& nameMap = m_ResourceNameMap.find(type)->second;
+	auto nameIt = nameMap.find(IDIt->second);
+	// find a Resource ID that does not exist yet
+	while (nameIt != nameMap.end())
 	{
-		auto const& nameMap = m_ResourceNameMap.find(type)->second;
-		auto nameIt = nameMap.find(IDIt->second++);
-		// find a Resource ID that does not exist yet
-		while (nameIt != nameMap.end())
-		{
-			if (IDIt->second) // if it isn't 0, bit shift
-				IDIt->second = IDIt->second << 1;
-			else  // if it is zeour add 1
-				IDIt->second++;
-			nameIt = nameMap.find(IDIt->second);
-		}
-		// We found the ID to use
-		retVal = IDIt->second;
-		IDIt->second = IDIt->second << 1;
+		nameIt = nameMap.find(++(IDIt->second));
 	}
-	else 
-	{
-		auto const& nameMap = m_ResourceNameMap.find(type)->second;
-		auto nameIt = nameMap.find(IDIt->second);
-		// find a Resource ID that does not exist yet
-		while (nameIt != nameMap.end())
-		{
-			nameIt = nameMap.find(++(IDIt->second));
-		}
-		// we found the ID to use
-		retVal = IDIt->second++;
-	}
+	// we found the ID to use
+	retVal = IDIt->second++;
+	
 
 	return retVal;
 }

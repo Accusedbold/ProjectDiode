@@ -47,8 +47,6 @@ ResourceLoader* ResourceLoader::m_Instance = nullptr;
 std::shared_ptr<Resource> ResourceLoader::operator()(ResourceType type, std::wstring const& name, ResourceID id)
 {
 	switch (type) {
-	case ResourceType::Shader:
-		return LoadShader(name, id);
 	case ResourceType::Texture:
 		return LoadTexture(name, id);
 	case ResourceType::Model:
@@ -75,29 +73,6 @@ ResourceLoader* ResourceLoader::GetInstance()
 	if (!m_Instance)
 		m_Instance = new ResourceLoader;
 	return m_Instance;
-}
-
-/******************************************************************************/
-/*!
-					LoadShader
-
-\author   John Salguero
-
-\brief    Loads in the shader to memory.
-
-\param    name
-					The name of the shader to load
-
-\param    id
-					The id to use in initializing the shader
-
-\return   std::shared_ptr<Resource>
-					The shader that got loaded in
-*/
-/******************************************************************************/
-std::shared_ptr<Resource> ResourceLoader::LoadShader(std::wstring const& name, ResourceID id)
-{
-	return std::shared_ptr<Resource>();
 }
 
 /******************************************************************************/
@@ -153,7 +128,8 @@ std::shared_ptr<Resource> ResourceLoader::LoadTexture(std::wstring const& name, 
 {
 
 	std::wstring filename = TEXTURE_DIRECTORY + name;
-	std::string cName(filename.begin(), filename.end());
+	std::string cName;
+	std::transform(filename.begin(), filename.end(), std::back_inserter(cName), [](wchar_t c) {return (char)c;});
 	SDL_Surface* surface = IMG_Load(cName.c_str());
 	FATAL_ERRORIF(!surface, "Could not load in Texture Name: " + cName);
 
@@ -168,7 +144,7 @@ std::shared_ptr<Resource> ResourceLoader::LoadTexture(std::wstring const& name, 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// Load texture data into OpenGL
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
 
 	// Free SDL surface (we don't need it anymore)
 	SDL_FreeSurface(surface);

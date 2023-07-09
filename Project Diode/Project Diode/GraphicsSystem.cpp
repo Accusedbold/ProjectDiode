@@ -61,6 +61,7 @@ void GraphicsSystem::Update(double dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	m_Device.Update(dt);
+	DrawCameras();
 
 
 	// Swap buffers
@@ -248,9 +249,115 @@ void GraphicsSystem::DrawCameras()
 {
 	for (auto const& camera : m_Cameras)
 	{
+		WARN("Need to implement buffer switching");
+		m_Device.SetCamera(camera.lock());
 		std::vector<std::weak_ptr<Renderable>> drawList;
 		drawList.swap(camera.lock()->GetDrawList());
 		drawList.insert(drawList.end(), m_ColliderlessRenderables.begin(), m_ColliderlessRenderables.end());
-
+		auto renderableMap = DivideRenderables(drawList);
+		DrawOpaqueRenderables(renderableMap);
+		DrawTransparentRenderables(camera.lock(), renderableMap);
 	}
+}
+
+/******************************************************************************/
+/*!
+					DrawCameras
+
+\author   John Salguero
+
+\brief    Given a vector of renderables to draw, divides them up depending on
+					what shaders they should use
+
+\return   void
+*/
+/******************************************************************************/
+std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>>
+GraphicsSystem::DivideRenderables(std::vector<std::weak_ptr<Renderable>> const& renderables) const
+{
+	std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> retVal;
+	for (auto& weak_Renderable : renderables) {
+		auto const& shared_Renderable = weak_Renderable.lock();
+		if (shared_Renderable->HasAnimation())
+		{
+			retVal[ANIMATION_FLAG].insert(shared_Renderable);
+			continue;
+		}
+		for (ShaderFlags flags : shared_Renderable->GetMaterialFlags())
+		{
+			if (flags & TRANSPARENCY_FLAG)
+			{
+				if (retVal[TRANSPARENCY_FLAG].find(shared_Renderable) == retVal[TRANSPARENCY_FLAG].end())
+					retVal[TRANSPARENCY_FLAG].insert(shared_Renderable);
+			}
+			else
+				retVal[flags].insert(shared_Renderable);
+		 }
+	}
+	return retVal;
+}
+
+/******************************************************************************/
+/*!
+					DrawOpaqueRenderables
+
+\author   John Salguero
+
+\brief    Given a unordered_map of renderables to draw, draws them in batches
+					based on what shaders they should use
+
+\param    renderableMap
+					A Map of renderables divided based on their material needs for
+					shaders
+
+\return   void
+*/
+/******************************************************************************/
+void GraphicsSystem::DrawOpaqueRenderables(std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> const&renderableMap)
+{
+	for (auto const& drawSet : renderableMap)
+	{
+		if (drawSet.first & TRANSPARENCY_FLAG)
+			continue;
+		if(!(drawSet.first & ANIMATION_FLAG))
+			m_Device.SetShaderProgram(drawSet.first);
+		m_Device.DrawBatchedRenderables(drawSet.second);
+	}
+}
+
+/******************************************************************************/
+/*!
+					DrawTransparentRenderables
+
+\author   John Salguero
+
+\brief    Given a vector of renderables to draw, divides them up depending on
+					what shaders they should use
+
+\return   void
+*/
+/******************************************************************************/
+void GraphicsSystem::DrawTransparentRenderables(std::shared_ptr<Camera> const& camera, std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> const& renderableMap)
+{
+	std::multimap<float, std::shared_ptr<Renderable>> mapToDraw;
+	glm::vec4 origin(0.0f);
+	auto& drawset = renderableMap.find(TRANSPARENCY_FLAG)->second;
+	// iterate through all the renderables and order them by Z for transparency
+	for (auto const& renderable : drawset)
+	{
+		glm::vec4 point;
+		auto const& transform = renderable->GetParent().lock()->has(Transform);
+		// If Renderable doesn't have transform, use origin
+		if (transform.expired())
+		{
+			point = camera->GetCameraTransformation() * origin;
+		}
+		else
+		{
+			point = camera->GetCameraTransformation() * glm::vec4(transform.lock()->GetPosition(), 1.0f);
+		}
+		mapToDraw.insert(std::pair<float, std::shared_ptr<Renderable>>(point.z, renderable));
+	}
+
+	m_Device.DrawTransparentRenderables(mapToDraw);
 }

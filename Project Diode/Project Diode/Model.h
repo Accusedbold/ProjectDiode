@@ -30,9 +30,6 @@ struct Model : public Resource, public std::enable_shared_from_this<Model>
   glm::vec4 m_centroid;
   // The skeleton of a rigged model
   Skeleton m_skeleton;
-
-  // The different Flags of shaders used to draw this model
-  std::vector<ResourceID> shaders;
 };
 
 #endif

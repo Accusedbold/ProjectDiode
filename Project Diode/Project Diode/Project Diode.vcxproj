@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN11;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -147,7 +147,7 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN11;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -201,7 +201,6 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -248,7 +247,6 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ResourceTypes.h" />
     <ClInclude Include="Serialization.h" />
-    <ClInclude Include="Shader.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="SlotMap.h" />
     <ClInclude Include="stdafx.h" />
@@ -261,6 +259,8 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClInclude Include="WindowSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Resources\Shaders\3758098497.frag" />
+    <None Include="..\..\Resources\Shaders\Non-Anim.vert" />
     <None Include="Components.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

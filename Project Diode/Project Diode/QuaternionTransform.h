@@ -18,7 +18,7 @@
 #define QuaternionTransform_H
 
 #include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 struct QuaternionTransform {
 	// constructor
@@ -29,6 +29,8 @@ struct QuaternionTransform {
 	QuaternionTransform(glm::vec3, glm::quat, glm::vec3);
 	// Interpolate the transformation
 	QuaternionTransform Interpolate(QuaternionTransform const&, float) const;
+	// Get the matrix form of the Transform
+	glm::mat4 GetTransformation() const;
 	// the translation in vec 3 form
 	glm::vec3 m_Translate = glm::vec3(0.0f);
 	// the rotation that can be slerped

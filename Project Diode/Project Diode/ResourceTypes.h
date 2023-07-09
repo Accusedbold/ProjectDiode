@@ -17,7 +17,6 @@
 #define ResourceTypes_H
 
 enum class ResourceType {
-	Shader,
 	Model,
 	Texture,
   Material,

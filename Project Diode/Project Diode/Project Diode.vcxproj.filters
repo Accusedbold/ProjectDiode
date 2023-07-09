@@ -94,9 +94,6 @@
     <Filter Include="Systems\Graphics\Resources\Resource Manager">
       <UniqueIdentifier>{b083e389-7ebe-4baa-b52f-1ce309a39376}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems\Graphics\Shader">
-      <UniqueIdentifier>{0464c114-c27a-45b3-946a-fd406fab603c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Systems\Graphics\Model\Skeleton">
       <UniqueIdentifier>{4b3e949f-ec00-4d23-ac5d-6830a22f953d}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,9 @@
     </Filter>
     <Filter Include="Utilities\Comparators">
       <UniqueIdentifier>{67bc7984-72be-46b2-8503-65b7f258aaae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\shaders">
+      <UniqueIdentifier>{5242e2a2-1950-4488-a484-9016b20f0dcd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,9 +201,6 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Systems\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Joint.cpp">
       <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
@@ -336,9 +333,6 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Systems\Graphics\Resources\Resource Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Systems\Graphics\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Joint.h">
       <Filter>Systems\Graphics\Model\Skeleton\Joint</Filter>
     </ClInclude>
@@ -385,6 +379,12 @@
   <ItemGroup>
     <None Include="Components.inl">
       <Filter>Game Engine\Components</Filter>
+    </None>
+    <None Include="..\..\Resources\Shaders\3758098497.frag">
+      <Filter>Utilities\shaders</Filter>
+    </None>
+    <None Include="..\..\Resources\Shaders\Non-Anim.vert">
+      <Filter>Utilities\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

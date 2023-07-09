@@ -40,6 +40,7 @@ public:
   bool IsVisible() const;
   bool IsDebug() const;
   bool HasAnimation() const;
+  std::set<long> const& GetMaterialFlags();
 
   // Setters
   void SetModel(ResourceID);
