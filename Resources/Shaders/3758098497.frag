@@ -27,10 +27,14 @@ out vec4 fragColor;
 
 void main()
 {
-    // Retrieve the texture samples
-    vec3 diffuseColor = texture(materials[matIndex].diffuseTex, fragUV).rgb;
-    vec3 emissiveColor = texture(materials[matIndex].emissiveTex, fragUV).rgb;
+    // Diffuse lighting
     vec3 normal = texture(materials[matIndex].normalTex, fragUV).rgb;
+    vec3 lightDir = normalize(vec3(0.0, 1.0, 0.0));  // Example: light direction from above
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuseColor = materials[matIndex].diffuse * diff * texture(materials[matIndex].diffuseTex, fragUV).rgb;
+
+    // Retrieve the texture samples
+    vec3 emissiveColor = texture(materials[matIndex].emissiveTex, fragUV).rgb;
     vec3 reflection = texture(materials[matIndex].reflectionTex, fragUV).rgb;
 
     // Calculate the lighting terms

@@ -50,9 +50,9 @@ void main()
 
     gl_Position = transformmatrix * totalPosition;
     fragPos = gl_Position.xyz;
-    fragNormal = totalNormal.xyz;
-    fragTan = totalTan.xyz;
-    fragBiTan = totalBiTan.xyz;
+    fragNormal = (transformmatrix * totalNormal).xyz;
+    fragTan = (transformmatrix * totalTan).xyz;
+    fragBiTan = (transformmatrix * totalBiTan).xyz;
     fragColor = color.xyz;
     fragUV = uv;
     matIndex = matIndices;

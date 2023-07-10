@@ -24,7 +24,7 @@ void main()
 {
     gl_Position = transformmatrix * position;
     fragPos = gl_Position.xyz;
-    fragNormal = (transformmatrix * normals).xyz;
+    fragNormal = (transformmatrix * normal).xyz;
     fragTan = (transformmatrix * tangent).xyz;
     fragBiTan = (transformmatrix * bitangent).xyz;
     fragColor = color.xyz;

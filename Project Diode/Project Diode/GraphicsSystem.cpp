@@ -340,6 +340,8 @@ void GraphicsSystem::DrawOpaqueRenderables(std::unordered_map<ShaderFlags, std::
 void GraphicsSystem::DrawTransparentRenderables(std::shared_ptr<Camera> const& camera, std::unordered_map<ShaderFlags, std::multiset<std::shared_ptr<Renderable>, RenderableComparator>> const& renderableMap)
 {
 	std::multimap<float, std::shared_ptr<Renderable>> mapToDraw;
+	if (renderableMap.find(TRANSPARENCY_FLAG) == renderableMap.end())
+		return;
 	glm::vec4 origin(0.0f);
 	auto& drawset = renderableMap.find(TRANSPARENCY_FLAG)->second;
 	// iterate through all the renderables and order them by Z for transparency
