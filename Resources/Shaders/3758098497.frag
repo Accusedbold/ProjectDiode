@@ -46,5 +46,5 @@ void main()
     // Combine the lighting terms
     vec3 finalColor = ambientTerm + diffuseTerm + specularTerm + emissiveTerm;
 
-    fragColor = vec4(finalColor, 1.0);
+    fragColor = vec4(1.0,1.0,1.0,1.0);
 }

@@ -67,7 +67,7 @@ private:
 	glm::mat4& GetTransform(std::shared_ptr<Renderable> const&, glm::mat4 &transOut) const;
 
 	// the current state of the device - will only draw certain flags
-	ShaderFlags m_CurrentFlags;
+	ShaderFlags m_CurrentFlags = UNUSED_FLAGS;
 	// The function used to update the device
 	UpdateFxn m_UpdateFxn = &OpenGLDevice::DoNothing;
 	// the openGL Context

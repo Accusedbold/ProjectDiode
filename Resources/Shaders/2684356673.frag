@@ -19,7 +19,7 @@ struct Material
     sampler2D transparencyTex;
 };
 
-const int MAX_MATERIALS = 25;
+const int MAX_MATERIALS = 5;
 uniform Material materials[MAX_MATERIALS];
 
 out vec4 FragColor;

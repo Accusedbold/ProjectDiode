@@ -28,6 +28,7 @@ enum class ComponentType {
   RigidBody,
   Transform,
   Controller,
+  CameraController,
   Camera, 
   Teleportal
 };

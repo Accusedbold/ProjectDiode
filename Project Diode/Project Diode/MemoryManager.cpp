@@ -325,6 +325,7 @@ bool MemoryManager::Deallocate(void* address)
     /* if the address was found */
     if (it && it->m_Address == address)
     {
+      m_MemoryLock.lock();
       /* deallocate the memory and consolidate surrounding free blocks */
       it->m_Allocated = false;
       /* Consolidate next block */
@@ -345,6 +346,7 @@ bool MemoryManager::Deallocate(void* address)
         delBlock->m_Next = m_UnusedBlocks;
         m_UnusedBlocks = delBlock;
       }
+      m_MemoryLock.unlock();
     }
     else /* if the address was not found */
       return false;

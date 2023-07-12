@@ -40,8 +40,8 @@ void Camera::Initialize()
 /* Get The Camera Matrix in Row-Major Order */
 glm::mat4 Camera::GetInverseOrthogonalTransformation()
 {
-	glm::mat4 retVal(m_Right, m_Up, m_LookAt, glm::vec4(0, 0, 0, 1));
-	return retVal;
+	glm::mat4 retVal(m_Right, m_Up, -m_LookAt, glm::vec4(0, 0, 0, 1));
+	return glm::transpose(retVal);
 }
 
 
@@ -56,14 +56,14 @@ glm::mat4 Camera::GetInverseTranslationalTransformation()
     retVal = glm::translate(retVal , -spTransform->GetPosition());
   }
 
-  return transpose(retVal);
+  return retVal;
 }
 
 
 /* Get The Camera Matrix in Row-Major Order */
 glm::mat4 Camera::GetCameraTransformation()
 {
-  return GetInverseTranslationalTransformation() * GetInverseOrthogonalTransformation();
+  return GetInverseOrthogonalTransformation() * GetInverseTranslationalTransformation();
 }
 
 /* Get The Camera Width */
@@ -126,7 +126,7 @@ void Camera::SetLookAt(glm::vec4 const& look)
   m_LookAt = glm::normalize(look);
 
   m_Right = glm::vec4(glm::cross(glm::vec3(m_LookAt), glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f);
-  m_Right = glm::vec4(glm::cross(glm::vec3(m_Right), glm::vec3(m_LookAt)), 0.0f);
+  m_Up = glm::vec4(glm::cross(glm::vec3(m_Right), glm::vec3(m_LookAt)), 0.0f);
 }
 
 /* Set The Camera Width */
@@ -215,8 +215,8 @@ void Camera::TurnFPCam(float degs)
 /* Turn cam up/down +/- */
 void Camera::LiftFPCam(float degs)
 {
-  glm::mat4 rotate;
-  rotate = glm::rotate(rotate, degs, glm::vec3(1.0f, 0.0f, 0.0));
+  glm::mat4 rotate(1.0f);
+  rotate = glm::rotate(rotate, degs, glm::vec3(m_Right));
 
   m_Up = rotate * m_Up;
   if (m_Up.y < 0)

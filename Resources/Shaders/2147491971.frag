@@ -20,7 +20,7 @@ struct Material
     sampler2D reflectionTex;
 };
 
-const int MAX_MATERIALS = 25;
+const int MAX_MATERIALS = 4;
 uniform Material materials[MAX_MATERIALS];
 
 out vec4 FragColor;

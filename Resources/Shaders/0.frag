@@ -32,13 +32,10 @@ void main()
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuseColor = materials[matIndex].diffuse * diff;
 
-    // Specular lighting
-    vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));  // Example: view direction along the positive z-axis
-
     // Emissive color
     vec3 emissiveColor = materials[matIndex].emissive;
 
     // Final color calculation
     vec3 finalColor = ambientColor + diffuseColor + emissiveColor;
-    FragColor = vec4(finalColor, 1.0f);
+    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 }

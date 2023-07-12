@@ -19,5 +19,6 @@
 #include "Transform.h"        /* Transform */
 #include "Camera.h"           /* Camera */
 #include "Collider.h"         /* Collider */
+#include "CameraController.h" /* CameraController */
 
 #endif

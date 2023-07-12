@@ -13,6 +13,16 @@ std::ifstream& operator>>(std::ifstream& inputFile, size_t& t)
   return inputFile;
 }
 
+std::ifstream& operator>>(std::ifstream& inputFile, GLushort& t)
+{
+  WARN("This is hacked, get rid of it");
+  size_t in;
+  inputFile.read(reinterpret_cast<char*>(&in), sizeof(in));
+  t = static_cast<GLushort>(in);
+
+  return inputFile;
+}
+
 std::ifstream& operator>>(std::ifstream& inputFile, int& t)
 {
   inputFile.read(reinterpret_cast<char*>(&t), sizeof(t));

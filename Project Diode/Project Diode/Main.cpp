@@ -40,8 +40,8 @@ int main(int, char*[]) {
   int retCode = 0;
   if(Engine::GetInstance()->Inititialize())
     retCode |= Engine::GetInstance()->GameLoop();
-	Engine::DestroyInstance();
   retCode |= ObjectFactory::GetInstance()->Release();
+	Engine::DestroyInstance();
 
   // Memory Manager should be the last thing destroyed -
   // With it goes all allocated memory

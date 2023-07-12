@@ -241,6 +241,9 @@
     <ClCompile Include="Comparators.cpp">
       <Filter>Utilities\Comparators</Filter>
     </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Game Engine\Components\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="Comparators.h">
       <Filter>Utilities\Comparators</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Game Engine\Components\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

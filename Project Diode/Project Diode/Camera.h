@@ -115,9 +115,9 @@ public:
 
 private:
   // used to construct the inverse orthogonal matrix
-  glm::vec4 m_LookAt;
-  glm::vec4 m_Right;
-  glm::vec4 m_Up;
+  glm::vec4 m_LookAt = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+  glm::vec4 m_Right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);;
+  glm::vec4 m_Up = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);;
 
   // Used for projection
   unsigned m_Width = 800;

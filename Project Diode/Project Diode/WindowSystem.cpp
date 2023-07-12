@@ -28,9 +28,9 @@
 WindowSystem::WindowSystem(std::wstring& name) : System(name)
 {
   if (m_FullScreen)
-    m_WinFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL;
+    m_WinFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
   else
-    m_WinFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+    m_WinFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
 }
 
 /******************************************************************************/
@@ -56,7 +56,7 @@ void WindowSystem::Initialize()
   FATAL_ERRORIF(SDL_Init(SDL_INIT_VIDEO) < 0, std::string("SDL could not be properly initialized.\nSDL_Error: ") + SDL_GetError());
 
   // Create The Window and Errorcheck
-  m_Window = SDL_CreateWindow(m_WinTitle, m_PosX, m_PosY, m_Width, m_Height, m_WinFlags);
+  m_Window = SDL_CreateWindow(m_WinTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_Width, m_Height, m_WinFlags);
   FATAL_ERRORIF(!m_Window, std::string("Window could not properly be created.\nSDL_Error: ") + SDL_GetError());
 
   SDL_Surface* icon = SDL_LoadBMP("Resources\\Textures\\diode.bmp");
@@ -64,6 +64,9 @@ void WindowSystem::Initialize()
 
   SDL_SetWindowIcon(m_Window, icon);
   SDL_FreeSurface(icon);
+
+  // Set the capture of Relative mouse motion
+  SDL_SetRelativeMouseMode(SDL_TRUE);
 
   Engine::GetInstance()->RelayMessage(std::shared_ptr<Message>(
     new Message(m_SystemName, MessageType::WindowCreated, std::shared_ptr<void>(
@@ -87,7 +90,7 @@ void WindowSystem::Initialize()
 \return     void
 */
 /******************************************************************************/
-void WindowSystem::Update(double)
+void WindowSystem::Update(double dt)
 {
   HandleEvents();
 }
@@ -151,6 +154,33 @@ void WindowSystem::HandleEvents()
       //HandleWMEvents(event.syswm.msg->msg.win.msg, event.syswm.msg->msg.win.wParam, event.syswm.msg->msg.win.lParam);
       break;
     case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    case SDL_TEXTEDITING:
+    case SDL_TEXTINPUT:
+    case SDL_KEYMAPCHANGED:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEWHEEL:
+    case SDL_JOYAXISMOTION:
+    case SDL_JOYBALLMOTION:
+    case SDL_JOYHATMOTION:
+    case SDL_JOYBUTTONDOWN:
+    case SDL_JOYBUTTONUP:
+    case SDL_JOYDEVICEADDED:
+    case SDL_JOYDEVICEREMOVED:
+    case SDL_JOYBATTERYUPDATED:
+    case SDL_CONTROLLERAXISMOTION:
+    case SDL_CONTROLLERBUTTONDOWN:
+    case SDL_CONTROLLERBUTTONUP:
+    case SDL_CONTROLLERDEVICEADDED:
+    case SDL_CONTROLLERDEVICEREMOVED:
+    case SDL_CONTROLLERDEVICEREMAPPED:
+    case SDL_CONTROLLERTOUCHPADDOWN:
+    case SDL_CONTROLLERTOUCHPADMOTION:
+    case SDL_CONTROLLERTOUCHPADUP:
+    case SDL_CONTROLLERSENSORUPDATE:
+      Engine::GetInstance()->RelayMessage(std::shared_ptr<Message>(new Message(m_SystemName, MessageType::Input, std::shared_ptr<void>(new SDL_Event(event)))));
       break;
     default:
       break;

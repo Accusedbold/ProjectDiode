@@ -12,8 +12,8 @@
     Popup Message Class used to communicate a message to the user
 */
 /********************************************************************/
-#ifndef _PopupMessageData
-#define _PopupMessageData
+#ifndef PopupMessageData_H
+#define PopupMessageData_H
 
 class PopUpMessageData {
 public:

@@ -18,10 +18,10 @@
 
 #include "Resource.h" // ResourceID
 #define TRANSPARENCY_MAP_FLAG 0b100000000000L
-#define Animation_FLAG 0b10000000000000000000000000000uL
 #define TRANSPARENCY_FLAG 0b100000000000000000000000000000uL
 #define ANIMATION_FLAG 0b1000000000000000000000000000000uL
 #define PHONG_FLAG 0b10000000000000000000000000000000uL
+#define UNUSED_FLAGS ~0uL
 
 struct Texture;
 
@@ -67,14 +67,6 @@ struct Material : public Resource
   virtual ~Material() = default;
   // The Type of the shader
   MaterialType m_Type;
-  // the vertex shader used
-  ResourceID m_VShader;
-  // the Tesselation Shader used
-  ResourceID m_TShader;
-  // The Geometry Shader used
-  ResourceID m_GShader;
-  // The Fragment Shader used
-  ResourceID m_FShader;
 
   // The Ambient clolor
   glm::vec3 m_Ambient;

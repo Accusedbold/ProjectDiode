@@ -57,6 +57,9 @@ private:
 	static ResourceManager* m_Instance;
 
 	comrade std::ifstream& operator>>(std::ifstream& inputFile, std::shared_ptr<Material>& loadedmaterial);
+
+	WARN("This is hacked, please remove");
+	comrade class GameManager;
 };
 
 #endif

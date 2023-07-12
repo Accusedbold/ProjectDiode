@@ -95,7 +95,7 @@ private:
   // Used to keep track of time intervals
   std::chrono::time_point<std::chrono::steady_clock> m_LastTime;
   // time since last frame
-  std::chrono::duration<double> m_TimeStep;
+  std::chrono::duration<double, std::milli> m_TimeStep;
   // Tracks all the systems the game uses
   std::vector<std::shared_ptr<System>> m_Systems;
 };

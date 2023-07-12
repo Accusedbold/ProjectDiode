@@ -8,6 +8,7 @@ enum class MaterialType;
 struct QuaternionTransform;
 struct Animation;
 
+std::ifstream& operator>>(std::ifstream& inputFile, GLushort& t);
 std::ifstream& operator>>(std::ifstream& inputFile, size_t& t);
 std::ifstream& operator>>(std::ifstream& inputFile, int& t);
 std::ifstream& operator>>(std::ifstream& inputFile, unsigned& t);

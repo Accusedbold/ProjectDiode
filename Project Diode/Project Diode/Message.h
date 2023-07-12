@@ -28,7 +28,9 @@ enum class MessageType
   ObjectDestroyed,
   ModelChange,
   TransparencyChange,
-  PopUp
+  PopUp,
+  Input,
+  Count
 };
 
 // Base class for Messages

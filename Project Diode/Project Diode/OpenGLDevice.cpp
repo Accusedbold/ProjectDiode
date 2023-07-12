@@ -61,8 +61,11 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos2, 0);
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
+    auto vert1 = transform * mesh.m_Positions[mesh.m_PosIndicies[0]];
+    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[1]];
+    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
     // Draw the Mesh
-    glDrawArrays(GL_TRIANGLES, 0, 1);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -82,6 +85,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glm::mat4 transform;
     GetTransform(renderable, transform);
     // Set up the instances
+    glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
     int pos1 = 9;
     int pos2 = pos1 + 1;
@@ -91,7 +95,6 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glEnableVertexAttribArray(pos2);
     glEnableVertexAttribArray(pos3);
     glEnableVertexAttribArray(pos4);
-    glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
     glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
     glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
     glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
@@ -101,7 +104,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     // Draw the Mesh
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh.m_PosIndicies.size()));
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -128,8 +131,8 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       if (currModel->m_meshes[i].m_flags != m_CurrentFlags)
         continue;
       modIt = currIt;
-      glBindVertexArray(*(*currIt)->GetModel()->m_meshes[i].m_VAO);
-      while ((*modIt)->GetModelID() == currModel->GetID())
+      glBindVertexArray((*currIt)->GetModel()->m_meshes[i].m_VAO[0]);
+      while (modIt != modEnd && (*modIt)->GetModelID() == currModel->GetID())
       {
         glm::mat4 transform;
         GetTransform(*modIt, transform);
@@ -137,8 +140,9 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
          ++modIt;
       }
       // Set up the instances
+      glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
       glBufferData(GL_ARRAY_BUFFER, instancedTransformations.size() * sizeof(glm::mat4), instancedTransformations.data(), GL_STATIC_DRAW);
-      int pos1 = 8;
+      int pos1 = 9;
       int pos2 = pos1 + 1;
       int pos3 = pos2 + 1;
       int pos4 = pos3 + 1;
@@ -146,7 +150,6 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       glEnableVertexAttribArray(pos2);
       glEnableVertexAttribArray(pos3);
       glEnableVertexAttribArray(pos4);
-      glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
       glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
       glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
       glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
@@ -155,10 +158,14 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       glVertexAttribDivisor(pos2, 1);
       glVertexAttribDivisor(pos3, 1);
       glVertexAttribDivisor(pos4, 1);
+      auto vertex1 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[0];
+      auto vertex2 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[1];
+      auto vertex3 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[2];
       // Draw the instances
-      glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<GLsizei>(currModel->m_meshes[i].m_PosIndicies.size()), static_cast<GLsizei>(instancedTransformations.size()));
+      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currModel->m_meshes[i].m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
     }
   }
+
   return 0;
 }
 
@@ -206,7 +213,7 @@ int OpenGLDevice::DrawTransparentRenderables(std::multimap<float, std::shared_pt
 /******************************************************************************/
 int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
 {
-  if (m_CurrentFlags == flags)
+  if (m_CurrentFlags == flags || flags == UNUSED_FLAGS)
     return 0;
   if (m_ShaderPrograms.find(flags) != m_ShaderPrograms.end())
     glUseProgram(m_ShaderPrograms[flags]);
@@ -370,7 +377,10 @@ bool OpenGLDevice::Initialize
   DEBUG_POPUP(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
   // Set up the viewport
-  glViewport(0, 0, 800, 600);
+  int width, height;
+  SDL_GL_GetDrawableSize(msgData->GetWindow(), &width, &height);
+  glViewport(0, 0, width, height);
+  glEnable(GL_CULL_FACE);
 
   m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
   m_System = system;
@@ -552,7 +562,7 @@ glm::mat4& OpenGLDevice::GetTransform(std::shared_ptr<Renderable> const& rendera
     transOut = glm::mat4(1.0f);
   else
     transOut = transform.lock()->GetWorldMatrix();
-  transOut = m_CameraTransformation * transOut;
+  transOut = m_ProjectionTransformation * m_CameraTransformation * transOut;
 
   return transOut;
 }

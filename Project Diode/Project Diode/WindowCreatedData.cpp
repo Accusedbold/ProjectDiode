@@ -67,7 +67,7 @@ SDL_Window* WindowCreatedData::GetWindow() const
 /******************************************************************************/
 int WindowCreatedData::GetWidth() const
 {
-	return m_Height;
+	return m_Width;
 }
 
 /******************************************************************************/
@@ -83,7 +83,7 @@ int WindowCreatedData::GetWidth() const
 /******************************************************************************/
 int WindowCreatedData::GetHeight() const
 {
-	return m_Width;
+	return m_Height;
 }
 
 

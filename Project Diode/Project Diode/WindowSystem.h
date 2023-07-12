@@ -31,7 +31,7 @@ public:
   virtual void Initialize();
 
 private:
-
+  // Handles the Window, System, and Input events
   void HandleEvents();
 
   // Creates an error popup message box
@@ -44,10 +44,6 @@ private:
   int m_Width = WINDOW_WIDTH;
   int m_Height = WINDOW_HEIGHT;
 
-  // Window Location
-  unsigned m_PosX = 100;
-  unsigned m_PosY = 100;
-
   // Window descriptors
   char const* m_WinTitle = WINDOW_TITLE;
   bool m_FullScreen = FULLSCREEN_MODE;
@@ -56,6 +52,8 @@ private:
   // Graphics stuff
   SDL_Window* m_Window = nullptr;
   SDL_Surface* m_WindowSurface = nullptr;
+
+  double m_TrackTime = 0;
 
 };
 
