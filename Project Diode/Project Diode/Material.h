@@ -65,8 +65,6 @@ struct Material : public Resource
   ShaderFlags GetMaterialFlags() const;
 
   virtual ~Material() = default;
-  // The Type of the shader
-  MaterialType m_Type;
 
   // The Ambient clolor
   glm::vec3 m_Ambient;
@@ -85,5 +83,31 @@ struct Material : public Resource
 
   // Textures used for mapping
   std::shared_ptr<Texture> m_MappingTextures[static_cast<size_t>(MapType::Count)];
+
+  // The Type of the shader
+  MaterialType m_Type;
 };
+
+struct MaterialBuffer
+{
+  // Default Constructor
+  MaterialBuffer() = default;
+  // Conversion Constructor
+  MaterialBuffer(Material const&);
+  // The Ambient clolor
+  alignas(16) glm::vec3 m_Ambient;
+  // The Diffuse Color
+  alignas(16) glm::vec3 m_Diffuse;
+  // The specular color
+  alignas(16) glm::vec3 m_Specular;
+  // the emmissive color
+  alignas(16) glm::vec3 m_Emissive;
+  // Transparency
+  float m_Transparency;
+  // Shininess
+  float m_Shininess;
+  // Reflectivity
+  float m_Reflectivity;
+};
+
 #endif

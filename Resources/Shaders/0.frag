@@ -8,16 +8,18 @@ in vec3 fragColor;
 in vec2 fragUV;
 flat in uint matIndex;
 
-struct Material
+const int MAX_MATERIALS = 10;
+
+layout (std140, binding = 0) uniform MaterialBlock
 {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     vec3 emissive;
-};
-
-const int MAX_MATERIALS = 25;
-uniform Material materials[MAX_MATERIALS];
+    float transparency;
+    float shininess;
+    float reflectivity;
+} materials[MAX_MATERIALS];
 
 out vec4 FragColor;
 
@@ -30,12 +32,12 @@ void main()
     vec3 normal = normalize(fragNormal);
     vec3 lightDir = normalize(vec3(0.0, 1.0, 0.0));  // Example: light direction from above
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuseColor = materials[matIndex].diffuse * diff;
+    vec3 diffuseColor = materials[0].diffuse;// * diff;
 
     // Emissive color
     vec3 emissiveColor = materials[matIndex].emissive;
 
     // Final color calculation
     vec3 finalColor = ambientColor + diffuseColor + emissiveColor;
-    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    FragColor = vec4(finalColor, 1.0f);
 }

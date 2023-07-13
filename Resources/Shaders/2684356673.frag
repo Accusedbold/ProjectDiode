@@ -8,46 +8,50 @@ in vec3 fragColor;
 in vec2 fragUV;
 flat in uint matIndex;
 
-struct Material
+const int MAX_MATERIALS = 5;
+
+layout (std140, binding = 0) uniform MaterialBlock
 {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     vec3 emissive;
-    sampler2D diffuseTex;
-    sampler2D specularTex;
-    sampler2D transparencyTex;
-};
+    float transparency;
+    float shininess;
+    float reflectivity;
+} materials[MAX_MATERIALS];
 
-const int MAX_MATERIALS = 5;
-uniform Material materials[MAX_MATERIALS];
+uniform sampler2D diffuseTex[MAX_MATERIALS];
+uniform sampler2D specularTex[MAX_MATERIALS];
+uniform sampler2D transparencyTex[MAX_MATERIALS];
 
 out vec4 FragColor;
 
 void main()
 {
     // Ambient lighting
-    vec3 ambientColor = materials[matIndex].ambient * texture(materials[matIndex].diffuseTex, fragUV).rgb;
+    vec3 ambientColor = materials[matIndex].ambient * texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Diffuse lighting
     vec3 normal = normalize(fragNormal);
     vec3 lightDir = normalize(vec3(0.0, 1.0, 0.0));  // Example: light direction from above
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuseColor = materials[matIndex].diffuse * diff * texture(materials[matIndex].diffuseTex, fragUV).rgb;
+    vec3 diffuseColor = materials[matIndex].diffuse * diff * texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Specular lighting
     vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));  // Example: view direction along the positive z-axis
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);  // Example: specular power of 32
-    vec3 specularColor = materials[matIndex].specular * spec * texture(materials[matIndex].specularTex, fragUV).rgb;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), materials[matIndex].shininess);
+    vec3 specularColor = materials[matIndex].specular * spec * texture(specularTex[matIndex], fragUV).rgb;
 
     // Emissive color
-    vec3 emissiveColor = materials[matIndex].emissive * texture(materials[matIndex].diffuseTex, fragUV).rgb;
+    vec3 emissiveColor = materials[matIndex].emissive * texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Transparency
-    float transparency = texture(materials[matIndex].transparencyTex, fragUV).r;
+    float transparency = texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
     vec3 finalColor = ambientColor + diffuseColor + specularColor + emissiveColor;
-    FragColor = vec4(finalColor, transparency);
+    // FragColor = vec4(finalColor, transparency);
+    FragColor = vec4(1.0,1.0,1.0,1.0);
 }

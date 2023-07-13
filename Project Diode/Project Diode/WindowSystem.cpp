@@ -55,6 +55,9 @@ void WindowSystem::Initialize()
   // Initialize SDL for video and Errorcheck
   FATAL_ERRORIF(SDL_Init(SDL_INIT_VIDEO) < 0, std::string("SDL could not be properly initialized.\nSDL_Error: ") + SDL_GetError());
 
+  // Set the Depth Buffer Precision
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, DEPTH_BUFFER_SIZE);
+
   // Create The Window and Errorcheck
   m_Window = SDL_CreateWindow(m_WinTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_Width, m_Height, m_WinFlags);
   FATAL_ERRORIF(!m_Window, std::string("Window could not properly be created.\nSDL_Error: ") + SDL_GetError());

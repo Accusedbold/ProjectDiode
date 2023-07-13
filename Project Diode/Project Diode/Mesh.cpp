@@ -90,10 +90,6 @@ void Mesh::GenerateDataBuffer()
   // populate the VBO and EBO
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_PosIndicies.size() * sizeof(GLushort), m_IndexData, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, size, m_Data, GL_STATIC_DRAW);
-
-  // unbind the VAO and VBO
-  glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::ReleaseDataBuffer()

@@ -18,6 +18,7 @@
 #define Mesh_H
 
 #define MAX_BONE_INFLUENCE 4
+#define MAX_MATERIALS 10
 
 struct Model; // forward Declaration
 struct Material;

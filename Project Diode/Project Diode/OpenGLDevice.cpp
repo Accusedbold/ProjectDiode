@@ -52,7 +52,6 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glEnableVertexAttribArray(pos2);
     glEnableVertexAttribArray(pos3);
     glEnableVertexAttribArray(pos4);
-    glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
     glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
     glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
     glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
@@ -62,8 +61,8 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     auto vert1 = transform * mesh.m_Positions[mesh.m_PosIndicies[0]];
-    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[1]];
-    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
+    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
+    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[3]];
     // Draw the Mesh
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0);
   }
@@ -85,7 +84,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glm::mat4 transform;
     GetTransform(renderable, transform);
     // Set up the instances
-    glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
     int pos1 = 9;
     int pos2 = pos1 + 1;
@@ -128,10 +127,13 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
     }
     for(int i = 0; i < (*currIt)->GetModel()->m_meshes.size(); ++i)
     {
-      if (currModel->m_meshes[i].m_flags != m_CurrentFlags)
+      auto const& currMesh = currModel->m_meshes[i];
+      if (currMesh.m_flags != m_CurrentFlags)
         continue;
       modIt = currIt;
       glBindVertexArray((*currIt)->GetModel()->m_meshes[i].m_VAO[0]);
+      // Bind the material to the uniform
+      SetMaterials(currMesh);
       while (modIt != modEnd && (*modIt)->GetModelID() == currModel->GetID())
       {
         glm::mat4 transform;
@@ -158,11 +160,8 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       glVertexAttribDivisor(pos2, 1);
       glVertexAttribDivisor(pos3, 1);
       glVertexAttribDivisor(pos4, 1);
-      auto vertex1 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[0];
-      auto vertex2 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[1];
-      auto vertex3 = instancedTransformations[0] * currModel->m_meshes[i].m_Positions[2];
       // Draw the instances
-      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currModel->m_meshes[i].m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
+      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
     }
   }
 
@@ -238,11 +237,52 @@ int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
 \param    id
           The ID of the buffer to draw to
 
-\return   void
+\return   int
+          the error code, 0 means success
 */
 /******************************************************************************/
 int OpenGLDevice::SetBuffer(int id)
 {
+  return 0;
+}
+
+/******************************************************************************/
+/*!
+          SetBuffer
+
+\author   John Salguero
+
+\brief    Sets Materials in the uniform to draw with
+
+\param    mesh
+          The Mesh to populate the materials with
+
+\return   int
+          the error code, 0 means success
+*/
+/******************************************************************************/
+int OpenGLDevice::SetMaterials(Mesh const& mesh)
+{
+  // Bind the UBO
+  glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
+
+  // Map the buffer to update the data
+  MaterialBuffer* materialBuffer = (MaterialBuffer*)glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+
+  // Copy the material data to the buffer
+  for (size_t i = 0; i < mesh.m_Materials.size(); ++i)
+  {
+    Material const& material = *mesh.m_Materials[i];
+
+    materialBuffer[i] = material;
+  }
+
+  // Unmap the buffer
+  glUnmapBuffer(GL_UNIFORM_BUFFER);
+
+  GLuint bindingPoint = 0; // The binding point/index to which the buffer object is bound
+  glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_materialUBO[0]);
+
   return 0;
 }
 
@@ -371,7 +411,10 @@ bool OpenGLDevice::Initialize
   FATAL_ERRORIF(glewInit(), "GLEW Failed to initialize");
 
   // Enable the Stencil Buffer
-  // glEnable(GL_STENCIL_TEST);
+  //glEnable(GL_STENCIL_TEST);
+
+  // Enable Depth Testing
+  glEnable(GL_DEPTH_TEST);
 
   // Print OpenGL version
   DEBUG_POPUP(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
@@ -380,7 +423,7 @@ bool OpenGLDevice::Initialize
   int width, height;
   SDL_GL_GetDrawableSize(msgData->GetWindow(), &width, &height);
   glViewport(0, 0, width, height);
-  glEnable(GL_CULL_FACE);
+  //glEnable(GL_CULL_FACE);
 
   m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
   m_System = system;
@@ -389,6 +432,10 @@ bool OpenGLDevice::Initialize
   glCreateBuffers(1, m_matVBO);
   // Create the VBO that will define bone transformations Drawing
   glCreateBuffers(1, m_boneVBO);
+  // Create the UBO that will define the uniform for materials
+  glCreateBuffers(1, m_materialUBO);
+  glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer) * MAX_MATERIALS, nullptr, GL_DYNAMIC_DRAW);
 
   return true;
 }

@@ -42,6 +42,8 @@ public:
 	int SetShaderProgram(ShaderFlags flags);
 	// Switches between buffers to draw on
 	int SetBuffer(int id);
+	// Populates the Material Uniform based on the mesh
+	int SetMaterials(Mesh const&);
 	// Gets the stats from the camera, like position, width, fov, etc
 	int SetCamera(std::shared_ptr<Camera> const&);
 	// Constructs the device with the graphics system
@@ -84,6 +86,8 @@ private:
 	GLuint m_matVBO[1] = { 0 };
 	// VBO for Bone Matrix Transformations
 	GLuint m_boneVBO[1] = { 0 };
+	// UBO for Materials
+	GLuint m_materialUBO[1] = { 0 };
 };
 
 #endif
