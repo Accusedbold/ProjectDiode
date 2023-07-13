@@ -16,8 +16,8 @@
     https://www.youtube.com/watch?v=SHaAR7XPtNU&ab_channel=CppNow
 */
 /********************************************************************/
-#ifndef _SlotMap
-  #define _SlotMap
+#ifndef SlotMap_H
+  #define SlotMap_H
 
 #include "stdafx.h" // allocator
 

@@ -191,6 +191,7 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="MemorySlotMap.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -231,6 +232,7 @@ xcopy /y /s "$(SolutionDir)..\Resources\" "$(TargetDir)Resources\"</Command>
     <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MemorySlotMap.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="QuaternionTransform.h" />

@@ -67,13 +67,13 @@ public:
   bool Deallocate(void* address);
 
   // These global functions are necessary to access the  Memory Manager
-  //comrade void* operator new(size_t size) noexcept(false);
-  //comrade void* operator new(size_t size, const std::nothrow_t&) noexcept(true);
-  //comrade void* operator new[](size_t size) noexcept(false);
-  //comrade void* operator new[](size_t size, const std::nothrow_t&) noexcept(true);
+  comrade void* operator new(size_t size) noexcept(false);
+  comrade void* operator new(size_t size, const std::nothrow_t&) noexcept(true);
+  comrade void* operator new[](size_t size) noexcept(false);
+  comrade void* operator new[](size_t size, const std::nothrow_t&) noexcept(true);
 
-  //comrade void operator delete(void* ptr) noexcept(true);
-  //comrade void operator delete(void* ptr, const std::nothrow_t&) noexcept(true);
-  //comrade void operator delete[](void* ptr) noexcept(true);
-  //comrade void operator delete[](void* ptr, const std::nothrow_t&) noexcept(true);
+  comrade void operator delete(void* ptr) noexcept(true);
+  comrade void operator delete(void* ptr, const std::nothrow_t&) noexcept(true);
+  comrade void operator delete[](void* ptr) noexcept(true);
+  comrade void operator delete[](void* ptr, const std::nothrow_t&) noexcept(true);
 };

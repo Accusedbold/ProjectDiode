@@ -22,6 +22,7 @@
 
 // standard C library stuff
 #include <memory>          // allocator
+#include <type_traits>     // is_same
 #include <vector>          // vector
 #include <set>             // set, multimap
 #include <list>            // list

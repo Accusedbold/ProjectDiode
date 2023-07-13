@@ -17,21 +17,22 @@
     "The C++ Standard Library"
 */
 /********************************************************************/
-#ifndef _Allocator
-  #define _Allocator
+#ifndef Allocator_H
+  #define Allocator_H
+
 #include "stdafx.h"
 
 template <class T>
 class Allocator {
 public:
   // Type Definitions
-  typedef T value_type;
-  typedef T* pointer;
-  typedef const T* const_pointer;
-  typedef T& reference;
-  typedef const T& const_reference;
-  typedef std::size_t size_type;
-  typedef std::ptrdiff_t difference_type;
+  using value_type = T;
+  using pointer = T*;
+  using const_pointer = const T*;
+  using reference = T&;
+  using const_reference = const T&;
+  using size_type = std::size_t;
+  using difference_type = std::ptrdiff_t;
 
   // struct whose member other is an allocator
   // for the given class. This is used
@@ -90,11 +91,11 @@ public:
 
   /******************************************************************************/
   /*!
-             ~Mallocato
+             ~allocato
 
   \author    John Salguero
 
-  \brief    Destructor
+  \brief     Destructor
 
   \return    void
 
@@ -122,7 +123,7 @@ public:
 
   \author    John Salguero
 
-  \brief     Const Copy Constructor
+  \brief     Assignment Operator
 
   \return    void
 
@@ -264,12 +265,12 @@ public:
 
 template <class T1, class T2>
 bool operator==(const Allocator<T1>&, const Allocator<T2>&) {
-  return sizeof(T1) == sizeof(T2);
+  return std::is_same_v<T1, T2>;
 }
 
 template <class T1, class T2>
 bool operator!= (const Allocator<T1>&, const Allocator<T2>&) {
-  return sizeof(T1) != sizeof(T2);
+  return std::is_same_v<T1, T2>;
 }
 
 #endif

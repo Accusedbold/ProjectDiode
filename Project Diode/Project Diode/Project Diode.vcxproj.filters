@@ -148,6 +148,9 @@
     <Filter Include="Utilities\shaders">
       <UniqueIdentifier>{5242e2a2-1950-4488-a484-9016b20f0dcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Engine\Memory Manager\MemorySlotMap">
+      <UniqueIdentifier>{10f57ac3-4904-43c3-9994-e33360be4dbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -243,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>Game Engine\Components\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="MemorySlotMap.cpp">
+      <Filter>Game Engine\Memory Manager\MemorySlotMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +386,9 @@
     </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>Game Engine\Components\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="MemorySlotMap.h">
+      <Filter>Game Engine\Memory Manager\MemorySlotMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
