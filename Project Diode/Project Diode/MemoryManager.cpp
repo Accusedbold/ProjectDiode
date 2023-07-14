@@ -178,64 +178,13 @@ void MemoryManager::GrowNodes()
   }
 }
 
-
 /******************************************************************************/
 /*!
-          FastAllocate
+          Allocate
 
 \author   John Salguero
 
-\brief    Given an size to allocate, looks at the heap for the first available
-          block usable and uses that to allocate the space
-
-\param    bytes
-          The size of the new allocation
-
-\return   The pointer to the allocated space
-
-*/
-/******************************************************************************/
-void* MemoryManager::FastAllocate(size_t bytes)
-{
-  void* allocated = nullptr;    /* memory in the heap to be returned */
-  m_MemoryLock.lock();
-  {
-    BlockInfo* it = m_BlockList;  /* head of the list of nodes describing the memory available */
-
-    /* crawl through the heap searching for the first fit */
-    while (it)
-    {
-      /* if block is not free or adequate in size go to next block */
-      if (it->m_Allocated || it->m_Size < bytes)
-      {
-        it = it->m_Next;
-      }
-      else /* if suitable block is found break */
-      {
-        break;
-      }
-    }
-    /* if there is a suitable block insert an allocated block in the heap */
-    if (it)
-    {
-      allocated = InsertBlock(it, bytes);
-    }
-    else 
-    {
-      throw std::bad_alloc();
-    }
-  } m_MemoryLock.unlock();
-
-  return allocated;
-}
-
-/******************************************************************************/
-/*!
-          BestAllocate
-
-\author   John Salguero
-
-\brief    Given an size to allocate, looks at the heap for the best available
+\brief    Given an size to allocate, looks at the heap for the next available
           block usable and uses that to allocate the space.
 
 \param    bytes
@@ -245,48 +194,8 @@ void* MemoryManager::FastAllocate(size_t bytes)
 
 */
 /******************************************************************************/
-void* MemoryManager::BestAllocate(size_t bytes)
+void* MemoryManager::Allocate(size_t bytes)
 {
-  void* allocated = nullptr;    /* memory in the heap to be returned */
-  m_MemoryLock.lock(); {
-    BlockInfo* bestFit = nullptr; /* free memory that best fits the size queried */
-    BlockInfo* it = m_BlockList;  /* head of the list of nodes describing the memory available */
-
-    /* crawl through the heap and find the best fit block */
-    while (it)
-    {
-      /* if the current block is free and adequate in size */
-      if (!(it->m_Allocated) && it->m_Size >= bytes)
-      {
-        if (!bestFit) /* if bestfit is null set it to the block */
-        {
-          bestFit = it;
-          if (bestFit->m_Size == bytes) /* if a perfect match was found */
-            break;
-        }
-        else /* if bestFit exists compare it to the current block */
-        {
-          if (bestFit->m_Size > it->m_Size) /* set bestFit to the smaller block */
-          {
-            bestFit = it;
-            if (bestFit->m_Size == bytes) /* if a perfect match was found */
-              break;
-          }
-        }
-      }
-      /* Crawl to the next block in the heap */
-      it = it->m_Next;
-    }
-    /* if there is a best fit block insert an allocated block in the heap */
-    if (bestFit)
-    {
-      allocated = InsertBlock(bestFit, bytes);
-    }
-    else {
-      throw std::bad_alloc();
-    }
-  } m_MemoryLock.unlock();
-
   return allocated;
 }
 

@@ -23,20 +23,14 @@
 template <size_t size>
 class MemorySlotMap {
 
-  struct FreeBlock {
-    FreeBlock* m_Next;
-  };
+  using FreeBlock = MemoryManager::BlockInfo;
 
 public:
   MemorySlotMap<size>(unsigned long long begin, unsigned long long end) :
-    m_BeginBoundary(begin), m_EndBoundary(end)
+    m_BeginBoundary(0), m_EndBoundary(0), m_MemoryManagerInstance(MemoryManager::GetInstance()),
+    m_FreeList(nullptr), m_FreeList(nullptr)
   {
-    m_FreeList = reinterpret_cast<FreeBlock*>(begin);
-    m_FreeListTail = m_FreeList;
-    for (int i = begin; i < (end - (sizeof(FreeBlock) + size) + 1); i += sizeof(FreeBlock) + size)
-    {
-      m_FreeListTail->m_Next = reinterpret_cast<FreeBlock*>(i);
-    }
+    Grow();
   }
   // Allocates memory
   void* Allocate();
@@ -44,18 +38,78 @@ public:
   void Deallocate(void*);
 
 private:
+  // Gets more memory from the memory Manager
+  void Grow();
   // Free list of blocks
   FreeBlock* m_FreeList;
   // Tail of the free list
   FreeBlock* m_FreeListTail;
   // Set of Allocated memory
   std::set<void*, std::less<Key>, Allocator<void*>> m_Allocated;
-  // Gets more memory from the memory Manager
-  void Grow();
+  // Instance of the memory Manager
+  MemoryManager* m_MemoryManagerInstance;
 
-  unsigned long long m_BeginBoundary;
-  unsigned long long m_EndBoundary;
+  // The begining boundry of available memory
+  type_ptr m_BeginBoundary;
+  // The end boundry of available memory
+  type_ptr m_EndBoundary;
+  // Mutex for multithreaded access
+  std::mutex m_Mutex;
 
-};
+}; 
 
+template<size_t size>
+inline void* MemorySlotMap<size>::Allocate()
+{
+  void* retVal = nullptr;
+  if (m_FreeList == m_FreeListTail)
+    Grow();
+  m_Mutex.lock();
+  {
+    void* retVal = reinterpret_cast<char*>(m_FreeList) + sizeof(m_FreeList);
+    m_FreeList = m_FreeList->m_Next;
+  }
+  m_Mutex.unlock();
+  return retVal;
+}
+
+template<size_t size>
+inline void MemorySlotMap<size>::Deallocate(void* address)
+{
+  if (m_Allocated.find(address) != m_Allocated.end())
+  {
+    m_Mutex.lock();
+    m_Allocated.erase(address);
+    m_Mutex.lock();
+  }
+}
+
+template<size_t size>
+inline void MemorySlotMap<size>::Grow()
+{
+  m_Mutex.lock();
+  if(!m_BeginBoundary)
+    m_MemoryManagerInstance->GetNextBlock(size, m_BeginBoundary, m_EndBoundary);
+  else
+    m_MemoryManagerInstance->GetNextBlock(size, size_t(0), m_EndBoundary);
+  
+  else
+  {
+    m_FreeListTail->m_Next = reinterpret_cast<FreeBlock*>(m_EndBoundary - size);
+    m_FreeListTail = m_FreeListTail->m_Next;
+  }
+  
+  for (int i = m_EndBoundary - size; i >= m_BeginBoundary; i -= sizeof(FreeBlock) + size)
+  {
+    if (!m_FreeListTail)
+    {
+      m_FreeListTail = reinterpret_cast<FreeBlock*>(m_EndBoundary - size);
+      m_FreeList = m_FreeListTail;
+      m_FreeListTail->m_Next = nullptr;
+    }
+    else
+      m_FreeListTail->m_Next = reinterpret_cast<FreeBlock*>(i);
+  }
+  m_Mutex.unlock();
+}
 #endif
