@@ -25,14 +25,13 @@ using type_ptr = unsigned long long;
 
 class MemoryManager {
 
-public:
-
   struct BlockInfo
   {
     /*! pointer to the next block */
     BlockInfo* m_Next;
   };
 
+public:
   // constructor - decides the heap size upon construction
   MemoryManager(size_t bytes = GAME_HEAP_SIZE);
   // destructor - frees all the memory
