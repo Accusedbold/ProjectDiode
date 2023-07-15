@@ -15,10 +15,7 @@ std::ifstream& operator>>(std::ifstream& inputFile, size_t& t)
 
 std::ifstream& operator>>(std::ifstream& inputFile, GLushort& t)
 {
-  WARN("This is hacked, get rid of it");
-  size_t in;
-  inputFile.read(reinterpret_cast<char*>(&in), sizeof(in));
-  t = static_cast<GLushort>(in);
+  inputFile.read(reinterpret_cast<char*>(&t), sizeof(t));
 
   return inputFile;
 }

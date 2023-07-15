@@ -12,7 +12,8 @@
     manages all the memory used in the game
 */
 /********************************************************************/
-#include "stdafx.h" // size_t, malloc, free, memcpy_s
+#include "stdafx.h"         // size_t, malloc, free, memcpy_s
+#include "MemorySlotMap.h"  // MemorySlotMap
 
 MemoryManager* MemoryManager::m_Instance = new(malloc(sizeof(MemoryManager))) MemoryManager;
 
@@ -31,25 +32,42 @@ MemoryManager* MemoryManager::m_Instance = new(malloc(sizeof(MemoryManager))) Me
 
 */
 /******************************************************************************/
-MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes), m_BlockSize(0), m_NodeData(nullptr)
+MemoryManager::MemoryManager(size_t bytes) : m_HeapSize(bytes)
 {
   m_HeapData = malloc(m_HeapSize);
-  m_UnusedBlocks = nullptr;
-  GrowNodes();
-  m_BlockList = m_UnusedBlocks;
-  m_UnusedBlocks = m_UnusedBlocks->m_Next;
-
-  m_BlockList->m_Size = m_HeapSize;
-  m_BlockList->m_Address = static_cast<char*>(const_cast<void*>(m_HeapData));
-  m_BlockList->m_Allocated = false;
-  m_BlockList->m_Next = nullptr;
+  m_AllocatedEnd = reinterpret_cast<type_ptr>(m_HeapData);
 }
 
+/******************************************************************************/
+/*!
+          GetInstance
+
+\author   John Salguero
+
+\brief    Returns an instance to the memory manager.
+
+\return   MemoryManager*
+          The pointer to the singleton MemoryManager
+
+*/
+/******************************************************************************/
 MemoryManager* MemoryManager::GetInstance()
 {
   return m_Instance;
 }
 
+/******************************************************************************/
+/*!
+          DestroyInstance
+
+\author   John Salguero
+
+\brief    Frees up the resources of the memory Manager
+
+\return   void
+
+*/
+/******************************************************************************/
 void MemoryManager::DestroyInstance()
 {
   m_Instance->~MemoryManager();
@@ -69,114 +87,8 @@ void MemoryManager::DestroyInstance()
 MemoryManager::~MemoryManager()
 {
   free(const_cast<void*>(m_HeapData));
-  for (int i = 0; i < m_BlockSize; ++i) {
-    for (int j = 0; j < (i+1) * BLOCK_PAGE_SIZE; ++j) {
-      m_NodeData[i][j].~BlockInfo();
-    }
-    free(m_NodeData[i]);
-  }
-  free(m_NodeData);
 }
 
-/******************************************************************************/
-/*!
-          GetFreeBlockInfo
-
-\author   John Salguero
-
-\brief    Returns an unused BlockInfo object that has been pre-allocated.
-
-\return   The pointer to the unused BlockInfo object
-
-*/
-/******************************************************************************/
-MemoryManager::BlockInfo* MemoryManager::GetFreeBlockInfo()
-{
-  if (!m_UnusedBlocks)
-    GrowNodes();
-  BlockInfo* retVal = m_UnusedBlocks;
-  m_UnusedBlocks = m_UnusedBlocks->m_Next;
-
-  return retVal;
-}
-
-/******************************************************************************/
-/*!
-          InsertBlock
-
-\author   John Salguero
-
-\brief    Given an old block describing free space, splits it into two different
-          blocks if the size is larger than the new size
-
-\param    oldBlock
-          The old block to be split
-
-\param    bytes
-          The size of the new allocation
-
-\return   The pointer to the allocated space
-
-*/
-/******************************************************************************/
-void* MemoryManager::InsertBlock(BlockInfo* const oldBlock, const size_t bytes)
-{
-  BlockInfo* freeMem = nullptr; /* block of extra free memory from oldBlock */
-  size_t oldsize = oldBlock->m_Size; /* size in bytes of the old block */
-  char* address = oldBlock->m_Address; /* address of the old block */
-
-  /* change the old block to reflect the inserted block */
-  oldBlock->m_Allocated = true;
-  oldBlock->m_Size = bytes;
-
-  /* if there is memory left over, insert a new block to reflect this */
-  if (bytes < oldsize)
-  {
-    /* get an unused node for the block info and insert it next on the list */
-    freeMem = GetFreeBlockInfo();
-    freeMem->m_Allocated = false;
-    freeMem->m_Size = oldsize - bytes;
-    freeMem->m_Address = address + bytes;
-    freeMem->m_Next = oldBlock->m_Next;
-
-    oldBlock->m_Next = freeMem;
-  }
-
-  /* return the address of the allocated memory */
-  return oldBlock->m_Address;
-}
-
-
-/******************************************************************************/
-/*!
-          GrowNodes
-
-\author   John Salguero
-
-\brief    Allocates more nodes for the list of unused BlockInfo Objects. These
-          are used to describe which parts of the heap are used and unused.
-
-\return   void
-
-*/
-/******************************************************************************/
-void MemoryManager::GrowNodes()
-{
-  void* newNodePointers = malloc(++m_BlockSize * sizeof(void*));
-  void* newNodeData = malloc(m_BlockSize * BLOCK_PAGE_SIZE * sizeof(BlockInfo));
-  if (m_NodeData) {
-    std::memcpy(newNodePointers, m_NodeData, (m_BlockSize - 1) * sizeof(void*));
-    free(m_NodeData);
-  }
-  m_NodeData = static_cast<BlockInfo**>(newNodePointers);
-  m_NodeData[m_BlockSize - 1] = static_cast<BlockInfo*>(newNodeData);
-
-  for (int i = 0; i < m_BlockSize * BLOCK_PAGE_SIZE; ++i) {
-    BlockInfo* newBlock = new((m_NodeData[m_BlockSize - 1] + i)) BlockInfo;
-    newBlock->m_Next = m_UnusedBlocks;
-    m_UnusedBlocks = newBlock;
-  }
-}
 
 /******************************************************************************/
 /*!
@@ -196,7 +108,10 @@ void MemoryManager::GrowNodes()
 /******************************************************************************/
 void* MemoryManager::Allocate(size_t bytes)
 {
-  return allocated;
+  auto mapIt = m_MemoryMaps.find(bytes);
+  if (mapIt != m_MemoryMaps.end())
+    return mapIt->second.Allocate();
+  return m_MemoryMaps.emplace(bytes, MemorySlotMap(bytes)).first->second.Allocate();
 }
 
 /******************************************************************************/
@@ -217,49 +132,35 @@ void* MemoryManager::Allocate(size_t bytes)
 /******************************************************************************/
 bool MemoryManager::Deallocate(void* address)
 {
-  BlockInfo* previous = nullptr; /* block before deallocated block */
-  BlockInfo* delBlock;           /* block to be deleted */
-  BlockInfo* it = m_BlockList;   /* iterator for the data heap */
-
-  /* if the address exists determine if it can be deallocated */
-  if (address)
+  for (auto &map : m_MemoryMaps)
   {
-    /* crawl through the heap looking for the address specified */
-    while (it && it->m_Address < (char*)address)
+    if (map.second.Contains(address))
     {
-      previous = it;
-      it = it->m_Next;
+      map.second.Deallocate(address);
+      return true;
     }
-
-    /* if the address was found */
-    if (it && it->m_Address == address)
-    {
-      m_MemoryLock.lock();
-      /* deallocate the memory and consolidate surrounding free blocks */
-      it->m_Allocated = false;
-      /* Consolidate next block */
-      if (it->m_Next && !(it->m_Next->m_Allocated))
-      {
-        delBlock = it->m_Next;
-        it->m_Size += it->m_Next->m_Size;
-        it->m_Next = it->m_Next->m_Next;
-        delBlock->m_Next = m_UnusedBlocks;
-        m_UnusedBlocks = delBlock;
-      }
-      /* Consolidate previous block */
-      if (previous && !(previous->m_Allocated))
-      {
-        delBlock = it;
-        previous->m_Size += it->m_Size;
-        previous->m_Next = it->m_Next;
-        delBlock->m_Next = m_UnusedBlocks;
-        m_UnusedBlocks = delBlock;
-      }
-      m_MemoryLock.unlock();
-    }
-    else /* if the address was not found */
-      return false;
   }
+  return false;
+}
 
-  return true;
+void MemoryManager::GetNextBlock(size_t size, type_ptr& begin, type_ptr& end)
+{
+  m_MemoryLock.lock();
+  {
+    size_t amount;
+    begin = m_AllocatedEnd + 1;
+    if (size < 100)
+      amount = 1000;
+    else if (size < 1000)
+      amount = 100;
+    else if (size < 10000)
+      amount = 10;
+    else
+      amount = 1;
+    m_AllocatedEnd = begin + (size + sizeof(MemoryManager::BlockInfo)) * amount;
+    end = m_AllocatedEnd;
+    if (m_AllocatedEnd - reinterpret_cast<type_ptr>(m_HeapData) > m_HeapSize)
+      throw std::exception("Out of Memory");
+  }
+  m_MemoryLock.unlock();
 }

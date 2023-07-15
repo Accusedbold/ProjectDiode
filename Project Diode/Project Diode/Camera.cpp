@@ -125,8 +125,8 @@ void Camera::SetLookAt(glm::vec4 const& look)
 {
   m_LookAt = glm::normalize(look);
 
-  m_Right = glm::vec4(glm::cross(glm::vec3(m_LookAt), glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f);
-  m_Up = glm::vec4(glm::cross(glm::vec3(m_Right), glm::vec3(m_LookAt)), 0.0f);
+  m_Right = glm::vec4(glm::normalize(glm::cross(glm::vec3(m_LookAt), glm::vec3(0.0f, 1.0f, 0.0f))), 0.0f);
+  m_Up = glm::vec4(glm::normalize(glm::cross(glm::vec3(m_Right), glm::vec3(m_LookAt))), 0.0f);
 }
 
 /* Set The Camera Width */

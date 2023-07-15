@@ -58,7 +58,7 @@ void GameManager::SetUpHackedBlockMan(double dt)
 			1,5,7,1,7,3, // Left
 			4,0,6,6,0,2 });
 		mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
-		mesh.m_MaterialIndices.resize(12, 0);
+		mesh.m_MaterialIndices.resize(36, 0);
 		auto& material = mesh.m_Materials[0];
 		material->m_Ambient = glm::vec4(0.0f);
 		material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -82,7 +82,7 @@ void GameManager::SetUpHackedBlockMan(double dt)
 			1,5,7,1,7,3, // Left
 			4,0,6,6,0,2 });
 		mesh.m_Materials.emplace_back(new Material(L"Lambert_Blue", 1));
-		mesh.m_MaterialIndices.resize(12, 0);
+		mesh.m_MaterialIndices.resize(36, 0);
 		auto& material = mesh.m_Materials[0];
 		material->m_Ambient = glm::vec4(0.0f);
 		material->m_Diffuse = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -129,9 +129,13 @@ void GameManager::SetUpHackedBikiniBabe(double)
 	auto obj = of.CreateGenericArchetype(name).lock();
 	auto renderable =
 		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	of.GiveArchetypeComponent(name, ComponentType::Transform);
+	auto transform = 
+		std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
 	auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"CC_Standard_B").lock());
 	renderable->SetModel(model);
+	transform->SetScale({ .1f,.1f,.1f });
+	float radians = glm::radians(-90.0f);
+	transform->Rotate(glm::angleAxis(radians, glm::vec3{1, 0, 0}));
 
 	// Instantiate the Bikini Babe
 	m_object = of.CreateArchetypedObject(name).lock();
@@ -164,7 +168,7 @@ void GameManager::SetUpHackedCube(double dt)
 		1,5,7,1,7,3, // Left
 		4,0,6,6,0,2});
 	mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
-	mesh.m_MaterialIndices.resize(12, 0);
+	mesh.m_MaterialIndices.resize(36, 0);
 	auto &material = mesh.m_Materials[0];
 	material->m_Ambient = glm::vec4(0.0f);
 	material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -192,7 +196,7 @@ void GameManager::SetUpHackedCube(double dt)
 
 	// Instantiate the player
 	m_player = of.CreateArchetypedObject(player).lock();
-	m_UpdateFxn = &GameManager::SetUpHackedBikiniBabe;
+	m_UpdateFxn = &GameManager::SetUpHackedTriangle;
 }
 
 void GameManager::SetUpHackedTriangle(double dt)
@@ -210,16 +214,16 @@ void GameManager::SetUpHackedTriangle(double dt)
 	model->m_meshes.resize(1);
 	auto& mesh = model->m_meshes[0];
 	// Vertices
-	mesh.m_Positions.push_back(glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f));
-	mesh.m_Positions.push_back(glm::vec4(0.5f, -0.5f, 0.0f, 1.0f));
-	mesh.m_Positions.push_back(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+	mesh.m_Positions.push_back(glm::vec4(-4.78539085, -3.25717545, 165.623718, 1.0f));
+	mesh.m_Positions.push_back(glm::vec4(-4.87418938, -3.26421595, 165.668549, 1.0f));
+	mesh.m_Positions.push_back(glm::vec4(-4.60879135, -3.56536198, 165.460693, 1.0f));
 	// Indices
 	mesh.m_PosIndicies.insert(mesh.m_PosIndicies.end(), { 0,1,2 });
-	mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
-	mesh.m_MaterialIndices.resize(1, 0);
+	mesh.m_Materials.emplace_back(new Material(L"Lambert_Black", 0));
+	mesh.m_MaterialIndices.resize(3, 0);
 	auto& material = mesh.m_Materials[0];
 	material->m_Ambient = glm::vec4(0.0f);
-	material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	material->m_Diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	material->m_Specular = glm::vec4(0.0f);
 	material->m_Transparency = 0.0f;
 	material->m_Reflectivity = 0.0f;
@@ -231,19 +235,11 @@ void GameManager::SetUpHackedTriangle(double dt)
 	ResourceManager::GetInstance()->InsertNewResource(material->GetType(), material->GetName(), material);
 	renderable->SetModel(model);
 
-	// Create the Archetype Player
-	std::wstring player(L"Oogler");
-	auto pObj = of.CreateGenericArchetype(player).lock();
-	std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(player, ComponentType::Transform).lock())->SetPosition({ 0.0f, 0.0f, 7.0f });
-	of.GiveArchetypeComponent(player, ComponentType::Camera);
-	of.GiveArchetypeComponent(player, ComponentType::CameraController);
-
 	// Instantiate the Triangle
 	of.CreateArchetypedObject(name);
 
-	// Instantiate the player
-	m_player = of.CreateArchetypedObject(player).lock();
-	m_UpdateFxn = &GameManager::OogleObject;
+	// Instantiate Bikini Babe
+	m_UpdateFxn = &GameManager::SetUpHackedBikiniBabe;
 }
 
 void GameManager::OogleObject(double dt)

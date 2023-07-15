@@ -26,6 +26,7 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
   {
     auto const& mesh = model.m_meshes[i];
     SetShaderProgram(mesh.m_flags);
+    SetMaterials(mesh);
     // if the model has a skeleton, populate the bones
       std::vector<glm::mat4> boneTransformations;
     if (!model.m_skeleton.empty())
@@ -56,15 +57,16 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
     glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
     glVertexAttribPointer(pos4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 12));
-    glVertexAttribDivisor(pos1, 0);
-    glVertexAttribDivisor(pos2, 0);
-    glVertexAttribDivisor(pos3, 0);
-    glVertexAttribDivisor(pos4, 0);
+    glVertexAttribDivisor(pos1, 1);
+    glVertexAttribDivisor(pos2, 1);
+    glVertexAttribDivisor(pos3, 1);
+    glVertexAttribDivisor(pos4, 1);
     auto vert1 = transform * mesh.m_Positions[mesh.m_PosIndicies[0]];
-    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
-    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[3]];
+    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[1]];
+    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.m_VBO[0]);
     // Draw the Mesh
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -81,6 +83,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     if (!(mesh.m_flags & TRANSPARENCY_FLAG))
       continue;
     SetShaderProgram(mesh.m_flags);
+    SetMaterials(mesh);
     glm::mat4 transform;
     GetTransform(renderable, transform);
     // Set up the instances
@@ -103,7 +106,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     // Draw the Mesh
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;

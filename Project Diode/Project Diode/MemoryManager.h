@@ -19,7 +19,12 @@
   
 */
 /********************************************************************/
+#ifndef MemoryManager_H
+#define MemoryManager_H
+#include "Allocator.h"     // Allocator
 
+// Forward Declaration
+class MemorySlotMap;
 
 using type_ptr = unsigned long long;
 
@@ -48,12 +53,15 @@ public:
 private:
   static MemoryManager* m_Instance; // Instance of the MemoryManager
   const void* m_HeapData;           // Contiguous memory used for objects allocated with new
-  BlockInfo** m_NodeData;           // Non-contiguos memory used for objects in memory management
-  size_t m_BlockSize;               // Size currently used for block data, grows linerally
-  const size_t m_HeapSize;          // Size currently used for heap data, does not change
-  BlockInfo* m_BlockList;           // Linked list of describing blocks of data
-  BlockInfo* m_UnusedBlocks;        // Linked list of nodes that can be used, so deallocation and allocation do not need to happen
-  std::mutex m_MemoryLock;          // Mutex to ensure no data races on the memory manager
+  std::unordered_map
+    <size_t, MemorySlotMap,
+    std::hash<size_t>,
+    std::equal_to<size_t>,
+    Allocator<std::pair<const size_t, MemorySlotMap>>>
+    m_MemoryMaps;                    // Maps the differently sized objects
+  type_ptr m_AllocatedEnd;           // End of where the currently allocated memory is
+  const size_t m_HeapSize;           // Size currently used for heap data, does not change
+  std::mutex m_MemoryLock;           // Mutex to ensure no data races on the memory manager
 
   // allocates and adds block nodes to the list of free block nodes
   void GetNextBlock(size_t size, type_ptr& begin, type_ptr& end);
@@ -69,5 +77,7 @@ private:
   comrade void operator delete[](void* ptr) noexcept(true);
   comrade void operator delete[](void* ptr, const std::nothrow_t&) noexcept(true);
 
-  template<size_t size> comrade class MemorySlotMap;
+  comrade class MemorySlotMap;
 };
+
+#endif

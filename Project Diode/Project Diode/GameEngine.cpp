@@ -316,6 +316,7 @@ void Engine::RelayMessage(std::shared_ptr<Message> const& msg)
 /******************************************************************************/
 void Engine::BroadcastMessages()
 {
+  static size_t count = 0;
   // empty out the messages
   while (!m_NewMessages.empty())
   {
@@ -330,6 +331,7 @@ void Engine::BroadcastMessages()
     }
 
     m_MessageMutex.lock();
+    count++;
     m_NewMessages.pop();
     m_MessageMutex.unlock();
   }

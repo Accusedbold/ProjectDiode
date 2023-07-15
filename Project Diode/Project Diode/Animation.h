@@ -19,9 +19,9 @@
 struct Animation {
 
   // brings takes the verticies from model space to animated space
-  QuaternionTransform m_globalTransform;
+  std::vector<QuaternionTransform> m_globalTransform;
   // brings takes the verticies from bone space to animated space
-  QuaternionTransform m_AnimatedTransform;
+  std::vector<QuaternionTransform> m_AnimatedTransform;
   // The delay in ms for the next frame
   unsigned m_FrameDelay;
   // The count of how many frames are in the animation

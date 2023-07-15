@@ -37,6 +37,8 @@ int main(int, char*[]) {
   // Memory Manager should be the first thing to initialize
   //MemoryManager::GetInstance();
 
+
+
   int retCode = 0;
   if(Engine::GetInstance()->Inititialize())
     retCode |= Engine::GetInstance()->GameLoop();

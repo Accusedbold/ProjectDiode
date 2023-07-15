@@ -120,10 +120,6 @@ std::weak_ptr<Object> ObjectFactory::CreateArchetypedObject(const std::wstring& 
   /* Create The Archetype */
   retVal = (*archeIT).second->CloneObject();
 
-  // Send the Message
-  std::shared_ptr<Message>msg(new Message(L"Core", MessageType::ObjectCreated, retVal.lock()));
-  Engine::GetInstance()->RelayMessage(msg);
-
   return retVal;
 }
 

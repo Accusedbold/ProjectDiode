@@ -48,7 +48,7 @@ void main()
         totalBiTan += localBiTan * boneWeights[i];
     }
 
-    gl_Position = transformmatrix * totalPosition;
+    gl_Position = transformmatrix * position;
     fragPos = gl_Position.xyz;
     fragNormal = (transformmatrix * totalNormal).xyz;
     fragTan = (transformmatrix * totalTan).xyz;

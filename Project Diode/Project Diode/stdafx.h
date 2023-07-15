@@ -64,6 +64,7 @@ namespace fs = std::filesystem;
 #include "Object.h"           // Object
 #include "ComponentFactory.h" // ComponentFactory
 #include "ObjectFactory.h"    // ObjectFactory
+#include "MemorySlotMap.h"    // MemorySlotMap
 
 // Systems
 #include "Systems.h"          // All The Systems the Game uses

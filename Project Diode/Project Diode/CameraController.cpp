@@ -80,6 +80,10 @@ void CameraController::HandleInputMessage(std::shared_ptr<Message> const& msg)
       if (!m_Transform.expired())
         m_Transform.lock()->SetPosition(position - glm::vec3(0.0f, 1.0f, 0.0f));
       break;
+    case SDLK_c:
+      if (!m_Transform.expired())
+        camera.SetLookAt({ -m_Transform.lock()->GetPosition(), 0.0f});
+      break;
     default:
       break;
     }

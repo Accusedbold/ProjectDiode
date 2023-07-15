@@ -10,7 +10,7 @@ void Mesh::GenerateDataBuffer()
   size_t size = 0;
   // Setup all the attributes for the VAO and obtain the size of the data
   // Material Indices - use short for faster data transfers
-  size += m_PosIndicies.size() * sizeof(GLushort);
+  size += m_MaterialIndices.size() * sizeof(GLushort);
   size += m_Positions.size() * sizeof(glm::vec4);
   size += m_Normals.size() * sizeof(glm::vec4);
   size += m_Tangents.size() * sizeof(glm::vec4);
@@ -35,14 +35,8 @@ void Mesh::GenerateDataBuffer()
   // Material indicies are per face, so each vertex of the triangle should have the same material
   // making indices shorts since that makes data transfer faster
   glVertexAttribPointer(0, 1, GL_UNSIGNED_SHORT, GL_FALSE, sizeof(GLushort), reinterpret_cast<const void*>(offset));
-  for (auto index : m_MaterialIndices)
-  {
-    for (int i = 0; i < 3; ++i)
-    {
-      (*reinterpret_cast<GLushort*>(m_Data + offset)) = index;
-      offset += sizeof(GLushort);
-    }
-  }
+  std::memcpy(m_Data + offset, m_MaterialIndices.data(), m_MaterialIndices.size() * sizeof(GLushort));
+  offset += m_MaterialIndices.size() * sizeof(GLushort);
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
   std::memcpy(m_Data + offset, m_Positions.data(), m_Positions.size() * sizeof(glm::vec4));
   offset += m_Positions.size() * sizeof(glm::vec4);
@@ -90,6 +84,10 @@ void Mesh::GenerateDataBuffer()
   // populate the VBO and EBO
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_PosIndicies.size() * sizeof(GLushort), m_IndexData, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, size, m_Data, GL_STATIC_DRAW);
+
+  // Unbinde VAO and VBO
+  glGenVertexArrays(1, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::ReleaseDataBuffer()
