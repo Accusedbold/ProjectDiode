@@ -122,23 +122,16 @@ std::ifstream& operator>>(std::ifstream& inputFile, Model& model)
 
 std::ifstream& operator>>(std::ifstream& inputFile, Mesh& mesh)
 {
-  inputFile >> mesh.m_MaterialIndices;
   inputFile >> mesh.m_Materials;
-  inputFile >> mesh.m_PosIndicies;
+  inputFile >> mesh.m_Indices;
+  inputFile >> mesh.m_MaterialIndices;
   inputFile >> mesh.m_Positions;
-  inputFile >> mesh.m_NormIndicies;
   inputFile >> mesh.m_Normals;
-  inputFile >> mesh.m_TanIndicies;
   inputFile >> mesh.m_Tangents;
-  inputFile >> mesh.m_BiIndicies;
   inputFile >> mesh.m_BiTangents;
-  inputFile >> mesh.m_ColorIndicies;
   inputFile >> mesh.m_Colors;
-  inputFile >> mesh.m_UVIndicies;
   inputFile >> mesh.m_UVs;
-  inputFile >> mesh.m_WeightIndicies;
   inputFile >> mesh.m_Weights;
-  inputFile >> mesh.m_AnimWeightIndicies;
   inputFile >> mesh.m_SkeletalIndices;
   inputFile >> mesh.m_SkeletalWeights;
 
@@ -225,6 +218,7 @@ std::ifstream& operator>>(std::ifstream& inputFile, Joint& joint)
 
 std::ifstream& operator>>(std::ifstream& inputFile, Animation& animation)
 {
+  inputFile >> animation.m_Name;
   inputFile >> animation.m_globalTransform;
   inputFile >> animation.m_AnimatedTransform;
   inputFile >> animation.m_FrameDelay;

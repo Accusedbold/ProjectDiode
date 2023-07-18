@@ -36,13 +36,16 @@ public:
 private:
 
   // The function used to update the device
-  UpdateFxn m_UpdateFxn = &GameManager::SetUpHackedCube;
+  UpdateFxn m_UpdateFxn = &GameManager::SetUpHackedBikiniBabe;
   // Hacked player object
   WARN("This is Hacked, please Remove");
   void SetUpHackedBlockMan(double dt);
   void SetUpHackedBikiniBabe(double dt);
+  void SetUpHackedWarriorBabe(double dt);
+  void SetUpHackedJade(double dt);
   void SetUpHackedCube(double dt);
   void SetUpHackedTriangle(double dt);
+  void SetUpHackedCamera(double dt);
   void OogleObject(double dt);
   std::shared_ptr<Object> m_player;
   std::shared_ptr<Object> m_object;

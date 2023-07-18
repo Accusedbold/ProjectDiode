@@ -21,7 +21,7 @@ void Mesh::GenerateDataBuffer()
   size += m_SkeletalWeights.size() * MAX_BONE_INFLUENCE * sizeof(float);
 
   m_Data = new char[size];
-  m_IndexData = new char[m_PosIndicies.size() * sizeof(GLushort)];
+  m_IndexData = new char[m_Indices.size() * sizeof(GLushort)];
 
   // Create the VBO and EBO which will be bound to the VAO
   glGenBuffers(1, m_VBO);
@@ -34,7 +34,7 @@ void Mesh::GenerateDataBuffer()
   size_t offset = 0;
   // Material indicies are per face, so each vertex of the triangle should have the same material
   // making indices shorts since that makes data transfer faster
-  glVertexAttribPointer(0, 1, GL_UNSIGNED_SHORT, GL_FALSE, sizeof(GLushort), reinterpret_cast<const void*>(offset));
+  glVertexAttribIPointer(0, 1, GL_UNSIGNED_SHORT, sizeof(GLushort), reinterpret_cast<const void*>(offset));
   std::memcpy(m_Data + offset, m_MaterialIndices.data(), m_MaterialIndices.size() * sizeof(GLushort));
   offset += m_MaterialIndices.size() * sizeof(GLushort);
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
@@ -55,7 +55,7 @@ void Mesh::GenerateDataBuffer()
   glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<const void*>(offset));
   std::memcpy(m_Data + offset, m_UVs.data(), m_UVs.size() * sizeof(glm::vec2));
   offset += m_UVs.size() * sizeof(glm::vec2);
-  glVertexAttribPointer(7, 4, GL_UNSIGNED_SHORT, GL_FALSE, sizeof(GLushort) * 4, reinterpret_cast<const void*>(offset));
+  glVertexAttribIPointer(7, 4, GL_UNSIGNED_SHORT, sizeof(GLushort) * MAX_BONE_INFLUENCE, reinterpret_cast<const void*>(offset));
   for (auto skelIndexVec : m_SkeletalIndices)
   {
     std::memcpy(m_Data + offset, skelIndexVec.data(), skelIndexVec.size() * sizeof(GLushort));
@@ -68,7 +68,7 @@ void Mesh::GenerateDataBuffer()
     offset += skelWeightVec.size() * sizeof(float);
   }
   // Populate the index buffer
-  std::memcpy(m_IndexData, m_PosIndicies.data(), m_PosIndicies.size() * sizeof(GLushort));
+  std::memcpy(m_IndexData, m_Indices.data(), m_Indices.size() * sizeof(GLushort));
 
   // enable the attributes
   glEnableVertexAttribArray(0);
@@ -82,7 +82,7 @@ void Mesh::GenerateDataBuffer()
   glEnableVertexAttribArray(8);
 
   // populate the VBO and EBO
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_PosIndicies.size() * sizeof(GLushort), m_IndexData, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(GLushort), m_IndexData, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, size, m_Data, GL_STATIC_DRAW);
 
   // Unbinde VAO and VBO

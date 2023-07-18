@@ -38,23 +38,23 @@ enum class MaterialType {
 };
 
 enum class MapType {
-  Diffuse,
-  Emissive,
-  EmissiveFactor,
-  Ambient,
-  AmbientFactor,
-  DiffuseFactor,
-  Specular,
-  Normal,
-  SpecularFactor,
-  Shininess,
-  Bump,
-  Transparency,
-  TransparencyFactor,
-  Reflection,
-  ReflectionFactor,
-  Displacement,
-  DisplacementVector,
+  Diffuse,            // 0
+  Emissive,           // 1
+  EmissiveFactor,     // 2
+  Ambient,            // 3
+  AmbientFactor,      // 4
+  DiffuseFactor,      // 5
+  Specular,           // 6
+  Normal,             // 7
+  SpecularFactor,     // 8
+  Shininess,          // 9
+  Bump,               // 10
+  Transparency,       // 11
+  TransparencyFactor, // 12
+  Reflection,         // 13
+  ReflectionFactor,   // 14
+  Displacement,       // 15
+  DisplacementVector, // 16
   Count
 };
 

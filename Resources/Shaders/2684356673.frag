@@ -36,7 +36,7 @@ void main()
     vec3 normal = normalize(fragNormal);
     vec3 lightDir = normalize(vec3(0.0, 1.0, 0.0));  // Example: light direction from above
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuseColor = materials[matIndex].diffuse * diff * texture(diffuseTex[matIndex], fragUV).rgb;
+    vec3 diffuseColor = texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Specular lighting
     vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));  // Example: view direction along the positive z-axis
@@ -52,6 +52,5 @@ void main()
 
     // Final color calculation
     vec3 finalColor = ambientColor + diffuseColor + specularColor + emissiveColor;
-    // FragColor = vec4(finalColor, transparency);
-    FragColor = vec4(1.0,1.0,1.0,1.0);
+    FragColor = vec4(diffuseColor, transparency);
 }

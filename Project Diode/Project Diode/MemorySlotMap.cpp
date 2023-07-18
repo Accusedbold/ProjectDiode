@@ -56,7 +56,6 @@ void* MemorySlotMap::Allocate()
 
 void MemorySlotMap::Deallocate(void* address)
 {
-  size_t location = static_cast<size_t>((reinterpret_cast<type_ptr>(address) - m_BeginBoundary - sizeof(FreeBlock)) / (sizeof(FreeBlock) + m_Size));
   if (m_Allocated.contains(address))
   {
     m_Mutex.lock();

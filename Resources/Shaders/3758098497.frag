@@ -34,7 +34,7 @@ void main()
     vec3 normal = texture(normalTex[matIndex], fragUV).rgb;
     vec3 lightDir = normalize(vec3(0.0, 1.0, 0.0));  // Example: light direction from above
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuseColor = materials[matIndex].diffuse * diff * texture(diffuseTex[matIndex], fragUV).rgb;
+    vec3 diffuseColor = texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Retrieve the texture samples
     vec3 emissiveColor = texture(emissiveTex[matIndex], fragUV).rgb;
@@ -42,12 +42,12 @@ void main()
 
     // Calculate the lighting terms
     vec3 ambientTerm = materials[matIndex].ambient * diffuseColor;
-    vec3 diffuseTerm = materials[matIndex].diffuse * diffuseColor * max(dot(normalize(fragNormal), normalize(vec3(0.0, 0.0, -1.0))), 0.0);
-    vec3 specularTerm = materials[matIndex].specular * pow(max(dot(reflect(-normalize(fragPos), normalize(fragNormal)), normalize(vec3(0.0, 0.0, -1.0))), 0.0), 32.0);
+    vec3 diffuseTerm = materials[matIndex].diffuse * diffuseColor * max(dot(normal, normalize(vec3(0.0, 0.0, -1.0))), 0.0);
+    vec3 specularTerm = materials[matIndex].specular * pow(max(dot(reflect(-normalize(fragPos), normal), normalize(vec3(0.0, 0.0, -1.0))), 0.0), 32.0);
     vec3 emissiveTerm = materials[matIndex].emissive * emissiveColor;
     
     // Combine the lighting terms
     vec3 finalColor = ambientTerm + diffuseTerm + specularTerm + emissiveTerm;
 
-    FragColor = vec4(1.0,1.0,1.0,1.0);
+    FragColor = vec4(diffuseColor, 1.0);
 }

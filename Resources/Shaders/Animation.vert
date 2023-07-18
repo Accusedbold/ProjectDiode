@@ -20,9 +20,9 @@ out vec2 fragUV;
 flat out uint matIndex;
 
 
-const uint MAX_BONES = 100u;
+const uint MAX_BONES = 206u;
 const uint MAX_BONE_INFLUENCE = 4u;
-uniform mat4 finalBonesMatrices[MAX_BONES];
+uniform mat4  finalBonesMatrices[MAX_BONES];
 
 
 void main()
@@ -33,7 +33,7 @@ void main()
     vec4 totalBiTan = vec4(0.0f);
     for(uint i = 0u ; i < MAX_BONE_INFLUENCE ; ++i)
     {
-        if(boneIndices[i] >=MAX_BONES)
+        if(boneIndices[i] >= MAX_BONES)
         {
             totalPosition = position;
             break;
@@ -48,12 +48,12 @@ void main()
         totalBiTan += localBiTan * boneWeights[i];
     }
 
-    gl_Position = transformmatrix * position;
+    gl_Position = transformmatrix * totalPosition;
     fragPos = gl_Position.xyz;
-    fragNormal = (transformmatrix * totalNormal).xyz;
-    fragTan = (transformmatrix * totalTan).xyz;
-    fragBiTan = (transformmatrix * totalBiTan).xyz;
+    fragNormal = normalize((transformmatrix * totalNormal).xyz);
+    fragTan = normalize((transformmatrix * totalTan).xyz);
+    fragBiTan = normalize((transformmatrix * totalBiTan).xyz);
     fragColor = color.xyz;
-    fragUV = uv;
+    fragUV = vec2(uv.x, -uv.y);
     matIndex = matIndices;
 }

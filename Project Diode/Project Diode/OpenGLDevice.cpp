@@ -15,6 +15,8 @@
 /********************************************************************/
 #include "stdafx.h"
 #include "Joint.h"
+#include "Animation.h"
+#include "Texture.h"
 
 
 int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
@@ -34,8 +36,21 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
       GLuint boneLocation = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], "finalBonesMatrices");
       for (auto &joint : model.m_skeleton)
       {
-        WARN("TODO: Add Animation here");
-        boneTransformations.push_back(joint.m_globalBindposeInverse.GetTransformation());
+        WARN("TODO: HACKED Animation here");
+        if (joint.m_Animations.empty())
+        {
+          boneTransformations.push_back(glm::mat4());
+          continue;
+        }
+        size_t currAnim, currFrame, nextFrame;
+        float interpolation;
+        renderable->GetAnimationIndices(currAnim, currFrame, interpolation);
+        nextFrame = currFrame + 1;
+        if (joint.m_Animations[currAnim].m_AnimatedTransform.size() == nextFrame)
+          nextFrame = currFrame;
+        auto transformation = joint.m_Animations[currAnim].m_AnimatedTransform[currFrame].Interpolate(
+          joint.m_Animations[currAnim].m_AnimatedTransform[nextFrame], interpolation).GetTransformation();
+        boneTransformations.push_back(transformation);
       }
       glUniformMatrix4fv(boneLocation, static_cast<GLsizei>(boneTransformations.size()), GL_FALSE, &boneTransformations[0][0][0]);
     }
@@ -61,12 +76,9 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos2, 1);
     glVertexAttribDivisor(pos3, 1);
     glVertexAttribDivisor(pos4, 1);
-    auto vert1 = transform * mesh.m_Positions[mesh.m_PosIndicies[0]];
-    auto vert2 = transform * mesh.m_Positions[mesh.m_PosIndicies[1]];
-    auto vert3 = transform * mesh.m_Positions[mesh.m_PosIndicies[2]];
     glBindBuffer(GL_ARRAY_BUFFER, mesh.m_VBO[0]);
     // Draw the Mesh
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, 1);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -106,7 +118,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     // Draw the Mesh
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, 1);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -164,7 +176,7 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       glVertexAttribDivisor(pos3, 1);
       glVertexAttribDivisor(pos4, 1);
       // Draw the instances
-      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_PosIndicies.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
+      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
     }
   }
 
@@ -266,6 +278,11 @@ int OpenGLDevice::SetBuffer(int id)
 /******************************************************************************/
 int OpenGLDevice::SetMaterials(Mesh const& mesh)
 {
+  // the collection of texture unit indicies used in the shader
+  std::vector<std::vector<GLint>> textureUnitIndices;
+  // a count of the texture unit index to use
+  GLint textureUnitIndex = 0;
+
   // Bind the UBO
   glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
 
@@ -273,15 +290,36 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
   MaterialBuffer* materialBuffer = (MaterialBuffer*)glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 
   // Copy the material data to the buffer
+  // Use the same loop to associate the textures to texture unit indices
   for (size_t i = 0; i < mesh.m_Materials.size(); ++i)
   {
     Material const& material = *mesh.m_Materials[i];
-
     materialBuffer[i] = material;
-  }
 
+    // the current texture index for the array of 2DSamplers
+    size_t textureIndex = 0;
+    for (size_t index = 0; index < static_cast<size_t>(MapType::Count); ++index) {
+      auto &texture = material.m_MappingTextures[index];
+      if (texture)
+      {
+        std::string uniformName = m_TextureLocationMap[1 << index] + std::string("[") + std::to_string(i) + "]";
+        GLuint location = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], uniformName.c_str());
+        glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + textureUnitIndex));
+        glBindTexture(GL_TEXTURE_2D, texture->m_textureID);
+        glUniform1i(location, textureUnitIndex++);
+        //textureUnitIndices[textureIndex++].push_back(textureUnitIndex++);
+      }
+    }
+
+  }
   // Unmap the buffer
   glUnmapBuffer(GL_UNIFORM_BUFFER);
+
+  // use the texture unit indices to populate the sdSamplers
+  /*for (size_t i = 0; i < textureUnitIndices.size(); ++i)
+  {
+    glUniform1iv(static_cast<GLint>(i), static_cast<GLsizei>(textureUnitIndices[i].size()), textureUnitIndices[i].data());
+  }*/
 
   GLuint bindingPoint = 0; // The binding point/index to which the buffer object is bound
   glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_materialUBO[0]);
@@ -426,7 +464,7 @@ bool OpenGLDevice::Initialize
   int width, height;
   SDL_GL_GetDrawableSize(msgData->GetWindow(), &width, &height);
   glViewport(0, 0, width, height);
-  //glEnable(GL_CULL_FACE);
+  glEnable(GL_CULL_FACE);
 
   m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
   m_System = system;
@@ -440,6 +478,8 @@ bool OpenGLDevice::Initialize
   glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
   glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer) * MAX_MATERIALS, nullptr, GL_DYNAMIC_DRAW);
 
+
+  InitializeTextureMap();
   return true;
 }
 
@@ -605,6 +645,24 @@ GLuint OpenGLDevice::LinkShaderProgram(GLuint vertexShader, GLuint fragmentShade
   return program;
 }
 
+/******************************************************************************/
+/*!
+          GetTransform
+
+\author   John Salguero
+
+\brief    Given a Renderable and a reference to a mat4, populates the mat4 with
+          World Transformation of the Renderable
+
+\param    renderable
+          Renderable to get Transformation Data from
+
+\param    transOut
+          The transformation data calculated
+
+\return   The mat4 calculated
+*/
+/******************************************************************************/
 glm::mat4& OpenGLDevice::GetTransform(std::shared_ptr<Renderable> const& renderable, glm::mat4& transOut) const
 {
   auto transform = renderable->GetParent().lock()->has(Transform);
@@ -615,4 +673,36 @@ glm::mat4& OpenGLDevice::GetTransform(std::shared_ptr<Renderable> const& rendera
   transOut = m_ProjectionTransformation * m_CameraTransformation * transOut;
 
   return transOut;
+}
+
+/******************************************************************************/
+/*!
+          InitializeTextureMap
+
+\author   John Salguero
+
+\brief    Initializes the texture map used to find texture locations
+
+\return   void
+*/
+/******************************************************************************/
+void OpenGLDevice::InitializeTextureMap()
+{
+  m_TextureLocationMap[1 << 0] = "diffuseTex";
+  m_TextureLocationMap[1 << 1] = "emissiveTex";
+  m_TextureLocationMap[1 << 2] = "emissiveFactorTex";
+  m_TextureLocationMap[1 << 3] = "ambientTex";
+  m_TextureLocationMap[1 << 4] = "ambientFactorTex";
+  m_TextureLocationMap[1 << 5] = "diffuseFactorTex";
+  m_TextureLocationMap[1 << 6] = "specularTex";
+  m_TextureLocationMap[1 << 7] = "normalTex";
+  m_TextureLocationMap[1 << 8] = "specularFactorTex";
+  m_TextureLocationMap[1 << 9] = "shininessTex";
+  m_TextureLocationMap[1 << 10] = "bumpTex";
+  m_TextureLocationMap[1 << 11] = "transparencyTex";
+  m_TextureLocationMap[1 << 12] = "transparencyFactorTex";
+  m_TextureLocationMap[1 << 13] = "reflectionTex";
+  m_TextureLocationMap[1 << 14] = "reflectionFactorTex";
+  m_TextureLocationMap[1 << 15] = "displacementTex";
+  m_TextureLocationMap[1 << 16] = "displacementVectorTex";
 }

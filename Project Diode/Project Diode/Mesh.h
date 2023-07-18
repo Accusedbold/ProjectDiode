@@ -22,6 +22,7 @@
 
 struct Model; // forward Declaration
 struct Material;
+struct QuaternionTransform;
 
 struct Mesh {
   // Generates the data buffer
@@ -36,35 +37,21 @@ struct Mesh {
   // The Textures used in drawing the mesh
   std::vector<std::shared_ptr<Material>> m_Materials;
   // The Indicies of the points to create the geometry
-  std::vector<GLushort> m_PosIndicies;
+  std::vector<GLushort> m_Indices;
   // The position of the verticies
   std::vector<glm::vec4> m_Positions;
-  // The Indicies of the normals
-  std::vector<GLushort> m_NormIndicies;
   // The normals of the verticies
   std::vector<glm::vec4> m_Normals;
-  // The Indicies of the BiTangents
-  std::vector<GLushort> m_TanIndicies;
   // The Bi-Tangets of the verticies
   std::vector<glm::vec4> m_Tangents;
-  // The Indicies of the BiTangents
-  std::vector<GLushort> m_BiIndicies;
   // The Bi-Tangets of the verticies
   std::vector<glm::vec4> m_BiTangents;
-  // The Indicies of the Colors
-  std::vector<GLushort> m_ColorIndicies;
   // The Color of the verticies
   std::vector<glm::vec4> m_Colors;
-  // The Indicies of the Texture Coordinates
-  std::vector<GLushort> m_UVIndicies;
   // The Texture Coordinates of the Mesh
   std::vector<glm::vec2> m_UVs;
-  // The Indicies of the weight
-  std::vector<GLushort> m_WeightIndicies;
   // The Physical Weight of the points
   std::vector<float> m_Weights;
-  // The Indicies of the Skeletal Weight
-  std::vector<GLushort> m_AnimWeightIndicies;
   // The indicies of the joints associated with the weights
   std::vector<std::vector<GLushort>> m_SkeletalIndices;
   // The skeletal weight of the points

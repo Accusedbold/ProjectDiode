@@ -25,6 +25,8 @@ struct QuaternionTransform {
 	QuaternionTransform() = default;
 	// copy constructor
 	QuaternionTransform(QuaternionTransform const&) = default;
+	// Conversion Constructor
+	QuaternionTransform(glm::mat4 const&);
 	// constructor
 	QuaternionTransform(glm::vec3, glm::quat, glm::vec3);
 	// Interpolate the transformation

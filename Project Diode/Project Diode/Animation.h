@@ -18,6 +18,8 @@
 
 struct Animation {
 
+  // The Name of the Animation
+  std::wstring m_Name;
   // brings takes the verticies from model space to animated space
   std::vector<QuaternionTransform> m_globalTransform;
   // brings takes the verticies from bone space to animated space

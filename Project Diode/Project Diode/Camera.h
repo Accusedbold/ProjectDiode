@@ -123,7 +123,7 @@ private:
   unsigned m_Width = 800;
   unsigned m_Height = 600;
   float m_FOV = 170.0f;
-  float m_Near = 2.5f;
+  float m_Near = 0.1f;
   float m_Far = 10'000.0f;
 
   // used to resize buffers

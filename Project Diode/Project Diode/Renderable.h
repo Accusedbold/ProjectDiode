@@ -41,10 +41,12 @@ public:
   bool IsDebug() const;
   bool HasAnimation() const;
   std::set<long> const& GetMaterialFlags();
+  void GetAnimationIndices(size_t& currAnimationIndex, size_t& currFrame, float& animInterpolation);
 
   // Setters
   void SetModel(ResourceID);
   void SetModel(std::shared_ptr<Model>&);
+  void SetIsAnimating(bool);
   void SetIsTransparent(bool);
   void SetTransparency(float);
   void SetVisible(bool);
@@ -67,24 +69,18 @@ private:
   bool m_Visible = true;
   // whether this is a Debug-Renderable
   bool m_Debug = false;
-  // The current animation Time
-  float m_CurrTime = 0;
-  // The current Frame of the animation animation
-  float m_CurrFrame = 0;
-  // The next animation Time
-  float m_NextAnimTime = 0;
-  // The next Frame of the animation animation
-  float m_NextAnimFrame = 0;
-  // how much between the frames that need to be slurped
-  float m_FrameInterpolation = 0;
-  // how much between the animations that need to be slurped
-  float m_AnimInterpolation = 0;
   // whether the animation is playing
   bool m_isAnimating = false;
+  // The current Time of the current frame
+  float m_CurrFrameTime = 0;
+  // The current Frame of the current animation
+  size_t m_CurrFrame = 0;
+  // how much between the frames that need to be slurped
+  float m_CurrAnimationFrameInterpolation = 0;
   // The current animation
-  int m_AnimationID = 0;
+  size_t m_AnimationID = 0;
   // The next Animation
-  int m_nextAnimationID = 0;
+  size_t m_nextAnimationID = 0;
 
 };
 

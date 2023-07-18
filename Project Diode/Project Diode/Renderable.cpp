@@ -15,6 +15,8 @@
 */
 /********************************************************************/
 #include "stdafx.h"
+#include "Joint.h"
+#include "Animation.h"
 
 /******************************************************************************/
 /*!
@@ -49,8 +51,31 @@ std::shared_ptr<Component> Renderable::CloneComponent() const
 
 */
 /******************************************************************************/
-void Renderable::Update(double)
+void Renderable::Update(double dt)
 {
+  if (m_isAnimating)
+  {
+    // update the times 
+    m_CurrFrameTime += static_cast<float>(dt);
+
+    auto const& animations = m_Model->m_skeleton[0].m_Animations;
+    auto const& animation = m_Model->m_skeleton[0].m_Animations[m_AnimationID];
+    float delay = static_cast<float>(animation.m_FrameDelay);
+    while (m_CurrFrameTime > delay)
+    {
+      m_CurrFrameTime -= delay;
+      m_CurrFrame++;
+      if (m_CurrFrame >= animation.m_Count - 1)
+      {
+        m_AnimationID = m_nextAnimationID;
+        if (++m_nextAnimationID == animations.size())
+          m_nextAnimationID = 0;
+        m_CurrFrame = 0;
+      }
+    }
+    m_CurrAnimationFrameInterpolation = m_CurrFrameTime / delay;
+    
+  }
 }
 
 /******************************************************************************/
@@ -234,6 +259,35 @@ std::set<long> const& Renderable::GetMaterialFlags()
 
 /******************************************************************************/
 /*!
+           GetAnimationIndices
+
+\author    John Salguero
+
+\brief     Obtains Animation data, which determines which frame to use
+
+\param     currAnimationIndex
+           output which animtaion to use
+
+\param     currFrame
+           output which frame of the animation to use
+
+\param     animInterpolation
+           output how much to interpolate betweeen the animations
+
+
+\return    void
+
+*/
+/******************************************************************************/
+void Renderable::GetAnimationIndices(size_t& currAnimationIndex, size_t& currFrame, float& animInterpolation)
+{
+  currAnimationIndex = m_AnimationID;
+  currFrame = m_CurrFrame;
+  animInterpolation = m_CurrAnimationFrameInterpolation;
+}
+
+/******************************************************************************/
+/*!
           SetModel
 
 \author   John Salguero
@@ -307,6 +361,26 @@ void Renderable::SetModel(std::shared_ptr<Model>& modelPtr)
       new Message(L"Renderable", MessageType::ModelChange, std::enable_shared_from_this<Renderable>::shared_from_this()));
     Engine::GetInstance()->ImmediateMessage(msg);
   }
+}
+
+/******************************************************************************/
+/*!
+          SetIsAnimating
+
+\author   John Salguero
+
+\brief    Sets the status of animation, false means paused animation
+
+\param    isAnimating
+          Whether the model is animating
+
+\return   void
+
+*/
+/******************************************************************************/
+void Renderable::SetIsAnimating(bool isAnimating)
+{
+  m_isAnimating = isAnimating;
 }
 
 /******************************************************************************/

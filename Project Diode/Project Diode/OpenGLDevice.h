@@ -67,6 +67,8 @@ private:
 	GLuint LinkShaderProgram(GLuint vertexShader, GLuint fragmentShader);
 	// Get The current Transform From mesh from renderable
 	glm::mat4& GetTransform(std::shared_ptr<Renderable> const&, glm::mat4 &transOut) const;
+	// Initializes the map that allows for finding the right texture location
+	void InitializeTextureMap();
 
 	// the current state of the device - will only draw certain flags
 	ShaderFlags m_CurrentFlags = UNUSED_FLAGS;
@@ -88,6 +90,8 @@ private:
 	GLuint m_boneVBO[1] = { 0 };
 	// UBO for Materials
 	GLuint m_materialUBO[1] = { 0 };
+	// Map used to get the correct location of texture maps
+	std::unordered_map<ShaderFlags, const char*> m_TextureLocationMap;
 };
 
 #endif

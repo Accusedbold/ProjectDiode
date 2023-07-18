@@ -69,7 +69,9 @@ glm::vec3 const& Transform::GetScale() const
 glm::mat4 Transform::GetWorldMatrix() const
 {
   auto rotate = glm::mat4_cast(m_Transform.m_Rotate);
-  return glm::translate(rotate * glm::scale(glm::mat4(1.0f), m_Transform.m_Scale), m_Transform.m_Translate);
+  auto translate = glm::translate(glm::mat4(1.0), m_Transform.m_Translate);
+  auto scale = glm::scale(glm::mat4(1.0f), m_Transform.m_Scale);
+  return translate * rotate * scale;
 }
 
 QuaternionTransform const& Transform::GetWorldTransform() const

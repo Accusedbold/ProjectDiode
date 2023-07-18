@@ -16,6 +16,15 @@
 /********************************************************************/
 #include "stdafx.h"
 #include "QuaternionTransform.h"
+#include <glm/gtx/matrix_decompose.hpp>
+
+QuaternionTransform::QuaternionTransform(glm::mat4 const& transformation)
+{
+	glm::vec3 skew;
+	glm::vec4 perspective;
+
+	glm::decompose(transformation, m_Scale, m_Rotate, m_Translate, skew, perspective);
+}
 
 QuaternionTransform::QuaternionTransform(glm::vec3 trans, glm::quat rot, glm::vec3 scale)
 {
@@ -27,16 +36,16 @@ QuaternionTransform::QuaternionTransform(glm::vec3 trans, glm::quat rot, glm::ve
 QuaternionTransform QuaternionTransform::Interpolate(QuaternionTransform const& rhs, float delta) const
 {
 	QuaternionTransform retVal = QuaternionTransform();
-	retVal.m_Scale = m_Scale * (delta) + rhs.m_Scale * (1 - delta);
-	retVal.m_Rotate = glm::slerp(m_Rotate, rhs.m_Rotate, delta);
-	retVal.m_Translate = m_Translate * (delta) + rhs.m_Translate * (1 - delta);
+	retVal.m_Scale = m_Scale *(delta)+rhs.m_Scale * (1 - delta);
+	retVal.m_Rotate = glm::slerp(m_Rotate, rhs.m_Rotate, 1 - delta);
+	retVal.m_Translate = m_Translate *(delta)+rhs.m_Translate * (1 - delta);
 	return retVal;
 }
 
 glm::mat4 QuaternionTransform::GetTransformation() const
 {
-	glm::mat4 retVal(1.0f);
-	retVal = glm::scale(glm::mat4(1.0f), m_Scale);
-	retVal = glm::toMat4(m_Rotate) * retVal;
-	return glm::translate(retVal, m_Translate);
+	auto scale = glm::scale(glm::mat4(1.0f), m_Scale);
+	auto rotate = glm::toMat4(m_Rotate);
+	auto translate = glm::translate(glm::mat4(1.0f), m_Translate);
+	return translate * rotate * scale;
 }

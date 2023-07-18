@@ -93,7 +93,7 @@ void WindowSystem::Initialize()
 \return     void
 */
 /******************************************************************************/
-void WindowSystem::Update(double dt)
+void WindowSystem::Update(double)
 {
   HandleEvents();
 }
