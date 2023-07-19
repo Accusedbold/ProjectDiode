@@ -86,7 +86,7 @@ void Mesh::GenerateDataBuffer()
   glBufferData(GL_ARRAY_BUFFER, size, m_Data, GL_STATIC_DRAW);
 
   // Unbinde VAO and VBO
-  glGenVertexArrays(1, 0);
+  glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
