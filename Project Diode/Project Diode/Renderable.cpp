@@ -380,7 +380,10 @@ void Renderable::SetModel(std::shared_ptr<Model>& modelPtr)
 /******************************************************************************/
 void Renderable::SetIsAnimating(bool isAnimating)
 {
-  m_isAnimating = isAnimating;
+  if (m_HasAnimation)
+    m_isAnimating = isAnimating;
+  else
+    m_isAnimating = false;
 }
 
 /******************************************************************************/

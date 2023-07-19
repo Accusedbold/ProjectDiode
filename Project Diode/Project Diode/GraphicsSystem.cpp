@@ -317,8 +317,11 @@ void GraphicsSystem::DrawOpaqueRenderables(std::unordered_map<ShaderFlags, std::
 {
 	for (auto const& drawSet : renderableMap)
 	{
+		// Skip ones with any transparency
 		if (drawSet.first & TRANSPARENCY_FLAG)
 			continue;
+		// refrain from setting shader if it has an animation flag. that happens per
+		// mesh for animated models
 		if(!(drawSet.first & ANIMATION_FLAG))
 			m_Device.SetShaderProgram(drawSet.first);
 		m_Device.DrawBatchedRenderables(drawSet.second);
