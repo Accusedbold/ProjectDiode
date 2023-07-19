@@ -37,7 +37,7 @@ struct Mesh {
   // The Textures used in drawing the mesh
   std::vector<std::shared_ptr<Material>> m_Materials;
   // The Indicies of the points to create the geometry
-  std::vector<GLushort> m_Indices;
+  std::vector<GLuint> m_Indices;
   // The position of the verticies
   std::vector<glm::vec4> m_Positions;
   // The normals of the verticies

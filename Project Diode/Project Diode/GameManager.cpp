@@ -25,12 +25,52 @@ void GameManager::Update(double dt)
 
 int GameManager::Release()
 {
+	UnRegisterClassListener(MessageType::Input, GameManager, &GameManager::HandleSceneInput);
 	return 0;
 }
 
 void GameManager::Initialize()
 {
+	RegisterClassListener(MessageType::Input, GameManager, &GameManager::HandleSceneInput);
+}
 
+void GameManager::HandleSceneInput(std::shared_ptr<Message> const& msg)
+{
+	auto& data = *GET_DATA_FROM_MESSAGE(SDL_Event, msg);
+	auto& of = *ObjectFactory::GetInstance();
+
+	switch (data.type)
+	{
+	case SDL_KEYDOWN:
+		switch (data.key.keysym.sym)
+		{
+		case SDLK_1:   /// Army of Blocks
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedBlockMan;
+			break;
+		case SDLK_2:   /// Crate
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedCube;
+			break;
+		case SDLK_3:   /// Jade
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedJade;
+			break;
+		case SDLK_4:   /// Bikini Babe
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedBikiniBabe;
+			break;
+		case SDLK_5:   /// Warrior
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedWarriorBabe;
+			break;
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void GameManager::SetUpHackedBlockMan(double)
@@ -40,62 +80,70 @@ void GameManager::SetUpHackedBlockMan(double)
 	// Create the archetype BlockMan
 	std::wstring name(L"BlockMan");
 	auto& of = *ObjectFactory::GetInstance();
-	auto obj = of.CreateGenericArchetype(name).lock();
-	auto renderable =
-		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	of.GiveArchetypeComponent(name, ComponentType::Transform);
-	auto model = std::shared_ptr<Model>(new Model(name, 0));
-	model->m_meshes.resize(2);
-	{ // HEAD
-		auto& mesh = model->m_meshes[0];
-		for (int i = 0; i < 8; ++i)
-			mesh.m_Positions.push_back(glm::vec4(i % 2 * -.375f + .1875f, i % 4 / 2 * -.375f + .1875f + 0.9375f, i / 4 * -.375f + .1875f, 1.0f));
-		mesh.m_Indices.insert(mesh.m_Indices.end(), {
-			0,5,1,4,5,0, // Top
-			2,3,7,2,7,6, // Bottom
-			0,1,3,2,0,3, // Front
-			5,4,7,7,4,6, // Back
-			1,5,7,1,7,3, // Left
-			4,0,6,6,0,2 });
-		mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
-		mesh.m_MaterialIndices.resize(36, 0);
-		auto& material = mesh.m_Materials[0];
-		material->m_Ambient = glm::vec4(0.0f);
-		material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-		material->m_Specular = glm::vec4(0.0f);
-		material->m_Emissive = glm::vec4(0.0f);
-		material->m_Transparency = 0.0f;
-		material->m_Reflectivity = 0.0f;
-		material->m_Type = MaterialType::Lambert;
-		mesh.GenerateDataBuffer();
-		ResourceManager::GetInstance()->InsertNewResource(material->GetType(), material->GetName(), material);
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		of.GiveArchetypeComponent(name, ComponentType::Transform);
+		auto model = std::shared_ptr<Model>(new Model(name, 0));
+		model->m_meshes.resize(2);
+		{ // HEAD
+			auto& mesh = model->m_meshes[0];
+			for (int i = 0; i < 8; ++i)
+				mesh.m_Positions.push_back(glm::vec4(i % 2 * -.375f + .1875f, i % 4 / 2 * -.375f + .1875f + 0.9375f, i / 4 * -.375f + .1875f, 1.0f));
+			mesh.m_Indices.insert(mesh.m_Indices.end(), {
+				0,5,1,4,5,0, // Top
+				2,3,7,2,7,6, // Bottom
+				0,1,3,2,0,3, // Front
+				5,4,7,7,4,6, // Back
+				1,5,7,1,7,3, // Left
+				4,0,6,6,0,2 });
+			mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
+			mesh.m_MaterialIndices.resize(36, 0);
+			auto& material = mesh.m_Materials[0];
+			material->m_Ambient = glm::vec4(0.0f);
+			material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			material->m_Specular = glm::vec4(0.0f);
+			material->m_Emissive = glm::vec4(0.0f);
+			material->m_Transparency = 0.0f;
+			material->m_Reflectivity = 0.0f;
+			material->m_Type = MaterialType::Lambert;
+			mesh.GenerateDataBuffer();
+			ResourceManager::GetInstance()->InsertNewResource(material->GetType(), material->GetName(), material);
+		}
+		{// Body
+			auto& mesh = model->m_meshes[1];
+			for (int i = 0; i < 8; ++i)
+				mesh.m_Positions.push_back(glm::vec4(i % 2 * -1.0f + .5f, i % 4 / 2 * -2.0f + .75f, i / 4 * -0.5f + .25f, 1.0f));
+			mesh.m_Indices.insert(mesh.m_Indices.end(), {
+				0,5,1,4,5,0, // Top
+				2,3,7,2,7,6, // Bottom
+				0,1,3,2,0,3, // Front
+				5,4,7,7,4,6, // Back
+				1,5,7,1,7,3, // Left
+				4,0,6,6,0,2 });
+			mesh.m_Materials.emplace_back(new Material(L"Lambert_Blue", 1));
+			mesh.m_MaterialIndices.resize(36, 0);
+			auto& material = mesh.m_Materials[0];
+			material->m_Ambient = glm::vec4(0.0f);
+			material->m_Diffuse = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+			material->m_Specular = glm::vec4(0.0f);
+			material->m_Emissive = glm::vec4(0.0f);
+			material->m_Transparency = 0.0f;
+			material->m_Reflectivity = 0.0f;
+			material->m_Type = MaterialType::Lambert;
+			mesh.GenerateDataBuffer();
+			ResourceManager::GetInstance()->InsertNewResource(material->GetType(), material->GetName(), material);
+		}
+		ResourceManager::GetInstance()->InsertNewResource(model->GetType(), model->GetName(), model);
+		renderable->SetModel(model);
 	}
-	{// Body
-		auto& mesh = model->m_meshes[1];
-		for (int i = 0; i < 8; ++i)
-			mesh.m_Positions.push_back(glm::vec4(i % 2 * -1.0f + .5f, i % 4 / 2 * -2.0f + .75f, i / 4 * -0.5f + .25f, 1.0f));
-		mesh.m_Indices.insert(mesh.m_Indices.end(), {
-			0,5,1,4,5,0, // Top
-			2,3,7,2,7,6, // Bottom
-			0,1,3,2,0,3, // Front
-			5,4,7,7,4,6, // Back
-			1,5,7,1,7,3, // Left
-			4,0,6,6,0,2 });
-		mesh.m_Materials.emplace_back(new Material(L"Lambert_Blue", 1));
-		mesh.m_MaterialIndices.resize(36, 0);
-		auto& material = mesh.m_Materials[0];
-		material->m_Ambient = glm::vec4(0.0f);
-		material->m_Diffuse = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-		material->m_Specular = glm::vec4(0.0f);
-		material->m_Emissive = glm::vec4(0.0f);
-		material->m_Transparency = 0.0f;
-		material->m_Reflectivity = 0.0f;
-		material->m_Type = MaterialType::Lambert;
-		mesh.GenerateDataBuffer();
-		ResourceManager::GetInstance()->InsertNewResource(material->GetType(), material->GetName(), material);
+	else
+	{
+		of.Destroy(test);
 	}
-	ResourceManager::GetInstance()->InsertNewResource(model->GetType(), model->GetName(), model);
-	renderable->SetModel(model);
 
 	// Instantiate the Block Men
 	int cube = 22;
@@ -118,19 +166,27 @@ void GameManager::SetUpHackedBikiniBabe(double)
 	// Create the archetype Bikini Babe
 	std::wstring name(L"Bikini Babe");
 	auto& of = *ObjectFactory::GetInstance();
-	auto obj = of.CreateGenericArchetype(name).lock();
-	auto renderable =
-		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	auto transform =
-		std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
-	auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Bikini_Babe").lock());
-	renderable->SetModel(model);
-	renderable->SetIsAnimating(true);
-	transform->SetScale({ .025f,.025f,.025f });
-	transform->SetPosition({ 0.0f, -3.0f, 0.0f });
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		auto transform =
+			std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
+		auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Bikini_Babe").lock());
+		renderable->SetModel(model);
+		renderable->SetIsAnimating(true);
+		transform->SetScale({ .025f,.025f,.025f });
+		transform->SetPosition({ 0.0f, -3.0f, 0.0f });
 
-	// Instantiate the Bikini Babe
-	m_object = of.CreateArchetypedObject(name).lock();
+		// Instantiate the Bikini Babe
+		m_object = of.CreateArchetypedObject(name).lock();
+	}
+	else
+	{
+		m_object = test.lock();
+	}
 
 	// Oogle the object
 	m_UpdateFxn = &GameManager::SetUpHackedCamera;
@@ -143,19 +199,27 @@ void GameManager::SetUpHackedWarriorBabe(double)
 	// Create the archetype Bikini Babe
 	std::wstring name(L"Warrior Babe");
 	auto& of = *ObjectFactory::GetInstance();
-	auto obj = of.CreateGenericArchetype(name).lock();
-	auto renderable =
-		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	auto transform =
-		std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
-	auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Warrior").lock());
-	renderable->SetModel(model);
-	renderable->SetIsAnimating(true);
-	transform->SetScale({ .025f,.025f,.025f });
-	transform->SetPosition({ 0.0f, -3.0f, 0.0f });
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		auto transform =
+			std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
+		auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Warrior").lock());
+		renderable->SetModel(model);
+		renderable->SetIsAnimating(true);
+		transform->SetScale({ .025f,.025f,.025f });
+		transform->SetPosition({ 0.0f, -3.0f, 0.0f });
 
-	// Instantiate the Bikini Babe
-	m_object = of.CreateArchetypedObject(name).lock();
+		// Instantiate the Warrior Babe
+		m_object = of.CreateArchetypedObject(name).lock();
+	}
+	else 
+	{
+		m_object = test.lock();
+	}
 
 	// Oogle the object
 	m_UpdateFxn = &GameManager::SetUpHackedCamera;
@@ -168,21 +232,29 @@ void GameManager::SetUpHackedJade(double)
 	// Create the archetype Jade
 	std::wstring name(L"Jade");
 	auto& of = *ObjectFactory::GetInstance();
-	auto obj = of.CreateGenericArchetype(name).lock();
-	auto renderable =
-		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	auto transform =
-		std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
-	auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"jade").lock());
-	renderable->SetModel(model);
-	renderable->SetIsAnimating(true);
-	transform->SetScale({ .025f,.025f,.025f });
-	transform->SetPosition({ 0.0f, -3.0f, 0.0f });
-	constexpr float radians = glm::radians(-90.0f);
-  transform->SetRotation(glm::angleAxis(radians, glm::vec3(1.0f, 0.0f, 0.0f)));
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		auto transform =
+			std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
+		auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"jade").lock());
+		renderable->SetModel(model);
+		renderable->SetIsAnimating(true);
+		transform->SetScale({ .025f,.025f,.025f });
+		transform->SetPosition({ 0.0f, -3.0f, 0.0f });
+		constexpr float radians = glm::radians(-90.0f);
+		transform->SetRotation(glm::angleAxis(radians, glm::vec3(1.0f, 0.0f, 0.0f)));
 
-	// Instantiate Jade
-	m_object = of.CreateArchetypedObject(name).lock();
+		// Instantiate Jade
+		m_object = of.CreateArchetypedObject(name).lock();
+	}
+	else 
+	{
+		m_object = test.lock();
+	}
 
 	// Oogle the object
 	m_UpdateFxn = &GameManager::SetUpHackedCamera;
@@ -214,17 +286,25 @@ void GameManager::SetUpHackedCube(double)
 	// Create the archetype Cube
 	std::wstring name(L"Cube");
 	auto& of = *ObjectFactory::GetInstance();
-	auto obj = of.CreateGenericArchetype(name).lock();
-	auto renderable =
-		std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
-	auto transform =
-		std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
-	auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Crate").lock());
-	renderable->SetModel(model);
-	renderable->SetIsAnimating(false);
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		auto transform =
+			std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
+		auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Crate").lock());
+		renderable->SetModel(model);
+		renderable->SetIsAnimating(false);
 
-	// Instantiate the Cube
-	m_object = of.CreateArchetypedObject(name).lock();
+		// Instantiate the Cube
+		m_object = of.CreateArchetypedObject(name).lock();
+	}
+	else
+	{
+		m_object = test.lock();
+	}
 
 	// Oogle the object
 	m_UpdateFxn = &GameManager::SetUpHackedCamera;

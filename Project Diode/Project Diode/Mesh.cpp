@@ -21,7 +21,7 @@ void Mesh::GenerateDataBuffer()
   size += m_SkeletalWeights.size() * MAX_BONE_INFLUENCE * sizeof(float);
 
   m_Data = new char[size];
-  m_IndexData = new char[m_Indices.size() * sizeof(GLushort)];
+  m_IndexData = new char[m_Indices.size() * sizeof(GLuint)];
 
   // Create the VBO and EBO which will be bound to the VAO
   glGenBuffers(1, m_VBO);
@@ -68,7 +68,7 @@ void Mesh::GenerateDataBuffer()
     offset += skelWeightVec.size() * sizeof(float);
   }
   // Populate the index buffer
-  std::memcpy(m_IndexData, m_Indices.data(), m_Indices.size() * sizeof(GLushort));
+  std::memcpy(m_IndexData, m_Indices.data(), m_Indices.size() * sizeof(GLuint));
 
   // enable the attributes
   glEnableVertexAttribArray(0);
@@ -82,7 +82,7 @@ void Mesh::GenerateDataBuffer()
   glEnableVertexAttribArray(8);
 
   // populate the VBO and EBO
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(GLushort), m_IndexData, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(GLuint), m_IndexData, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, size, m_Data, GL_STATIC_DRAW);
 
   // Unbinde VAO and VBO

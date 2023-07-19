@@ -36,9 +36,9 @@ QuaternionTransform::QuaternionTransform(glm::vec3 trans, glm::quat rot, glm::ve
 QuaternionTransform QuaternionTransform::Interpolate(QuaternionTransform const& rhs, float delta) const
 {
 	QuaternionTransform retVal = QuaternionTransform();
-	retVal.m_Scale = m_Scale *(delta)+rhs.m_Scale * (1 - delta);
-	retVal.m_Rotate = glm::slerp(m_Rotate, rhs.m_Rotate, 1 - delta);
-	retVal.m_Translate = m_Translate *(delta)+rhs.m_Translate * (1 - delta);
+	retVal.m_Scale = m_Scale *(1 - delta)+rhs.m_Scale * (delta);
+	retVal.m_Rotate = glm::slerp(m_Rotate, rhs.m_Rotate, delta);
+	retVal.m_Translate = m_Translate *(1 - delta)+rhs.m_Translate * (delta);
 	return retVal;
 }
 

@@ -78,7 +78,7 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos4, 1);
     glBindBuffer(GL_ARRAY_BUFFER, mesh.m_VBO[0]);
     // Draw the Mesh
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, 1);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_INT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -118,7 +118,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glVertexAttribDivisor(pos3, 0);
     glVertexAttribDivisor(pos4, 0);
     // Draw the Mesh
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, 1);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_INT, 0, 1);
   }
   SetShaderProgram(oldFlags);
   return 0;
@@ -176,7 +176,7 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       glVertexAttribDivisor(pos3, 1);
       glVertexAttribDivisor(pos4, 1);
       // Draw the instances
-      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_Indices.size()), GL_UNSIGNED_SHORT, 0, static_cast<GLsizei>(instancedTransformations.size()));
+      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(instancedTransformations.size()));
     }
   }
 
@@ -296,8 +296,7 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
     Material const& material = *mesh.m_Materials[i];
     materialBuffer[i] = material;
 
-    // the current texture index for the array of 2DSamplers
-    size_t textureIndex = 0;
+    // Set the Textures for the materials
     for (size_t index = 0; index < static_cast<size_t>(MapType::Count); ++index) {
       auto &texture = material.m_MappingTextures[index];
       if (texture)
@@ -307,19 +306,12 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
         glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + textureUnitIndex));
         glBindTexture(GL_TEXTURE_2D, texture->m_textureID);
         glUniform1i(location, textureUnitIndex++);
-        //textureUnitIndices[textureIndex++].push_back(textureUnitIndex++);
       }
     }
 
   }
   // Unmap the buffer
   glUnmapBuffer(GL_UNIFORM_BUFFER);
-
-  // use the texture unit indices to populate the sdSamplers
-  /*for (size_t i = 0; i < textureUnitIndices.size(); ++i)
-  {
-    glUniform1iv(static_cast<GLint>(i), static_cast<GLsizei>(textureUnitIndices[i].size()), textureUnitIndices[i].data());
-  }*/
 
   GLuint bindingPoint = 0; // The binding point/index to which the buffer object is bound
   glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_materialUBO[0]);
