@@ -18,6 +18,7 @@ out vec3 fragBiTan;
 out vec3 fragColor;
 out vec2 fragUV;
 flat out uint matIndex;
+out mat3 TBN;
 
 
 const uint MAX_BONES = 206u;
@@ -54,6 +55,7 @@ void main()
     fragTan = normalize((transformmatrix * totalTan).xyz);
     fragBiTan = normalize((transformmatrix * totalBiTan).xyz);
     fragColor = color.xyz;
-    fragUV = vec2(uv.x, -uv.y);
+    fragUV = vec2(uv.x, 1-uv.y);
     matIndex = matIndices;
+    TBN = mat3(normalize(fragTan), normalize(fragBiTan), normalize(fragNormal));
 }

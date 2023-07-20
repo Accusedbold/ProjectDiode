@@ -19,6 +19,7 @@ enum class MessageType
 {
   None,
   WindowCreated,
+  WindowResized,
   ErrorMessage,
   Quit,
   Shutdown,

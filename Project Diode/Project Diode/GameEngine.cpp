@@ -28,7 +28,6 @@ Engine* Engine::m_Instance = nullptr;
 */
 /******************************************************************************/
 Engine::~Engine() {
-  if (m_GameRunning)
     Close();
 }
 

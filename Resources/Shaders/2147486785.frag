@@ -9,7 +9,7 @@ in vec2 fragUV;
 flat in uint matIndex;
 in mat3 TBN;
 
-const int MAX_MATERIALS = 5;
+const int MAX_MATERIALS = 4;
 
 layout (std140, binding = 0) uniform MaterialBlock
 {
@@ -24,7 +24,8 @@ layout (std140, binding = 0) uniform MaterialBlock
 
 uniform sampler2D diffuseTex[MAX_MATERIALS];
 uniform sampler2D specularTex[MAX_MATERIALS];
-uniform sampler2D normalTex[MAX_MATERIALS];
+uniform sampler2D bumpTex[MAX_MATERIALS];
+uniform sampler2D transparencyTex[MAX_MATERIALS];
 
 uniform vec3 viewPos;
 
@@ -37,9 +38,13 @@ void main()
     vec3 lightColor = vec3(1.0, 1.0, 1.0); // White Light Example
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    // Calculate the tangent space normal from the normal map
-    vec3 normalMap = texture(normalTex[matIndex], fragUV).rgb * 2.0 - 1.0;
-    vec3 normal = normalize(TBN * normalMap);
+    // Calculate the normal from BumpMap
+    vec2 dSTdx = dFdx( fragUV );
+    vec2 dSTdy = dFdy( fragUV );
+    float Hll = texture2D( bumpTex[matIndex], fragUV ).x;
+    float dBx = texture2D( bumpTex[matIndex], fragUV + dSTdx ).x - Hll;
+    float dBy = texture2D( bumpTex[matIndex], fragUV + dSTdy ).x - Hll;
+    vec3 normal = normalize(TBN * vec3(dBx, dBy, 1.0));
 
     // Diffuse lighting
     float diff = max(dot(normal, lightDir), 0.0);
@@ -54,14 +59,14 @@ void main()
     float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess_exponent);
     vec3 specularTerm = lightColor * spec;
 
-    // Emissive color
+    // Emmissive Lighting
     vec3 emissiveColor = diffuseColor;
     vec3 emissiveTerm = materials[matIndex].emissive * emissiveColor;
 
     // Transparency
-    float transparency = (1-materials[matIndex].transparency);
+    float transparency = (1-materials[matIndex].transparency) * texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
-    vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveTerm * 0;
+    vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveColor * 0;
     FragColor = vec4(finalColor, 1.0);
 }

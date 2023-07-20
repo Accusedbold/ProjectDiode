@@ -16,6 +16,9 @@
 #ifndef OpenGLDevice_H
 #define OpenGLDevice_H
 
+#define MATERIAL_BINDING_POINT 0
+#define VIEW_BINDING_POINT 1
+
 // forward Declarations
 class GraphicsSystem;
 struct RenderableComparator;
@@ -46,17 +49,22 @@ public:
 	int SetMaterials(Mesh const&);
 	// Gets the stats from the camera, like position, width, fov, etc
 	int SetCamera(std::shared_ptr<Camera> const&);
-	// Constructs the device with the graphics system
-	OpenGLDevice(std::weak_ptr<GraphicsSystem> const& system);
 	// Called to update it every game tick
 	void Update(double dt);
 	// Used to initialize the device
-	bool Initialize
-	(std::shared_ptr<WindowCreatedData> const& data, std::shared_ptr<GraphicsSystem> const& system);
+	bool Initialize(std::shared_ptr<WindowCreatedData> const& data);
 	// Used to Release all resources it owns
 	int Release();
 
 private:
+	// Create the openGL Context
+	void CreateContext(std::shared_ptr<WindowCreatedData> const& msgData);
+	// Create the Viewport
+	void CreateViewport(std::shared_ptr<WindowCreatedData> const& msgData);
+	// Create Buffers Used
+	void CreateBuffers();
+	// Register Listeners for messages
+	void RegisterListeners();
 	// Retrieves, Compiles, and Links a Shader Program
 	GLuint LoadShaderProgram(ShaderFlags flags);
 	// Reads in the code from a shader
@@ -69,6 +77,8 @@ private:
 	glm::mat4& GetTransform(std::shared_ptr<Renderable> const&, glm::mat4 &transOut) const;
 	// Initializes the map that allows for finding the right texture location
 	void InitializeTextureMap();
+	// Handles the window resize event
+	void HandleWindowResize(std::shared_ptr<Message> const&);
 
 	// the current state of the device - will only draw certain flags
 	ShaderFlags m_CurrentFlags = UNUSED_FLAGS;
@@ -76,12 +86,14 @@ private:
 	UpdateFxn m_UpdateFxn = &OpenGLDevice::DoNothing;
 	// the openGL Context
 	SDL_GLContext m_glContext;
-	// The Graphics System which holds the resources for rendering
-	std::weak_ptr<GraphicsSystem> m_System;
 	// The current Camera Transformation
 	glm::mat4 m_CameraTransformation;
 	// the current Projection Transformation
 	glm::mat4 m_ProjectionTransformation;
+	// the current World to View Matrix
+	glm::mat4 m_WorldToViewTransformation;
+	// The Current View Vector
+	glm::vec3 m_ViewPos;
 	// Map of the shaders programs
 	std::unordered_map<ShaderFlags, GLuint> m_ShaderPrograms;
 	// VBO for Instanced Matrix Transformations

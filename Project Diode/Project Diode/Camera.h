@@ -114,14 +114,18 @@ public:
   std::vector<std::weak_ptr<Renderable>>& GetDrawList();
 
 private:
+
+  // Handles the Resize of the window
+  void HandleResizeWindow(std::shared_ptr<Message> const&);
+
   // used to construct the inverse orthogonal matrix
   glm::vec4 m_LookAt = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
   glm::vec4 m_Right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);;
   glm::vec4 m_Up = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);;
 
   // Used for projection
-  unsigned m_Width = 800;
-  unsigned m_Height = 600;
+  int m_Width = WINDOW_WIDTH;
+  int m_Height = WINDOW_HEIGHT;
   float m_FOV = 170.0f;
   float m_Near = 0.1f;
   float m_Far = 10'000.0f;

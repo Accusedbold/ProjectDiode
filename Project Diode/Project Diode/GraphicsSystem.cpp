@@ -36,7 +36,7 @@
 */
 /******************************************************************************/
 GraphicsSystem::GraphicsSystem(std::wstring& name) : 
-	System(name), m_WindowHandle(nullptr), m_Device(std::weak_ptr<GraphicsSystem>())
+	System(name), m_WindowHandle(nullptr), m_Device()
 {}
 
 /******************************************************************************/
@@ -126,7 +126,7 @@ void GraphicsSystem::HandleWindowCreated(std::shared_ptr<Message> const& msg)
 {
 	auto data = GET_DATA_FROM_MESSAGE(WindowCreatedData, msg);
 	m_WindowHandle = data->GetWindow();
-	m_Device.Initialize(data, shared_from_this());
+	m_Device.Initialize(data);
 }
 
 /******************************************************************************/

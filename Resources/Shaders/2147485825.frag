@@ -23,8 +23,8 @@ layout (std140, binding = 0) uniform MaterialBlock
 } materials[MAX_MATERIALS];
 
 uniform sampler2D diffuseTex[MAX_MATERIALS];
-uniform sampler2D specularTex[MAX_MATERIALS];
 uniform sampler2D normalTex[MAX_MATERIALS];
+uniform sampler2D transparencyTex[MAX_MATERIALS];
 
 uniform vec3 viewPos;
 
@@ -50,7 +50,7 @@ void main()
     vec3 ambientTerm = materials[matIndex].ambient * diffuseColor * 0.1f;
 
     // Specular Lighting
-    float shininess_exponent = texture(specularTex[matIndex], fragUV).r;
+    float shininess_exponent = materials[matIndex].shininess;
     float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess_exponent);
     vec3 specularTerm = lightColor * spec;
 
@@ -59,7 +59,7 @@ void main()
     vec3 emissiveTerm = materials[matIndex].emissive * emissiveColor;
 
     // Transparency
-    float transparency = (1-materials[matIndex].transparency);
+    float transparency = (1-materials[matIndex].transparency) * texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
     vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveTerm * 0;

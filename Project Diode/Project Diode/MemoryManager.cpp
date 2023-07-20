@@ -86,6 +86,7 @@ void MemoryManager::DestroyInstance()
 /******************************************************************************/
 MemoryManager::~MemoryManager()
 {
+  m_Instance->m_MemoryMaps.clear();
   free(const_cast<void*>(m_HeapData));
 }
 

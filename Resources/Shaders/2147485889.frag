@@ -9,9 +9,9 @@ in vec2 fragUV;
 flat in uint matIndex;
 in mat3 TBN;
 
-const int MAX_MATERIALS = 5;
+const int MAX_MATERIALS = 4;
 
-layout (std140, binding = 0) uniform MaterialBlock
+layout (binding = 0) uniform MaterialBlock
 {
     vec3 ambient;
     vec3 diffuse;
@@ -25,6 +25,7 @@ layout (std140, binding = 0) uniform MaterialBlock
 uniform sampler2D diffuseTex[MAX_MATERIALS];
 uniform sampler2D specularTex[MAX_MATERIALS];
 uniform sampler2D normalTex[MAX_MATERIALS];
+uniform sampler2D transparencyTex[MAX_MATERIALS];
 
 uniform vec3 viewPos;
 
@@ -59,7 +60,7 @@ void main()
     vec3 emissiveTerm = materials[matIndex].emissive * emissiveColor;
 
     // Transparency
-    float transparency = (1-materials[matIndex].transparency);
+    float transparency = (1-materials[matIndex].transparency) * texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
     vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveTerm * 0;

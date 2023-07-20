@@ -33,6 +33,7 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
       std::vector<glm::mat4> boneTransformations;
     if (!model.m_skeleton.empty())
     {
+      boneTransformations.reserve(model.m_skeleton.size());
       GLuint boneLocation = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], "finalBonesMatrices");
       for (auto &joint : model.m_skeleton)
       {
@@ -76,7 +77,6 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
     glVertexAttribDivisor(pos2, 1);
     glVertexAttribDivisor(pos3, 1);
     glVertexAttribDivisor(pos4, 1);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.m_VBO[0]);
     // Draw the Mesh
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_INT, 0, 1);
   }
@@ -228,7 +228,8 @@ int OpenGLDevice::DrawTransparentRenderables(std::multimap<float, std::shared_pt
 /******************************************************************************/
 int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
 {
-  if (m_CurrentFlags == flags || flags == UNUSED_FLAGS)
+  flags &= ~(TRANSPARENCY_FLAG);
+  if (m_CurrentFlags == flags || flags == (UNUSED_FLAGS & ~(TRANSPARENCY_FLAG)))
     return 0;
   if (m_ShaderPrograms.find(flags) != m_ShaderPrograms.end())
     glUseProgram(m_ShaderPrograms[flags]);
@@ -238,6 +239,11 @@ int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
     m_ShaderPrograms[flags] = shaderProgram;
     glUseProgram(shaderProgram);
   }
+
+  // Everytime the uniform state changes, update view position
+  GLuint location = glGetUniformLocation(m_ShaderPrograms[flags], "viewPos");
+  glUniform1fv(location, 3, &m_ViewPos[0]);
+
   m_CurrentFlags = flags;
   return 0;
 }
@@ -315,7 +321,7 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
   glUnmapBuffer(GL_UNIFORM_BUFFER);
 
   GLuint bindingPoint = 0; // The binding point/index to which the buffer object is bound
-  glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_materialUBO[0]);
+  glBindBufferBase(GL_UNIFORM_BUFFER, MATERIAL_BINDING_POINT, m_materialUBO[0]);
 
   return 0;
 }
@@ -338,26 +344,13 @@ int OpenGLDevice::SetCamera(std::shared_ptr<Camera> const& camera)
 {
   m_CameraTransformation = camera->GetCameraTransformation();
   m_ProjectionTransformation = camera->GetPerpectiveMatrix();
+  m_WorldToViewTransformation = m_ProjectionTransformation * m_CameraTransformation;
+  auto transform = camera->GetParent().lock()->has(Transform);
+  if (transform.expired())
+    m_ViewPos = glm::vec3(0.0f);
+  else
+    m_ViewPos = transform.lock()->GetPosition(), 1.0f;
   return 0;
-}
-
-/******************************************************************************/
-/*!
-          OpenGLDevice
-
-\author   John Salguero
-
-\brief    Constructs the Graphics Device with the proper system
-
-\param    std::weak_ptr<Renderable>
-          The Renderable to Draw
-
-\return   void
-*/
-/******************************************************************************/
-OpenGLDevice::OpenGLDevice(std::weak_ptr<GraphicsSystem> const& system) 
-{
-  m_System = system;
 }
 
 /******************************************************************************/
@@ -434,7 +427,57 @@ void OpenGLDevice::Update(double dt)
 */
 /******************************************************************************/
 bool OpenGLDevice::Initialize
-(std::shared_ptr<WindowCreatedData> const& msgData, std::shared_ptr<GraphicsSystem> const& system)
+(std::shared_ptr<WindowCreatedData> const& msgData)
+{
+  // Create the context
+  CreateContext(msgData);
+  // Set up the viewport
+  CreateViewport(msgData);
+  // Create Universal Buffers
+  CreateBuffers();
+  // Initialize the texture map lookup table
+  InitializeTextureMap();
+  // Register the message listener for resized Windows
+  RegisterListeners();
+  // Set the update function
+  m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
+  return true;
+}
+
+/******************************************************************************/
+/*!
+          Release
+
+\author   John Salguero
+
+\brief    Releases the resources held by the glDevice.
+
+\return   the error code caused by release. 0 is a success
+*/
+/******************************************************************************/
+int OpenGLDevice::Release()
+{
+  for (auto const& program : m_ShaderPrograms)
+    glDeleteProgram(program.second);
+  glDeleteBuffers(1, m_matVBO);
+  glDeleteBuffers(1, m_boneVBO);
+  SDL_GL_DeleteContext(m_glContext);
+  UnRegisterClassListener(MessageType::WindowResized, OpenGLDevice, &OpenGLDevice::HandleWindowResize);
+  return 0;
+}
+
+/******************************************************************************/
+/*!
+          CreateContext
+
+\author   John Salguero
+
+\brief    Creates the openGL Context
+
+\return   
+*/
+/******************************************************************************/
+void OpenGLDevice::CreateContext(std::shared_ptr<WindowCreatedData> const& msgData)
 {
   // Create an OpenGL context
   m_glContext = SDL_GL_CreateContext(msgData->GetWindow());
@@ -452,50 +495,72 @@ bool OpenGLDevice::Initialize
 
   // Print OpenGL version
   DEBUG_POPUP(std::string("OpenGL version: ") + reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+}
 
+/******************************************************************************/
+/*!
+          CreateViewport
+
+\author   John Salguero
+
+\brief    Creates the Viewport used to render to the window
+
+\param    msgData
+          The message holding the data from the created Window 
+
+\param    system
+          The Graphics System that is using the device
+
+\return   void
+*/
+/******************************************************************************/
+void OpenGLDevice::CreateViewport(std::shared_ptr<WindowCreatedData> const& msgData)
+{
   // Set up the viewport
   int width, height;
   SDL_GL_GetDrawableSize(msgData->GetWindow(), &width, &height);
   glViewport(0, 0, width, height);
   glEnable(GL_CULL_FACE);
+}
 
-  m_UpdateFxn = &OpenGLDevice::InitializedUpdate;
-  m_System = system;
+/******************************************************************************/
+/*!
+          CreateBuffers
 
+\author   John Salguero
+
+\brief    Creates the univeral buffers used for rendering
+
+\return   the error code caused by comiliation. 0 is a success
+*/
+/******************************************************************************/
+void OpenGLDevice::CreateBuffers()
+{
   // Create the VBO that will define transformation Instanced Drawing
   glCreateBuffers(1, m_matVBO);
   // Create the VBO that will define bone transformations Drawing
   glCreateBuffers(1, m_boneVBO);
   // Create the UBO that will define the uniform for materials
   glCreateBuffers(1, m_materialUBO);
+  // Allocate size for the UBOs
   glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
   glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer) * MAX_MATERIALS, nullptr, GL_DYNAMIC_DRAW);
-
-
-  InitializeTextureMap();
-  return true;
 }
 
 /******************************************************************************/
 /*!
-          Release
+          RegisterListeners
 
 \author   John Salguero
 
-\brief    Releases the resources held by the glDevice.
+\brief    Registers the message liseners for the class
 
+\return   void
 
-\return   the error code caused by release. 0 is a success
-*/
 /******************************************************************************/
-int OpenGLDevice::Release()
+void OpenGLDevice::RegisterListeners()
 {
-  for (auto const& program : m_ShaderPrograms)
-    glDeleteProgram(program.second);
-  glDeleteBuffers(1, m_matVBO);
-  glDeleteBuffers(1, m_boneVBO);
-  SDL_GL_DeleteContext(m_glContext);
-  return 0;
+  RegisterClassListener(MessageType::WindowResized, OpenGLDevice, &OpenGLDevice::HandleWindowResize);
 }
 
 /******************************************************************************/
@@ -523,7 +588,7 @@ GLuint OpenGLDevice::LoadShaderProgram(ShaderFlags flags)
     vertShader = L"Animation.vert";
   else
     vertShader = L"Non-Anim.vert";
-  flags &= ~ANIMATION_FLAG;
+  flags &= ~(ANIMATION_FLAG | TRANSPARENCY_FLAG);
   fragShader = std::to_wstring(flags) + L".frag";
   
   vertShaderCode = ReadShaderCode(SHADER_DIRECTORY + vertShader);
@@ -663,7 +728,7 @@ glm::mat4& OpenGLDevice::GetTransform(std::shared_ptr<Renderable> const& rendera
     transOut = glm::mat4(1.0f);
   else
     transOut = transform.lock()->GetWorldMatrix();
-  transOut = m_ProjectionTransformation * m_CameraTransformation * transOut;
+  transOut = m_WorldToViewTransformation * transOut;
 
   return transOut;
 }
@@ -698,4 +763,12 @@ void OpenGLDevice::InitializeTextureMap()
   m_TextureLocationMap[1 << 14] = "reflectionFactorTex";
   m_TextureLocationMap[1 << 15] = "displacementTex";
   m_TextureLocationMap[1 << 16] = "displacementVectorTex";
+}
+
+void OpenGLDevice::HandleWindowResize(std::shared_ptr<Message> const& msg)
+{
+  auto data = GET_DATA_FROM_MESSAGE(SDL_WindowEvent, msg);
+  int width, height;
+  SDL_GL_GetDrawableSize(SDL_GetWindowFromID(data->windowID), &width, &height);
+  glViewport(0, 0, width, height);
 }

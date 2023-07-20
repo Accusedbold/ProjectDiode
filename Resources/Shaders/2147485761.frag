@@ -24,7 +24,7 @@ layout (std140, binding = 0) uniform MaterialBlock
 
 uniform sampler2D diffuseTex[MAX_MATERIALS];
 uniform sampler2D specularTex[MAX_MATERIALS];
-uniform sampler2D normalTex[MAX_MATERIALS];
+uniform sampler2D transparencyTex[MAX_MATERIALS];
 
 uniform vec3 viewPos;
 
@@ -38,8 +38,7 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     // Calculate the tangent space normal from the normal map
-    vec3 normalMap = texture(normalTex[matIndex], fragUV).rgb * 2.0 - 1.0;
-    vec3 normal = normalize(TBN * normalMap);
+    vec3 normal = fragNormal;
 
     // Diffuse lighting
     float diff = max(dot(normal, lightDir), 0.0);
@@ -59,7 +58,7 @@ void main()
     vec3 emissiveTerm = materials[matIndex].emissive * emissiveColor;
 
     // Transparency
-    float transparency = (1-materials[matIndex].transparency);
+    float transparency = (1-materials[matIndex].transparency) * texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
     vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveTerm * 0;

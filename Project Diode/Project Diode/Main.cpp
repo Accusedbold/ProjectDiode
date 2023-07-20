@@ -35,10 +35,7 @@
 int main(int, char*[]) {
 
   // Memory Manager should be the first thing to initialize
-  //MemoryManager::GetInstance();
-
-
-
+  
   int retCode = 0;
   if(Engine::GetInstance()->Inititialize())
     retCode |= Engine::GetInstance()->GameLoop();
@@ -47,6 +44,5 @@ int main(int, char*[]) {
 
   // Memory Manager should be the last thing destroyed -
   // With it goes all allocated memory
-  MemoryManager::DestroyInstance();
   return retCode;
 }

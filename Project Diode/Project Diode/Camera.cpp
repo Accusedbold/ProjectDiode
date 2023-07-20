@@ -31,10 +31,12 @@ void Camera::Update(double)
 
 void Camera::Release()
 {
+  UnRegisterClassListener(MessageType::WindowResized, Camera, &Camera::HandleResizeWindow);
 }
 
 void Camera::Initialize()
 {
+  RegisterClassListener(MessageType::WindowResized, Camera, &Camera::HandleResizeWindow);
 }
 
 /* Get The Camera Matrix in Row-Major Order */
@@ -260,4 +262,11 @@ glm::mat4 Camera::GetPerpectiveMatrix() {
 std::vector<std::weak_ptr<Renderable>>& Camera::GetDrawList()
 {
   return m_RenderablesWithinFrustum;
+}
+
+/* Handles when the window gets resized */
+void Camera::HandleResizeWindow(std::shared_ptr<Message> const& msg)
+{
+  auto data = GET_DATA_FROM_MESSAGE(SDL_WindowEvent, msg);
+  SDL_GL_GetDrawableSize(SDL_GetWindowFromID(data->windowID), &m_Width, &m_Height);
 }

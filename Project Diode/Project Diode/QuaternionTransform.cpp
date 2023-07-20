@@ -44,8 +44,9 @@ QuaternionTransform QuaternionTransform::Interpolate(QuaternionTransform const& 
 
 glm::mat4 QuaternionTransform::GetTransformation() const
 {
-	auto scale = glm::scale(glm::mat4(1.0f), m_Scale);
-	auto rotate = glm::toMat4(m_Rotate);
-	auto translate = glm::translate(glm::mat4(1.0f), m_Translate);
-	return translate * rotate * scale;
+	glm::mat4 retVal = glm::scale(glm::toMat4(m_Rotate), m_Scale);
+	retVal[3][0] = m_Translate[0];
+	retVal[3][1] = m_Translate[1];
+	retVal[3][2] = m_Translate[2];
+	return retVal;
 }

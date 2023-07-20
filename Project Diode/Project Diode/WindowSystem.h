@@ -33,6 +33,7 @@ public:
 private:
   // Handles the Window, System, and Input events
   void HandleEvents();
+  void HandleWindowEvents(SDL_WindowEvent const &);
 
   // Creates an error popup message box
   void ErrorPopUp(std::shared_ptr<Message> const& msg);
