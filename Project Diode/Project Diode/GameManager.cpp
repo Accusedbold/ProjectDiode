@@ -64,6 +64,10 @@ void GameManager::HandleSceneInput(std::shared_ptr<Message> const& msg)
 			of.DestroyAllObjects();
 			m_UpdateFxn = &GameManager::SetUpHackedWarriorBabe;
 			break;
+		case SDLK_6:   /// MilitaryMan
+			of.DestroyAllObjects();
+			m_UpdateFxn = &GameManager::SetUpHackedVampire;
+			break;
 		default:
 			break;
 		}
@@ -216,7 +220,40 @@ void GameManager::SetUpHackedWarriorBabe(double)
 		// Instantiate the Warrior Babe
 		m_object = of.CreateArchetypedObject(name).lock();
 	}
-	else 
+	else
+	{
+		m_object = test.lock();
+	}
+
+	// Oogle the object
+	m_UpdateFxn = &GameManager::SetUpHackedCamera;
+}
+
+void GameManager::SetUpHackedVampire(double)
+{
+	WARN("This is a hacked thing - please remove");
+
+	// Create the archetype Bikini Babe
+	std::wstring name(L"Vampire");
+	auto& of = *ObjectFactory::GetInstance();
+	auto test = of.CreateArchetypedObject(name);
+	if (test.expired())
+	{
+		auto obj = of.CreateGenericArchetype(name).lock();
+		auto renderable =
+			std::static_pointer_cast<Renderable>(of.GiveArchetypeComponent(name, ComponentType::Renderable).lock());
+		auto transform =
+			std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(name, ComponentType::Transform).lock());
+		auto model = std::static_pointer_cast<Model>(ResourceManager::GetInstance()->GetResource(ResourceType::Model, L"Vampire").lock());
+		renderable->SetModel(model);
+		renderable->SetIsAnimating(true);
+		transform->SetScale({ .025f,.025f,.025f });
+		transform->SetPosition({ 0.0f, -3.0f, 0.0f });
+
+		// Instantiate the Vampire
+		m_object = of.CreateArchetypedObject(name).lock();
+	}
+	else
 	{
 		m_object = test.lock();
 	}

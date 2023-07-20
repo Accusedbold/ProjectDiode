@@ -144,7 +144,17 @@ std::shared_ptr<Resource> ResourceLoader::LoadTexture(std::wstring const& name, 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// Load texture data into OpenGL
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
+	switch (surface->format->format)
+	{
+	case SDL_PIXELFORMAT_RGB24:
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
+		break;
+	case SDL_PIXELFORMAT_ARGB8888:
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+		break;
+	default:
+		break;
+	}
 
 	// Free SDL surface (we don't need it anymore)
 	SDL_FreeSurface(surface);

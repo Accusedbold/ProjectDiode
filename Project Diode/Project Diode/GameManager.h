@@ -39,11 +39,12 @@ private:
   void HandleSceneInput(std::shared_ptr<Message> const&);
 
   // The function used to update the device
-  UpdateFxn m_UpdateFxn = &GameManager::SetUpHackedWarriorBabe;
+  UpdateFxn m_UpdateFxn = &GameManager::SetUpHackedCube;
   // Hacked player object
   WARN("This is Hacked, please Remove");
   void SetUpHackedBlockMan(double dt);
   void SetUpHackedBikiniBabe(double dt);
+  void SetUpHackedVampire(double dt);
   void SetUpHackedWarriorBabe(double dt);
   void SetUpHackedJade(double dt);
   void SetUpHackedCube(double dt);

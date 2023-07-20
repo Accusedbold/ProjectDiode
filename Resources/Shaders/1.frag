@@ -36,16 +36,10 @@ void main()
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuseColor = texture(diffuseTex[matIndex], fragUV).rgb;
 
-    // Specular lighting
-    vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));  // Example: view direction along the positive z-axis
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), materials[matIndex].shininess);
-    vec3 specularColor = materials[matIndex].specular * spec;
-
     // Emissive color
     vec3 emissiveColor = materials[matIndex].emissive * texture(diffuseTex[matIndex], fragUV).rgb;
 
     // Final color calculation
-    vec3 finalColor = ambientColor + diffuseColor + specularColor + emissiveColor;
+    vec3 finalColor = ambientColor + diffuseColor + emissiveColor;
     FragColor = vec4(diffuseColor,1.0);
 }

@@ -99,6 +99,7 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
     glm::mat4 transform;
     GetTransform(renderable, transform);
     // Set up the instances
+    glBindVertexArray(mesh.m_VAO[0]);
     glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
     int pos1 = 9;
