@@ -107,7 +107,7 @@ void GameManager::SetUpHackedBlockMan(double)
 			mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
 			mesh.m_MaterialIndices.resize(36, 0);
 			auto& material = mesh.m_Materials[0];
-			material->m_Ambient = glm::vec4(0.0f);
+			material->m_Ambient = glm::vec4(0.1f);
 			material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 			material->m_Specular = glm::vec4(0.0f);
 			material->m_Emissive = glm::vec4(0.0f);
@@ -131,7 +131,7 @@ void GameManager::SetUpHackedBlockMan(double)
 			mesh.m_Materials.emplace_back(new Material(L"Lambert_Blue", 1));
 			mesh.m_MaterialIndices.resize(36, 0);
 			auto& material = mesh.m_Materials[0];
-			material->m_Ambient = glm::vec4(0.0f);
+			material->m_Ambient = glm::vec4(0.1f);
 			material->m_Diffuse = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 			material->m_Specular = glm::vec4(0.0f);
 			material->m_Emissive = glm::vec4(0.0f);

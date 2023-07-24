@@ -2,9 +2,6 @@
 
 in vec3 FragPos;
 in vec3 fragNormal;
-in vec3 fragTan;
-in vec3 fragBiTan;
-in vec3 fragColor;
 in vec2 fragUV;
 flat in uint matIndex;
 in mat3 TBN;
@@ -13,13 +10,13 @@ const int MAX_MATERIALS = 5;
 
 layout (std140, binding = 0) uniform MaterialBlock
 {
+    float transparency;
+    float shininess;
+    float reflectivity;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     vec3 emissive;
-    float transparency;
-    float shininess;
-    float reflectivity;
 } materials[MAX_MATERIALS];
 
 uniform sampler2D diffuseTex[MAX_MATERIALS];
@@ -33,7 +30,8 @@ out vec4 FragColor;
 void main()
 {
     // Vector Calculations
-    vec3 lightDir = vec3(0.0, 1.0, 0.0);   // Example: light direction from above
+    vec3 lightPos = vec3(0.0, 100.0, 0.0); 
+    vec3 lightDir = normalize(lightPos - FragPos);   // Example: light direction from above
     vec3 lightColor = vec3(1.0, 1.0, 1.0); // White Light Example
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
@@ -44,10 +42,10 @@ void main()
     // Diffuse lighting
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuseColor = texture(diffuseTex[matIndex], fragUV).rgb;
-    vec3 diffuseTerm = materials[matIndex].diffuse * diffuseColor * max(dot(normal, viewDir), 0.0);
+    vec3 diffuseTerm = materials[matIndex].diffuse * diffuseColor * diff;
 
     // Ambient Lighting
-    vec3 ambientTerm = materials[matIndex].ambient * diffuseColor * 0.1f;
+    vec3 ambientTerm = materials[matIndex].ambient * diffuseColor;
 
     // Specular Lighting
     float shininess_exponent = materials[matIndex].shininess;
@@ -62,6 +60,6 @@ void main()
     float transparency = (1-materials[matIndex].transparency) * texture(transparencyTex[matIndex], fragUV).r;
 
     // Final color calculation
-    vec3 finalColor = ambientTerm + diffuseTerm + specularTerm * 0 + emissiveTerm * 0;
-    FragColor = vec4(finalColor, 1.0);
+    vec3 finalColor = ambientTerm + diffuseTerm + specularTerm + emissiveTerm;
+    FragColor = vec4(finalColor, transparency);
 }

@@ -5,10 +5,10 @@ Material::Material(std::wstring const& name, ResourceID id) :
 {}
 
 MaterialBuffer::MaterialBuffer(Material const& conv) :
- m_Ambient(conv.m_Ambient),
- m_Diffuse(conv.m_Diffuse),
- m_Specular(conv.m_Specular),
- m_Emissive(conv.m_Emissive),
+ m_Ambient(conv.m_Ambient, 0.0f),
+ m_Diffuse(conv.m_Diffuse, 0.0f),
+ m_Specular(conv.m_Specular, 0.0f),
+ m_Emissive(conv.m_Emissive, 0.0f),
  m_Transparency(conv.m_Transparency),
  m_Shininess(conv.m_Shininess),
  m_Reflectivity(conv.m_Reflectivity)

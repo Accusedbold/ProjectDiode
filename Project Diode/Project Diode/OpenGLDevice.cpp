@@ -55,28 +55,11 @@ int OpenGLDevice::DrawRenderable(std::shared_ptr<Renderable> const& renderable)
       }
       glUniformMatrix4fv(boneLocation, static_cast<GLsizei>(boneTransformations.size()), GL_FALSE, &boneTransformations[0][0][0]);
     }
-    glm::mat4 transform;
-    GetTransform(renderable, transform);
+    std::vector<glm::mat4> instancedTransformations(2);
+    GetMWVPTransform(renderable, instancedTransformations[0], instancedTransformations[1]);
     // Set up the instances
     glBindVertexArray(mesh.m_VAO[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
-    int pos1 = 9;
-    int pos2 = pos1 + 1;
-    int pos3 = pos2 + 1;
-    int pos4 = pos3 + 1;
-    glEnableVertexAttribArray(pos1);
-    glEnableVertexAttribArray(pos2);
-    glEnableVertexAttribArray(pos3);
-    glEnableVertexAttribArray(pos4);
-    glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
-    glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
-    glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
-    glVertexAttribPointer(pos4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 12));
-    glVertexAttribDivisor(pos1, 1);
-    glVertexAttribDivisor(pos2, 1);
-    glVertexAttribDivisor(pos3, 1);
-    glVertexAttribDivisor(pos4, 1);
+    SetMWVP(instancedTransformations, 1);
     // Draw the Mesh
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_INT, 0, 1);
   }
@@ -96,28 +79,13 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
       continue;
     SetShaderProgram(mesh.m_flags);
     SetMaterials(mesh);
-    glm::mat4 transform;
-    GetTransform(renderable, transform);
+    glm::mat4 mwTransform;
+    glm::mat4 mwvptransform;
+    std::vector<glm::mat4> instancedTransformations(2);
+    GetMWVPTransform(renderable, instancedTransformations[0], instancedTransformations[1]);
     // Set up the instances
     glBindVertexArray(mesh.m_VAO[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), &transform, GL_STREAM_DRAW);
-    int pos1 = 9;
-    int pos2 = pos1 + 1;
-    int pos3 = pos2 + 1;
-    int pos4 = pos3 + 1;
-    glEnableVertexAttribArray(pos1);
-    glEnableVertexAttribArray(pos2);
-    glEnableVertexAttribArray(pos3);
-    glEnableVertexAttribArray(pos4);
-    glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
-    glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
-    glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
-    glVertexAttribPointer(pos4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 12));
-    glVertexAttribDivisor(pos1, 0);
-    glVertexAttribDivisor(pos2, 0);
-    glVertexAttribDivisor(pos3, 0);
-    glVertexAttribDivisor(pos4, 0);
+    SetMWVP(instancedTransformations, 1);
     // Draw the Mesh
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh.m_Indices.size()), GL_UNSIGNED_INT, 0, 1);
   }
@@ -152,32 +120,17 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
       SetMaterials(currMesh);
       while (modIt != modEnd && (*modIt)->GetModelID() == currModel->GetID())
       {
-        glm::mat4 transform;
-        GetTransform(*modIt, transform);
-        instancedTransformations.push_back(transform);
+        glm::mat4 mwTransform;
+        glm::mat4 mwvptransform;
+        GetMWVPTransform(*modIt, mwvptransform, mwTransform);
+        instancedTransformations.push_back(mwvptransform);
+        instancedTransformations.push_back(mwTransform);
          ++modIt;
       }
       // Set up the instances
-      glBindBuffer(GL_ARRAY_BUFFER, *m_matVBO);
-      glBufferData(GL_ARRAY_BUFFER, instancedTransformations.size() * sizeof(glm::mat4), instancedTransformations.data(), GL_STATIC_DRAW);
-      int pos1 = 9;
-      int pos2 = pos1 + 1;
-      int pos3 = pos2 + 1;
-      int pos4 = pos3 + 1;
-      glEnableVertexAttribArray(pos1);
-      glEnableVertexAttribArray(pos2);
-      glEnableVertexAttribArray(pos3);
-      glEnableVertexAttribArray(pos4);
-      glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(0));
-      glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 4));
-      glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 8));
-      glVertexAttribPointer(pos4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4, (void*)(sizeof(float) * 12));
-      glVertexAttribDivisor(pos1, 1);
-      glVertexAttribDivisor(pos2, 1);
-      glVertexAttribDivisor(pos3, 1);
-      glVertexAttribDivisor(pos4, 1);
+      SetMWVP(instancedTransformations, 1);
       // Draw the instances
-      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(instancedTransformations.size()));
+      glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(currMesh.m_Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(instancedTransformations.size()/2));
     }
   }
 
@@ -290,25 +243,36 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
   // a count of the texture unit index to use
   GLint textureUnitIndex = 0;
 
-  // Bind the UBO
-  glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
-
-  // Map the buffer to update the data
-  MaterialBuffer* materialBuffer = (MaterialBuffer*)glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+  // The buffer to update the UBO
+  MaterialBuffer materialBuffer[MAX_MATERIALS];
 
   // Copy the material data to the buffer
   // Use the same loop to associate the textures to texture unit indices
   for (size_t i = 0; i < mesh.m_Materials.size(); ++i)
   {
     Material const& material = *mesh.m_Materials[i];
-    materialBuffer[i] = material;
+    MaterialBuffer materialBuffer = material;
+
+    // Set the Material Data for the materials
+    for (size_t materialBindingPoint = 0; materialBindingPoint < mesh.m_Materials.size(); ++materialBindingPoint)
+    {
+      // Bind the UBO
+      glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[materialBindingPoint]);
+      // Substitute the data with the actual material data
+      glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(materialBuffer), &materialBuffer);
+      // Bind the Material Location in the shader with the Binding point used
+      GLuint program = m_ShaderPrograms[m_CurrentFlags];
+      std::string nameedMaterial = "MaterialBlock[" + std::to_string(materialBindingPoint) + "]";
+      GLuint blockIndex = glGetUniformBlockIndex(program, nameedMaterial.c_str());
+      glUniformBlockBinding(program, blockIndex, materialBindingPoint);
+    }
 
     // Set the Textures for the materials
     for (size_t index = 0; index < static_cast<size_t>(MapType::Count); ++index) {
       auto &texture = material.m_MappingTextures[index];
       if (texture)
       {
-        std::string uniformName = m_TextureLocationMap[1 << index] + std::string("[") + std::to_string(i) + "]";
+        std::string uniformName = m_TextureLocationMap[1uL << index] + std::string("[") + std::to_string(i) + "]";
         GLuint location = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], uniformName.c_str());
         glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + textureUnitIndex));
         glBindTexture(GL_TEXTURE_2D, texture->m_textureID);
@@ -317,11 +281,6 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
     }
 
   }
-  // Unmap the buffer
-  glUnmapBuffer(GL_UNIFORM_BUFFER);
-
-  GLuint bindingPoint = 0; // The binding point/index to which the buffer object is bound
-  glBindBufferBase(GL_UNIFORM_BUFFER, MATERIAL_BINDING_POINT, m_materialUBO[0]);
 
   return 0;
 }
@@ -541,10 +500,15 @@ void OpenGLDevice::CreateBuffers()
   // Create the VBO that will define bone transformations Drawing
   glCreateBuffers(1, m_boneVBO);
   // Create the UBO that will define the uniform for materials
-  glCreateBuffers(1, m_materialUBO);
+  glCreateBuffers(MAX_MATERIALS, m_materialUBO);
   // Allocate size for the UBOs
-  glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[0]);
-  glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer) * MAX_MATERIALS, nullptr, GL_DYNAMIC_DRAW);
+  for (size_t i = 0; i < MAX_MATERIALS; ++i)
+  {
+    glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[i]);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer), nullptr, GL_DYNAMIC_DRAW);
+    // Bind the current buffer to the binding point to the materials
+    glBindBufferBase(GL_UNIFORM_BUFFER, i, m_materialUBO[i]);
+  }
 }
 
 /******************************************************************************/
@@ -715,22 +679,82 @@ GLuint OpenGLDevice::LinkShaderProgram(GLuint vertexShader, GLuint fragmentShade
 \param    renderable
           Renderable to get Transformation Data from
 
-\param    transOut
-          The transformation data calculated
+\param    mwvpOut
+          The transformation matrix from model to projection
 
-\return   The mat4 calculated
+\param    mwOut
+          The transformation matrix from model to world
+
+\return   The transformation matrix from model to projection
 */
 /******************************************************************************/
-glm::mat4& OpenGLDevice::GetTransform(std::shared_ptr<Renderable> const& renderable, glm::mat4& transOut) const
+glm::mat4& OpenGLDevice::GetMWVPTransform(std::shared_ptr<Renderable> const& renderable, glm::mat4& mwvpOut, glm::mat4& mwOut) const
 {
   auto transform = renderable->GetParent().lock()->has(Transform);
   if (transform.expired())
-    transOut = glm::mat4(1.0f);
+    mwOut = glm::mat4(1.0f);
   else
-    transOut = transform.lock()->GetWorldMatrix();
-  transOut = m_WorldToViewTransformation * transOut;
+    mwOut = transform.lock()->GetWorldMatrix();
+  mwvpOut = m_WorldToViewTransformation * mwOut;
 
-  return transOut;
+  return mwvpOut;
+}
+
+/******************************************************************************/
+/*!
+          GetTransform
+
+\author   John Salguero
+
+\brief    A vector of Matrices interlaced with attribute transformations,
+          and a divisor for instancing - set the attribute for the 
+          targeted VAO
+
+\param    matrices
+          Vector of matrices interlaced
+
+\param    divisor
+          how they will be instanced
+
+\return   void
+*/
+/******************************************************************************/
+void OpenGLDevice::SetMWVP(std::vector<glm::mat4> const& matrices, int divisor)
+{
+  glBindBuffer(GL_ARRAY_BUFFER, m_matVBO[0]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * matrices.size(), matrices.data(), GL_STREAM_DRAW);
+  const int pos1 = 7;
+  const int pos2 = pos1 + 1;
+  const int pos3 = pos2 + 1;
+  const int pos4 = pos3 + 1;
+  const int pos5 = pos4 + 1;
+  const int pos6 = pos5 + 1;
+  const int pos7 = pos6 + 1;
+  const int pos8 = pos7 + 1;
+  glEnableVertexAttribArray(pos1);
+  glEnableVertexAttribArray(pos2);
+  glEnableVertexAttribArray(pos3);
+  glEnableVertexAttribArray(pos4);
+  glEnableVertexAttribArray(pos5);
+  glEnableVertexAttribArray(pos6);
+  glEnableVertexAttribArray(pos7);
+  glEnableVertexAttribArray(pos8);
+  glVertexAttribPointer(pos1, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(0));
+  glVertexAttribPointer(pos2, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 4));
+  glVertexAttribPointer(pos3, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 8));
+  glVertexAttribPointer(pos4, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 12));
+  glVertexAttribPointer(pos5, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 16));
+  glVertexAttribPointer(pos6, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 20));
+  glVertexAttribPointer(pos7, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 24));
+  glVertexAttribPointer(pos8, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4 * 4 * 2, (void*)(sizeof(float) * 28));
+  glVertexAttribDivisor(pos1, divisor);
+  glVertexAttribDivisor(pos2, divisor);
+  glVertexAttribDivisor(pos3, divisor);
+  glVertexAttribDivisor(pos4, divisor);
+  glVertexAttribDivisor(pos5, divisor);
+  glVertexAttribDivisor(pos6, divisor);
+  glVertexAttribDivisor(pos7, divisor);
+  glVertexAttribDivisor(pos8, divisor);
 }
 
 /******************************************************************************/

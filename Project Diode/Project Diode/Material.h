@@ -94,20 +94,22 @@ struct MaterialBuffer
   MaterialBuffer() = default;
   // Conversion Constructor
   MaterialBuffer(Material const&);
-  // The Ambient clolor
-  alignas(16) glm::vec3 m_Ambient;
-  // The Diffuse Color
-  alignas(16) glm::vec3 m_Diffuse;
-  // The specular color
-  alignas(16) glm::vec3 m_Specular;
-  // the emmissive color
-  alignas(16) glm::vec3 m_Emissive;
   // Transparency
   float m_Transparency;
   // Shininess
   float m_Shininess;
   // Reflectivity
   float m_Reflectivity;
+  // buffer for alignment
+  float m_alignmentBuffer[1];
+  // The Ambient clolor
+  glm::vec4 m_Ambient;
+  // The Diffuse Color
+  glm::vec4 m_Diffuse;
+  // The specular color
+  glm::vec4 m_Specular;
+  // the emmissive color
+  glm::vec4 m_Emissive;
 };
 
 #endif

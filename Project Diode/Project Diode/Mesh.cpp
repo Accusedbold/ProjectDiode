@@ -14,8 +14,6 @@ void Mesh::GenerateDataBuffer()
   size += m_Positions.size() * sizeof(glm::vec4);
   size += m_Normals.size() * sizeof(glm::vec4);
   size += m_Tangents.size() * sizeof(glm::vec4);
-  size += m_BiTangents.size() * sizeof(glm::vec4);
-  size += m_Colors.size() * sizeof(glm::vec4);
   size += m_UVs.size() * sizeof(glm::vec2);
   size += m_SkeletalIndices.size() * MAX_BONE_INFLUENCE * sizeof(GLushort);
   size += m_SkeletalWeights.size() * MAX_BONE_INFLUENCE * sizeof(float);
@@ -46,22 +44,16 @@ void Mesh::GenerateDataBuffer()
   glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
   std::memcpy(m_Data + offset, m_Tangents.data(), m_Tangents.size() * sizeof(glm::vec4));
   offset += m_Tangents.size() * sizeof(glm::vec4);
-  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
-  std::memcpy(m_Data + offset, m_BiTangents.data(), m_BiTangents.size() * sizeof(glm::vec4));
-  offset += m_BiTangents.size() * sizeof(glm::vec4);
-  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
-  std::memcpy(m_Data + offset, m_Colors.data(), m_Colors.size() * sizeof(glm::vec4));
-  offset += m_Colors.size() * sizeof(glm::vec4);
-  glVertexAttribPointer(6, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<const void*>(offset));
+  glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), reinterpret_cast<const void*>(offset));
   std::memcpy(m_Data + offset, m_UVs.data(), m_UVs.size() * sizeof(glm::vec2));
   offset += m_UVs.size() * sizeof(glm::vec2);
-  glVertexAttribIPointer(7, 4, GL_UNSIGNED_SHORT, sizeof(GLushort) * MAX_BONE_INFLUENCE, reinterpret_cast<const void*>(offset));
+  glVertexAttribIPointer(5, 4, GL_UNSIGNED_SHORT, sizeof(GLushort) * MAX_BONE_INFLUENCE, reinterpret_cast<const void*>(offset));
   for (auto skelIndexVec : m_SkeletalIndices)
   {
     std::memcpy(m_Data + offset, skelIndexVec.data(), skelIndexVec.size() * sizeof(GLushort));
     offset += skelIndexVec.size() * sizeof(GLushort);
   }
-  glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
+  glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<const void*>(offset));
   for (auto skelWeightVec : m_SkeletalWeights)
   {
     std::memcpy(m_Data + offset, skelWeightVec.data(), skelWeightVec.size() * sizeof(float));
@@ -78,8 +70,6 @@ void Mesh::GenerateDataBuffer()
   glEnableVertexAttribArray(4);
   glEnableVertexAttribArray(5);
   glEnableVertexAttribArray(6);
-  glEnableVertexAttribArray(7);
-  glEnableVertexAttribArray(8);
 
   // populate the VBO and EBO
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(GLuint), m_IndexData, GL_STATIC_DRAW);

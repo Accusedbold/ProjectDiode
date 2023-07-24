@@ -128,8 +128,6 @@ std::ifstream& operator>>(std::ifstream& inputFile, Mesh& mesh)
   inputFile >> mesh.m_Positions;
   inputFile >> mesh.m_Normals;
   inputFile >> mesh.m_Tangents;
-  inputFile >> mesh.m_BiTangents;
-  inputFile >> mesh.m_Colors;
   inputFile >> mesh.m_UVs;
   inputFile >> mesh.m_Weights;
   inputFile >> mesh.m_SkeletalIndices;

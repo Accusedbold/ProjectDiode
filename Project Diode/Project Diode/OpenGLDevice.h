@@ -16,7 +16,6 @@
 #ifndef OpenGLDevice_H
 #define OpenGLDevice_H
 
-#define MATERIAL_BINDING_POINT 0
 #define VIEW_BINDING_POINT 1
 
 // forward Declarations
@@ -73,8 +72,10 @@ private:
 	GLuint CompileShader(GLenum shaderType, const std::string& shaderCode);
 	// Links the shader code
 	GLuint LinkShaderProgram(GLuint vertexShader, GLuint fragmentShader);
-	// Get The current Transform From mesh from renderable
-	glm::mat4& GetTransform(std::shared_ptr<Renderable> const&, glm::mat4 &transOut) const;
+	// Get The current Transform From Model space to projection from renderable and Model World Transform
+	glm::mat4& GetMWVPTransform(std::shared_ptr<Renderable> const&, glm::mat4& mwvpOut, glm::mat4& mwOut) const;
+	// Set the Attribute for the Matrix Transformatioins
+	void SetMWVP(std::vector<glm::mat4> const&, int divisor);
 	// Initializes the map that allows for finding the right texture location
 	void InitializeTextureMap();
 	// Handles the window resize event
@@ -92,7 +93,7 @@ private:
 	glm::mat4 m_ProjectionTransformation;
 	// the current World to View Matrix
 	glm::mat4 m_WorldToViewTransformation;
-	// The Current View Vector
+	// The Current View Pos
 	glm::vec3 m_ViewPos;
 	// Map of the shaders programs
 	std::unordered_map<ShaderFlags, GLuint> m_ShaderPrograms;
@@ -101,7 +102,7 @@ private:
 	// VBO for Bone Matrix Transformations
 	GLuint m_boneVBO[1] = { 0 };
 	// UBO for Materials
-	GLuint m_materialUBO[1] = { 0 };
+	GLuint m_materialUBO[MAX_MATERIALS] = { 0 };
 	// Map used to get the correct location of texture maps
 	std::unordered_map<ShaderFlags, const char*> m_TextureLocationMap;
 };

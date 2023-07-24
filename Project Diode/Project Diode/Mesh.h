@@ -44,10 +44,6 @@ struct Mesh {
   std::vector<glm::vec4> m_Normals;
   // The Bi-Tangets of the verticies
   std::vector<glm::vec4> m_Tangents;
-  // The Bi-Tangets of the verticies
-  std::vector<glm::vec4> m_BiTangents;
-  // The Color of the verticies
-  std::vector<glm::vec4> m_Colors;
   // The Texture Coordinates of the Mesh
   std::vector<glm::vec2> m_UVs;
   // The Physical Weight of the points
