@@ -79,8 +79,6 @@ int OpenGLDevice::DrawTransparentRenderable(std::shared_ptr<Renderable> const& r
       continue;
     SetShaderProgram(mesh.m_flags);
     SetMaterials(mesh);
-    glm::mat4 mwTransform;
-    glm::mat4 mwvptransform;
     std::vector<glm::mat4> instancedTransformations(2);
     GetMWVPTransform(renderable, instancedTransformations[0], instancedTransformations[1]);
     // Set up the instances
@@ -125,7 +123,7 @@ int OpenGLDevice::DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderabl
         GetMWVPTransform(*modIt, mwvptransform, mwTransform);
         instancedTransformations.push_back(mwvptransform);
         instancedTransformations.push_back(mwTransform);
-         ++modIt;
+        ++modIt;
       }
       // Set up the instances
       SetMWVP(instancedTransformations, 1);
@@ -166,6 +164,36 @@ int OpenGLDevice::DrawTransparentRenderables(std::multimap<float, std::shared_pt
 
 /******************************************************************************/
 /*!
+          DrawSkyMap
+
+\author   John Salguero
+
+\brief    Draws the skymap that has been last set
+
+
+\return   int
+          Error code of setting the program
+*/
+/******************************************************************************/
+int OpenGLDevice::DrawSkyMap(std::shared_ptr<Camera> const& camera)
+{
+  SetShaderProgram(SKYBOX_FLAG);
+  GLuint transformLocation = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], "MWVP");
+  glm::mat4 mwTransform;
+  glm::mat4 mwvptransform;
+  GetMWVPTransform(camera, mwvptransform, mwTransform);
+  glUniformMatrix4fv(transformLocation, static_cast<GLsizei>(1), GL_FALSE, &mwvptransform[0][0]);
+  glBindVertexArray(m_skyMesh.m_VAO[0]);
+  GLuint cubeMapLocation = glGetUniformLocation(m_ShaderPrograms[m_CurrentFlags], "skybox");
+  glActiveTexture(static_cast<GLenum>(GL_TEXTURE0));
+  glBindTexture(GL_TEXTURE_CUBE_MAP, camera->GetSkyMapID());
+  glUniform1i(cubeMapLocation, 0);
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_skyMesh.m_Indices.size()), GL_UNSIGNED_INT, 0);
+  return 0;
+}
+
+/******************************************************************************/
+/*!
           SetShaderProgram
 
 \author   John Salguero
@@ -181,9 +209,9 @@ int OpenGLDevice::DrawTransparentRenderables(std::multimap<float, std::shared_pt
 /******************************************************************************/
 int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
 {
-  flags &= ~(TRANSPARENCY_FLAG);
-  if (m_CurrentFlags == flags || flags == (UNUSED_FLAGS & ~(TRANSPARENCY_FLAG)))
+  if (m_CurrentFlags == flags || flags == UNUSED_FLAGS)
     return 0;
+  flags &= ~(TRANSPARENCY_FLAG);
   if (m_ShaderPrograms.find(flags) != m_ShaderPrograms.end())
     glUseProgram(m_ShaderPrograms[flags]);
   else
@@ -216,7 +244,7 @@ int OpenGLDevice::SetShaderProgram(ShaderFlags flags)
           the error code, 0 means success
 */
 /******************************************************************************/
-int OpenGLDevice::SetBuffer(int id)
+int OpenGLDevice::SetBuffer(GLuint)
 {
   return 0;
 }
@@ -243,9 +271,6 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
   // a count of the texture unit index to use
   GLint textureUnitIndex = 0;
 
-  // The buffer to update the UBO
-  MaterialBuffer materialBuffer[MAX_MATERIALS];
-
   // Copy the material data to the buffer
   // Use the same loop to associate the textures to texture unit indices
   for (size_t i = 0; i < mesh.m_Materials.size(); ++i)
@@ -254,7 +279,7 @@ int OpenGLDevice::SetMaterials(Mesh const& mesh)
     MaterialBuffer materialBuffer = material;
 
     // Set the Material Data for the materials
-    for (size_t materialBindingPoint = 0; materialBindingPoint < mesh.m_Materials.size(); ++materialBindingPoint)
+    for (GLuint materialBindingPoint = 0; materialBindingPoint < mesh.m_Materials.size(); ++materialBindingPoint)
     {
       // Bind the UBO
       glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[materialBindingPoint]);
@@ -502,13 +527,31 @@ void OpenGLDevice::CreateBuffers()
   // Create the UBO that will define the uniform for materials
   glCreateBuffers(MAX_MATERIALS, m_materialUBO);
   // Allocate size for the UBOs
-  for (size_t i = 0; i < MAX_MATERIALS; ++i)
+  for (GLuint i = 0; i < MAX_MATERIALS; ++i)
   {
     glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO[i]);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialBuffer), nullptr, GL_DYNAMIC_DRAW);
     // Bind the current buffer to the binding point to the materials
     glBindBufferBase(GL_UNIFORM_BUFFER, i, m_materialUBO[i]);
   }
+  // Create the VAO for the skymap
+  for (int i = 0; i < 8; ++i)
+    m_skyMesh.m_Positions.push_back(glm::vec4(i % 2 * -1.0f + .5f, i % 4 / 2 * -1.0f + .5f, i / 4 * -1.0f + .5f, 1.0f));
+  m_skyMesh.m_Indices.insert(m_skyMesh.m_Indices.end(), {
+    0,1,5,4,0,5, // Top
+    2,7,3,2,6,7, // Bottom
+    0,3,1,2,3,0, // Front
+    5,7,4,7,6,4, // Back
+    1,7,5,1,3,7, // Left
+    4,6,0,6,2,0 });
+  m_skyMesh.GenerateDataBuffer();
+  glBindVertexArray(m_skyMesh.m_VAO[0]);
+  glDisable(0);
+  glDisable(2);
+  glDisable(3);
+  glDisable(4);
+  glDisable(5);
+  glDisable(6);
 }
 
 /******************************************************************************/
@@ -548,7 +591,9 @@ GLuint OpenGLDevice::LoadShaderProgram(ShaderFlags flags)
   GLuint vertShaderID, fragShaderID;
   GLuint programID;
 
-  if (flags & ANIMATION_FLAG)
+  if (flags == SKYBOX_FLAG)
+    vertShader = L"Skybox.vert";
+  else if (flags & ANIMATION_FLAG)
     vertShader = L"Animation.vert";
   else
     vertShader = L"Non-Anim.vert";
@@ -688,7 +733,7 @@ GLuint OpenGLDevice::LinkShaderProgram(GLuint vertexShader, GLuint fragmentShade
 \return   The transformation matrix from model to projection
 */
 /******************************************************************************/
-glm::mat4& OpenGLDevice::GetMWVPTransform(std::shared_ptr<Renderable> const& renderable, glm::mat4& mwvpOut, glm::mat4& mwOut) const
+glm::mat4& OpenGLDevice::GetMWVPTransform(std::shared_ptr<Component> const& renderable, glm::mat4& mwvpOut, glm::mat4& mwOut) const
 {
   auto transform = renderable->GetParent().lock()->has(Transform);
   if (transform.expired())

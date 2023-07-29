@@ -15,10 +15,14 @@
 #ifndef _MemoryAllocation
 	#define _MemoryAllocation
 
-void* operator new(size_t size) noexcept(false);
-void* operator new(size_t size, const std::nothrow_t&) noexcept(true);
-void* operator new[](size_t size) noexcept(false);
-void* operator new[](size_t size, const std::nothrow_t&) noexcept(true);
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new(size_t size);
+_NODISCARD _Ret_maybenull_ _Success_(return != NULL) _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new(size_t size, const std::nothrow_t&) noexcept(true);
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new[](size_t size);
+_NODISCARD _Ret_maybenull_ _Success_(return != NULL) _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* __CRTDECL operator new[](size_t size, const std::nothrow_t&) noexcept(true);
 
 void operator delete(void* ptr) noexcept(true);
 void operator delete(void* ptr, const std::nothrow_t&) noexcept(true);

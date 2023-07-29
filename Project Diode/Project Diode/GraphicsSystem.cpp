@@ -249,14 +249,18 @@ void GraphicsSystem::DrawCameras()
 {
 	for (auto const& camera : m_Cameras)
 	{
-		WARN("Need to implement buffer switching");
-		m_Device.SetCamera(camera.lock());
+		auto currCamera = camera.lock();
+		// get the stuff we need to draw
 		std::vector<std::weak_ptr<Renderable>> drawList;
 		drawList.swap(camera.lock()->GetDrawList());
 		drawList.insert(drawList.end(), m_ColliderlessRenderables.begin(), m_ColliderlessRenderables.end());
 		auto renderableMap = DivideRenderables(drawList);
+		// Draw what we need to draw
+		m_Device.SetCamera(currCamera);
 		DrawOpaqueRenderables(renderableMap);
-		DrawTransparentRenderables(camera.lock(), renderableMap);
+		DrawTransparentRenderables(currCamera, renderableMap);
+		if(currCamera->HasSkyMap())
+			m_Device.DrawSkyMap(currCamera);
 	}
 }
 

@@ -30,7 +30,7 @@ public:
 	static ResourceLoader* GetInstance();
 private:
 	// Loads in the Shader
-	std::shared_ptr<Resource> LoadShader(std::wstring const& name, ResourceID id);
+	std::shared_ptr<Resource> LoadCubeMap(std::wstring const& name, ResourceID id);
 	// Loads in the Model
 	std::shared_ptr<Resource> LoadModel(std::wstring const& name, ResourceID id);
 	// Loads in the Texture

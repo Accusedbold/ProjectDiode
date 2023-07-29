@@ -59,6 +59,9 @@ public:
   // Whether or not the width or height changed 
   bool GetDidChange();
 
+  // Get the SkyMap ID
+  GLint GetSkyMapID();
+
   // Get The Right Vector 
   const glm::vec4& GetRightVector(void);
 
@@ -113,6 +116,12 @@ public:
   // Gets a vector of renderables the camera needs to draw
   std::vector<std::weak_ptr<Renderable>>& GetDrawList();
 
+  // Whether the camera renders a skymap
+  bool HasSkyMap();
+
+  // set the textures for a skymap
+  void SetSkyMap(std::shared_ptr<Texture> const&);
+
 private:
 
   // Handles the Resize of the window
@@ -124,14 +133,15 @@ private:
   glm::vec4 m_Up = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);;
 
   // Used for projection
+  bool m_WidthHeightChanged = false;
   int m_Width = WINDOW_WIDTH;
   int m_Height = WINDOW_HEIGHT;
   float m_FOV = 170.0f;
   float m_Near = 0.1f;
   float m_Far = 10'000.0f;
 
-  // used to resize buffers
-  bool m_WidthHeightChanged;
+  // used for skymaps
+  std::shared_ptr<Texture> m_SkyMap;
 
   // Objects to draw
   std::vector<std::weak_ptr<Renderable>> m_RenderablesWithinFrustum;

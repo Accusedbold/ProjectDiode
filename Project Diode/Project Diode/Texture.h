@@ -18,9 +18,9 @@
 
 struct Texture : public Resource, public std::enable_shared_from_this<Texture>
 {
-  Texture(std::wstring const& name, ResourceID id);
+  Texture(std::wstring const& name, ResourceID id, ResourceType const& type = ResourceType::Texture);
 
-  GLuint m_textureID;
+  GLuint m_textureID = 0;
 };
 
 #endif

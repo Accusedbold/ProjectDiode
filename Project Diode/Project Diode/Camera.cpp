@@ -15,6 +15,7 @@
 */
 /********************************************************************/
 #include "stdafx.h"
+#include "Texture.h"
 
 std::shared_ptr<Component> Camera::CloneComponent() const
 {
@@ -98,10 +99,15 @@ float Camera::GetCameraNear()
   return m_Near;
 }
 
-/* Whether or not the width or height changed */
 bool Camera::GetDidChange()
 {
   return m_WidthHeightChanged;
+}
+
+/* Retrieves the Skymap ID */
+GLint Camera::GetSkyMapID()
+{
+  return m_SkyMap->m_textureID;
 }
 
 /* Get The Camera Right Vector (very useful for game logic) */
@@ -262,6 +268,18 @@ glm::mat4 Camera::GetPerpectiveMatrix() {
 std::vector<std::weak_ptr<Renderable>>& Camera::GetDrawList()
 {
   return m_RenderablesWithinFrustum;
+}
+
+/* Whether the camera has a skymap */
+bool Camera::HasSkyMap()
+{
+  return m_SkyMap.get();
+}
+
+/* Sets the textures for a skymap */
+void Camera::SetSkyMap(std::shared_ptr<Texture> const& skymap)
+{
+  m_SkyMap = skymap;
 }
 
 /* Handles when the window gets resized */

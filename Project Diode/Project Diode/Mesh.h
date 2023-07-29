@@ -60,8 +60,6 @@ struct Mesh {
   std::weak_ptr<Model> m_Owner;
   // All the vertex data packed into contiguous memory
   char* m_Data = nullptr;
-  // All the index data packed into contiguous memory
-  char* m_IndexData = nullptr;
   // The VAO OpenGL will use to draw the mesh
   GLuint m_VAO[1] = { 0 };
   // The EBO OpenGL will use to draw the mesh

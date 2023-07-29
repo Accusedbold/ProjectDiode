@@ -40,10 +40,12 @@ public:
 	int DrawBatchedRenderables(std::multiset<std::shared_ptr<Renderable>, RenderableComparator> const&);
 	// Draws Renderables in the order given, switching between shaders
 	int DrawTransparentRenderables(std::multimap<float, std::shared_ptr<Renderable>> const& vecRenderabls);
+	// Draws the current set skymap
+	int DrawSkyMap(std::shared_ptr<Camera> const&);
 	// Switches between the different shaders
 	int SetShaderProgram(ShaderFlags flags);
 	// Switches between buffers to draw on
-	int SetBuffer(int id);
+	int SetBuffer(GLuint id);
 	// Populates the Material Uniform based on the mesh
 	int SetMaterials(Mesh const&);
 	// Gets the stats from the camera, like position, width, fov, etc
@@ -73,7 +75,7 @@ private:
 	// Links the shader code
 	GLuint LinkShaderProgram(GLuint vertexShader, GLuint fragmentShader);
 	// Get The current Transform From Model space to projection from renderable and Model World Transform
-	glm::mat4& GetMWVPTransform(std::shared_ptr<Renderable> const&, glm::mat4& mwvpOut, glm::mat4& mwOut) const;
+	glm::mat4& GetMWVPTransform(std::shared_ptr<Component> const&, glm::mat4& mwvpOut, glm::mat4& mwOut) const;
 	// Set the Attribute for the Matrix Transformatioins
 	void SetMWVP(std::vector<glm::mat4> const&, int divisor);
 	// Initializes the map that allows for finding the right texture location
@@ -103,6 +105,8 @@ private:
 	GLuint m_boneVBO[1] = { 0 };
 	// UBO for Materials
 	GLuint m_materialUBO[MAX_MATERIALS] = { 0 };
+	// mesh for skyboxes
+	Mesh m_skyMesh;
 	// Map used to get the correct location of texture maps
 	std::unordered_map<ShaderFlags, const char*> m_TextureLocationMap;
 };

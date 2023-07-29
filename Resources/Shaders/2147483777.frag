@@ -6,7 +6,7 @@ in vec2 fragUV;
 flat in uint matIndex;
 in mat3 TBN;
 
-const int MAX_MATERIALS = 5;
+const int MAX_MATERIALS = 8;
 
 layout (std140, binding = 0) uniform MaterialBlock
 {

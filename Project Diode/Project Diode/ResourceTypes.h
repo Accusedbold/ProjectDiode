@@ -20,6 +20,7 @@ enum class ResourceType {
 	Model,
 	Texture,
   Material,
+  CubeMap,
 	Count
 };
 
@@ -31,6 +32,12 @@ enum class ResourceType {
 #define SHADER_DIRECTORY L"Resources/Shaders/"
 #define MODEL_DIRECTORY L"Resources/Models/"
 #define TEXTURE_DIRECTORY L"Resources/Textures/"
+#define POS_X_FILENAME L"posx.png"
+#define NEG_X_FILENAME L"negx.png"
+#define POS_Y_FILENAME L"posy.png"
+#define NEG_Y_FILENAME L"negy.png"
+#define POS_Z_FILENAME L"posz.png"
+#define NEG_Z_FILENAME L"negz.png"
 
 
 #endif

@@ -13,6 +13,8 @@
 */
 /********************************************************************/
 #include "stdafx.h"
+WARN("This is hacked, please remove");
+#include "Texture.h"
 
 GameManager::GameManager(std::wstring& name) : System(name)
 {
@@ -107,7 +109,7 @@ void GameManager::SetUpHackedBlockMan(double)
 			mesh.m_Materials.emplace_back(new Material(L"Lambert_Red", 0));
 			mesh.m_MaterialIndices.resize(36, 0);
 			auto& material = mesh.m_Materials[0];
-			material->m_Ambient = glm::vec4(0.1f);
+			material->m_Ambient = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 			material->m_Diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 			material->m_Specular = glm::vec4(0.0f);
 			material->m_Emissive = glm::vec4(0.0f);
@@ -131,7 +133,7 @@ void GameManager::SetUpHackedBlockMan(double)
 			mesh.m_Materials.emplace_back(new Material(L"Lambert_Blue", 1));
 			mesh.m_MaterialIndices.resize(36, 0);
 			auto& material = mesh.m_Materials[0];
-			material->m_Ambient = glm::vec4(0.1f);
+			material->m_Ambient = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
 			material->m_Diffuse = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 			material->m_Specular = glm::vec4(0.0f);
 			material->m_Emissive = glm::vec4(0.0f);
@@ -306,7 +308,8 @@ void GameManager::SetUpHackedCamera(double)
 	auto& of = *ObjectFactory::GetInstance();
 	auto pObj = of.CreateGenericArchetype(player).lock();
 	std::static_pointer_cast<Transform>(of.GiveArchetypeComponent(player, ComponentType::Transform).lock())->SetPosition({ 0.0f, 0.0f, 7.0f });
-	of.GiveArchetypeComponent(player, ComponentType::Camera);
+	auto camera = std::static_pointer_cast<Camera>(of.GiveArchetypeComponent(player, ComponentType::Camera).lock());
+	camera->SetSkyMap(std::static_pointer_cast<Texture>(ResourceManager::GetInstance()->GetResource(ResourceType::CubeMap, L"space\\").lock()));
 	of.GiveArchetypeComponent(player, ComponentType::CameraController);
 
 	// Instantiate the Player

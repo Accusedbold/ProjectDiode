@@ -30,7 +30,7 @@ out vec4 FragColor;
 void main()
 {
     // Vector Calculations
-    vec3 lightPos = vec3(0.0, -100.0, 0.0); 
+    vec3 lightPos = vec3(0.0, 100.0, 0.0); 
     vec3 lightDir = normalize(lightPos - FragPos);   // Example: light direction from above
     vec3 lightColor = vec3(1.0, 1.0, 1.0); // White Light Example
     vec3 viewDir = normalize(viewPos - FragPos);

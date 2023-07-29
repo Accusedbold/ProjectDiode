@@ -36,6 +36,7 @@
 #include <queue>           // queue
 #include <unordered_map>   // unordered_map
 #include <map>             // multimap
+#include <array>           // array
 #include <filesystem>      // path, exists, is_directory, directory_iterator
 #include <fstream>         // ofstream
 #include <GL\glew.h>       // GLEW

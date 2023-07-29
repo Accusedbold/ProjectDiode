@@ -51,6 +51,8 @@ std::shared_ptr<Resource> ResourceLoader::operator()(ResourceType type, std::wst
 		return LoadTexture(name, id);
 	case ResourceType::Model:
 		return LoadModel(name, id);
+	case ResourceType::CubeMap:
+		return LoadCubeMap(name, id);
 	default:
 		return std::shared_ptr<Resource>();
 	}
@@ -73,6 +75,77 @@ ResourceLoader* ResourceLoader::GetInstance()
 	if (!m_Instance)
 		m_Instance = new ResourceLoader;
 	return m_Instance;
+}
+
+/******************************************************************************/
+/*!
+					LoadCubeMap
+
+\author   John Salguero
+
+\brief    Loads in the cubemap to GPU memory via OpenGL.
+
+\param    name
+					The name of the directory with the cube map to load
+
+\param    id
+					The id to use in initializing the texture
+
+\return   std::shared_ptr<Resource>
+					The Texture that got loaded in
+*/
+/******************************************************************************/
+std::shared_ptr<Resource> ResourceLoader::LoadCubeMap(std::wstring const& name, ResourceID id)
+{
+	std::wstring filenames[6] = {
+	{TEXTURE_DIRECTORY + name + POS_X_FILENAME},
+	{TEXTURE_DIRECTORY + name + NEG_X_FILENAME},
+	{TEXTURE_DIRECTORY + name + POS_Y_FILENAME},
+	{TEXTURE_DIRECTORY + name + NEG_Y_FILENAME},
+	{TEXTURE_DIRECTORY + name + POS_Z_FILENAME},
+	{TEXTURE_DIRECTORY + name + NEG_Z_FILENAME}
+	};
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	for (GLenum i = 0; i < 6; ++i) {
+		std::string cName;
+		std::transform(filenames[i].begin(), filenames[i].end(), std::back_inserter(cName), [](wchar_t c) {return (char)c; });
+		SDL_Surface* surface = IMG_Load(cName.c_str());
+		FATAL_ERRORIF(!surface, "Could not load in Texture Name: " + cName);
+
+		// Load texture data into OpenGL
+		switch (surface->format->format)
+		{
+		case SDL_PIXELFORMAT_RGB24:
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
+			break;
+		case SDL_PIXELFORMAT_ARGB8888:
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+			break;
+		case SDL_PIXELFORMAT_ABGR8888:
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+			break;
+		default:
+			break;
+		}
+		// Free SDL surface (we don't need it anymore)
+		SDL_FreeSurface(surface);
+	}
+
+	// Set texture parameters
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	std::shared_ptr<Texture> loadedTexture(new Texture(name, id, ResourceType::CubeMap));
+	loadedTexture->m_textureID = textureID;
+
+	return loadedTexture;
 }
 
 /******************************************************************************/
